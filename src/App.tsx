@@ -1,0 +1,39 @@
+import { useEffect, useRef } from "react";
+import Phaser from "phaser";
+import { GameScene } from "./phaser/scenes/GameScene";
+
+export default function App() {
+    const host = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const game = new Phaser.Game({
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            parent: host.current!,
+            backgroundColor: 0x0b1020,
+            physics: {
+                default: "arcade",
+                arcade: {
+                    gravity: { x: 0, y: 0 },
+                    debug: false,
+                },
+            },
+            scene: [GameScene],
+        });
+
+        return () => game.destroy(true);
+    }, []);
+
+    return (
+        <div className="min-h-dvh bg-slate-900 text-white flex items-start justify-center pt-6">
+            <div ref={host} id="game-root" />
+            <div className="ml-4 mt-2 text-emerald-400">
+                Tailwind is working
+            </div>
+        </div>
+    );
+}
+
+// test page - to be deleted when we start building the game
+
