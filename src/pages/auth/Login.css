@@ -1,0 +1,113 @@
+.bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background: #121212;
+    font-family: monospace;
+}
+.form-box {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    background: #1e1e1e;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+    transition: transform 0.6s ease-in-out;
+}
+
+.form {
+    font-family: monospace;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    transition: opacity 0.4s ease-in-out, transform 0.6s ease-in-out;
+}
+.form__header {
+    font-family: monospace;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 24px;
+}
+.form__input {
+    font-family: monospace;
+    background: #2a2a2a;
+    border: none;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+.form__input:focus {
+    background: #333;
+    outline: none;
+}
+
+.form__btn {
+    font-family: monospace;
+    margin-top: 15px;
+    padding: 12px;
+    background: #03dac6;
+    border: none;
+    border-radius: 6px;
+    color: #121212;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+.form__btn:hover {
+    background: #00c4aa;
+}
+
+.toggle-form {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #aaa;
+}
+.toggle-form__link {
+    color: #03dac6;
+    cursor: pointer;
+    font-weight: bold;
+}
+.toggle-form__link:hover {
+    text-decoration: underline;
+}
+
+.sign-in-form {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.sign-up-form {
+    opacity: 0;
+    transform: translateX(100%);
+    pointer-events: none;
+}
+
+.form-box.active .sign-in-form {
+    opacity: 0;
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+.form-box.active .sign-up-form {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+}
+.error-messages {
+    width: 500px;
+    color: red;
+    text-align: center;
+}
