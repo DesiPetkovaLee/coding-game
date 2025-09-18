@@ -16,6 +16,9 @@ const config = {
     },
   },
   scene: [PreloadScene, BunkerLevelScene],
+  fps: {
+    limit: 30,
+  },
 };
 
 const StartGame = (parent) => {
