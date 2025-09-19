@@ -4,28 +4,12 @@ import LogIn from "./pages/auth/LoginPage";
 import { useEffect, useRef } from "react";
 import Phaser from "phaser";
 import { GameScene } from "./phaser/scenes/GameScene";
+import { config } from "./phaser/core/config";
 
 export default function App() {
     const host = useRef<HTMLDivElement>(null);
-    //MATT NOTE ---> This is the config which we're also storing in config, so don't need to redeclare here,
-    //but also need to reference somehow
     useEffect(() => {
-        const game = new Phaser.Game({
-            type: Phaser.AUTO,
-            width: 800,
-            height: 600,
-            parent: host.current!,
-            backgroundColor: 0x0b1020,
-            physics: {
-                default: "arcade",
-                arcade: {
-                    gravity: { x: 0, y: 0 },
-                    debug: false,
-                },
-            },
-            scene: [GameScene],
-        });
-
+        const game = new Phaser.Game(config);
         return () => game.destroy(true);
     }, []);
 
@@ -33,7 +17,7 @@ export default function App() {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <div className="min-h-dvh bg-slate-900 text-white flex items-start justify-center pt-6">
-                <LogIn></LogIn>
+                {/* <LogIn></LogIn> */}
                 <div ref={host} id="game-root" />
                 <div className="ml-4 mt-2 text-emerald-400">
                     Tailwind is working
