@@ -3,7 +3,7 @@ import theme from "./theme/theme";
 import LogIn from "./pages/auth/LoginPage";
 import { useEffect, useRef } from "react";
 import Phaser from "phaser";
-import { GameScene } from "./phaser/scenes/GameScene";
+
 import { config } from "./phaser/core/config";
 
 export default function App() {
