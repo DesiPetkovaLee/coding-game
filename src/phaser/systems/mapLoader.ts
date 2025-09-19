@@ -1,3 +1,4 @@
+// reusable mapLoader
 export class mapLoader {
     private scene: Phaser.Scene;
     constructor(scene: Phaser.Scene) {

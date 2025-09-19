@@ -4,7 +4,7 @@ import { BunkerLevelScene } from "../scenes/BunkerLevelScene";
 
 export const config = {
     type: Phaser.AUTO,
-    width: 1000,
+    width: 1500,
     height: 1000,
     parent: "game-container",
     backgroundColor: "#deded1",

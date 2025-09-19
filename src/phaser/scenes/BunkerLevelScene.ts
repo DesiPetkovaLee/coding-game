@@ -35,7 +35,10 @@ export class BunkerLevelScene extends Scene {
         this.rolly.setCollideWorldBounds(true);
         this.physics.add.collider(this.rolly, collisionLayer);
         this.physics.add.collider(this.rolly, this.player);
-        this.physics.add.collider(this.rolly, this.playerTwo);
+        this.physics.add.collider(this.rolly, this.playerTwo, () => {
+            console.log("collision");
+            // this.scene.pause();
+        });
 
         // Camera
         const camControl = new CameraController(this);
@@ -57,6 +60,7 @@ export class BunkerLevelScene extends Scene {
 
     update() {
         this.playerTwo?.update();
+        this.rolly?.update();
     }
 }
 
