@@ -16,7 +16,7 @@ export class CameraController {
         const boundsY = map.height * tileHeight;
         camera.setBounds(0, 0, boundsX, boundsY);
         camera.startFollow(player, true, 0.1, 0.1);
-        camera.zoom = 1.2;
+        camera.zoom = 1;
         return camera;
     }
 }

@@ -2,6 +2,7 @@ import { Scene } from "phaser";
 import { mapLoader } from "../systems/mapLoader";
 import { Player } from "../prefabs/Player";
 import { MusicLoader } from "../systems/musicLoader";
+import { CameraController } from "../systems/CameraControl";
 
 export class BunkerLevelScene extends Scene {
     player!: any;
@@ -11,6 +12,7 @@ export class BunkerLevelScene extends Scene {
     }
 
     create() {
+        // map load
         const mLoader = new mapLoader(this);
         const { map, collisionLayer } = mLoader.loadMap(
             "BunkerLevelMap",
@@ -18,19 +20,12 @@ export class BunkerLevelScene extends Scene {
             "BunkerLevelTileset"
         );
 
+        // player load
         this.playerTwo = new Player(this, 1250, 2900);
         this.playerTwo.setScale(1);
         this.playerTwo.getBody().setCollideWorldBounds(true);
 
-        // this.physics.add.collider(this.player, collisionLayer);
-        // if (this.input.keyboard !== null) {
-        //     this.input.keyboard.once("keydown", () => {
-        //         const bgMusic = new MusicLoader(this, "menu", true, 0.5);
-        //         bgMusic.playMusic();
-        //     });
-        // }
-
-        // --- Player ---
+        // thinker load- no additional fields
         this.player = this.physics.add.sprite(1200, 2900, "thinker");
         this.player.setScale(1.25);
         this.player.setCollideWorldBounds(true);
@@ -46,57 +41,35 @@ export class BunkerLevelScene extends Scene {
             repeat: -1,
         });
 
-        // // --- Groups ---
-        // this.marvils = this.physics.add.staticGroup();
-        // this.rollies = this.physics.add.group();
-
-        // for (let i = 0; i < 6; i++) {
-        //   let marvilY = 0;
-        //   let randomX = Math.ceil(Math.random() * 3000);
-        //   let randomY = Math.ceil(Math.random() * 3000);
-
-        //   if (i < 2) marvilY = 2450 - i * 100;
-        //   else if (i < 4) marvilY = 1750 - i * 100;
-        //   else marvilY = 1050 - i * 100;
-
-        //   const marvil = this.marvils.create(2950, marvilY, "marvil");
-
-        //   const rolly = this.rollies.create(randomX, randomY, "rolly");
-        //   if (rolly.coll) rolly.setDepth(1);
-        //   rolly.setCollideWorldBounds(true);
-        //   rolly.anims.play("roll", true);
-        // }
-
-        // Camera follow
-        this.cameras.main.startFollow(this.player);
-        this.cameras.main.setBounds(
-            0,
-            0,
-            map.widthInPixels,
-            map.heightInPixels
-        );
-        this.physics.world.setBounds(
-            0,
-            0,
-            map.widthInPixels,
-            map.heightInPixels
-        );
+        // Camera
+        const camControl = new CameraController(this);
+        camControl.setup(this.playerTwo, map);
     }
 
     update() {
         this.playerTwo?.update();
-        // --- Player movement ---
-        // this.player.body.velocity.normalize().scale(speed);
-        // // --- Control rollies ---
-        // this.rollies.children.iterate((rolly) => {
-        //   if (!rolly) return;
-        //   // Example: make them move left/right
-        //   if (rolly.body.velocity.x === 0) {
-        //     rolly.setVelocityX(Phaser.Math.Between(-100, 100));
-        //   }
-        //   if (rolly.body.blocked.left || rolly.body.blocked.right) {
-        //     rolly.setVelocityX(-rolly.body.velocity.x); // bounce
-        //   }
-        // });
     }
 }
+
+// // --- Groups ---
+// this.marvils = this.physics.add.staticGroup();
+// this.rollies = this.physics.add.group();
+
+// for (let i = 0; i < 6; i++) {
+//   let marvilY = 0;
+//   let randomX = Math.ceil(Math.random() * 3000);
+//   let randomY = Math.ceil(Math.random() * 3000);
+
+//   if (i < 2) marvilY = 2450 - i * 100;
+//   else if (i < 4) marvilY = 1750 - i * 100;
+//   else marvilY = 1050 - i * 100;
+
+//   const marvil = this.marvils.create(2950, marvilY, "marvil");
+
+// this.physics.add.collider(this.player, collisionLayer);
+// if (this.input.keyboard !== null) {
+//     this.input.keyboard.once("keydown", () => {
+//         const bgMusic = new MusicLoader(this, "menu", true, 0.5);
+//         bgMusic.playMusic();
+//     });
+// }
