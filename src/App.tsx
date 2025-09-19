@@ -8,8 +8,6 @@ import { config } from "./phaser/core/config";
 
 export default function App() {
     const host = useRef<HTMLDivElement>(null);
-    //MATT NOTE ---> This is the config which we're also storing in config, so don't need to redeclare here,
-    //but also need to reference somehow
     useEffect(() => {
         const game = new Phaser.Game(config);
         return () => game.destroy(true);

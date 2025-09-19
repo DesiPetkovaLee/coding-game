@@ -14,7 +14,8 @@ export class BunkerLevelScene extends Scene {
         const mLoader = new mapLoader(this);
         const { map, collisionLayer } = mLoader.loadMap(
             "BunkerLevelMap",
-            "assets/tilesets/BunkerLevelScene.png"
+            "level-0-map.tsx",
+            "BunkerLevelTileset"
         );
 
         this.playerTwo = new Player(this, 1250, 2900);
