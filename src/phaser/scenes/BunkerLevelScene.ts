@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import { mapLoader } from "../systems/mapLoader";
 import { Player } from "../prefabs/Player";
-import { MusicLoader } from "../systems/musicLoader";
+import { MusicLoader } from "../systems/MusicLoader";
 import { CameraController } from "../systems/CameraControl";
 
 export class BunkerLevelScene extends Scene {
@@ -21,29 +21,29 @@ export class BunkerLevelScene extends Scene {
         );
 
         // player load
-        this.playerTwo = new Player(this, 1250, 2900);
+        this.playerTwo = new Player(this, 1300, 2900);
         this.playerTwo.setScale(1);
         this.playerTwo.getBody().setCollideWorldBounds(true);
 
-        // thinker load- no additional fields
-        this.player = this.physics.add.sprite(1200, 2900, "thinker");
-        this.player.setScale(1.25);
-        this.player.setCollideWorldBounds(true);
-
-        // --- Animation for rollies ---
-        this.anims.create({
-            key: "roll",
-            frames: this.anims.generateFrameNumbers("rolly", {
-                start: 0,
-                end: 4,
-            }),
-            frameRate: 2,
-            repeat: -1,
-        });
+        //
+        this.physics.add.collider(this.playerTwo, collisionLayer);
 
         // Camera
         const camControl = new CameraController(this);
         camControl.setup(this.playerTwo, map);
+
+        // thinker load- no additional fields, just want to see him
+        this.player = this.physics.add.sprite(1200, 2900, "thinker");
+        this.player.setScale(1.25);
+        this.player.setCollideWorldBounds(true);
+
+        // music
+        // if (this.input.keyboard !== null) {
+        //     this.input.keyboard.once("keydown", () => {
+        //         const bgMusic = new MusicLoader(this, "menu", true, 0.5);
+        //         bgMusic.playMusic();
+        //     });
+        // }
     }
 
     update() {
@@ -67,9 +67,3 @@ export class BunkerLevelScene extends Scene {
 //   const marvil = this.marvils.create(2950, marvilY, "marvil");
 
 // this.physics.add.collider(this.player, collisionLayer);
-// if (this.input.keyboard !== null) {
-//     this.input.keyboard.once("keydown", () => {
-//         const bgMusic = new MusicLoader(this, "menu", true, 0.5);
-//         bgMusic.playMusic();
-//     });
-// }

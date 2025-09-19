@@ -9,7 +9,6 @@ export class Player extends BaseSprite {
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, "player-sheet", 0);
 
-        // typescript is being very fussy about the scene/ keyboard being null
         if (!scene.input.keyboard) {
             throw new Error("Keyboard input not initialized");
         }
@@ -19,8 +18,8 @@ export class Player extends BaseSprite {
         this.keyS = scene.input.keyboard.addKey("S");
         this.keyD = scene.input.keyboard.addKey("D");
 
-        this.getBody().setSize(20, 90);
-        this.getBody().setOffset(10, 5);
+        this.getBody().setSize(30, 95);
+        this.getBody().setOffset(48, 15);
 
         this.anims.create({
             key: "blink",
@@ -46,7 +45,7 @@ export class Player extends BaseSprite {
             yoyo: true,
         });
     }
-
+    // these should be change able for diff textures
     update() {
         const body = this.getBody();
         body.setVelocity(0);
@@ -61,13 +60,11 @@ export class Player extends BaseSprite {
         if (this.keyA?.isDown) {
             body.velocity.x = -110;
             this.anims.play("walk", true);
-            this.checkFlip();
-            body.setOffset(15, 15);
+            this.setFlipX(false);
         } else if (this.keyD?.isDown) {
             this.anims.play("walk", true);
             body.velocity.x = 110;
-            this.checkFlip();
-            body.setOffset(48, 15);
+            this.setFlipX(true);
         } else {
             this.anims.play("blink", true);
         }
