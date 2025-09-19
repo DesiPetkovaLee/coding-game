@@ -3,10 +3,12 @@ import { mapLoader } from "../systems/mapLoader";
 import { Player } from "../prefabs/Player";
 import { MusicLoader } from "../systems/MusicLoader";
 import { CameraController } from "../systems/CameraControl";
+import { RollySprite } from "../prefabs/RollySprite";
 
 export class BunkerLevelScene extends Scene {
     player!: any;
     playerTwo: Player | undefined;
+    rolly: RollySprite | undefined;
     constructor() {
         super("BunkerLevelScene");
     }
@@ -27,6 +29,13 @@ export class BunkerLevelScene extends Scene {
 
         //
         this.physics.add.collider(this.playerTwo, collisionLayer);
+
+        // rolly enemy
+        this.rolly = new RollySprite(this, 1400, 2700, "rolly");
+        this.rolly.setCollideWorldBounds(true);
+        this.physics.add.collider(this.rolly, collisionLayer);
+        this.physics.add.collider(this.rolly, this.player);
+        this.physics.add.collider(this.rolly, this.playerTwo);
 
         // Camera
         const camControl = new CameraController(this);

@@ -51,19 +51,19 @@ export class Player extends BaseSprite {
         body.setVelocity(0);
 
         if (this.keyW?.isDown) {
-            this.anims.play("walk", true);
-            body.velocity.y = -110;
+            this.setTexture("player-sheet", 7);
+            body.velocity.y = -120;
         } else if (this.keyS?.isDown) {
             this.anims.play("walk", true);
-            body.velocity.y = 110;
+            body.velocity.y = 120;
         }
         if (this.keyA?.isDown) {
-            body.velocity.x = -110;
+            body.velocity.x = -120;
             this.anims.play("walk", true);
             this.setFlipX(false);
         } else if (this.keyD?.isDown) {
             this.anims.play("walk", true);
-            body.velocity.x = 110;
+            body.velocity.x = 120;
             this.setFlipX(true);
         } else {
             this.anims.play("blink", true);

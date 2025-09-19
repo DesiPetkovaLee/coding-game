@@ -11,6 +11,7 @@ export class RollySprite extends BaseSprite {
         super(scene, x, y, texture);
 
         this.getBody().setSize(30, 60);
+        this.getBody().setBounce(0.2, 0.2);
         this.setVelocity(
             Phaser.Math.Between(-60, 60),
             Phaser.Math.Between(-60, 60)
