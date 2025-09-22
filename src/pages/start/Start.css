@@ -1,0 +1,18 @@
+.start-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: #0B0D0A; 
+    background-image: url('/assets/UI/coil.png');
+    background-size: auto 90%; 
+    background-position: center;
+    background-repeat: no-repeat; 
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden; 
+}

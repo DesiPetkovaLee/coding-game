@@ -1,30 +1,30 @@
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./theme/theme";
-import LogIn from "./pages/auth/LoginPage";
-import { useEffect, useRef } from "react";
-import Phaser from "phaser";
-
-import { config } from "./phaser/core/config";
+import LoginPage from "./pages/auth/LoginPage";
+import SignupPage from "./pages/auth/SignupPage";
+import StartPage from "./pages/start/StartPage";
+import SetupPage from "./pages/setup/SetupPage";
+import StoryPage from "./pages/story/StoryPage";
+import LevelSelectPage from "./pages/levelSelect/LevelSelectPage";
+import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./appState/auth/AuthContext";
+import GameInitialiser from "./phaser/GameInitialiser";
 
 export default function App() {
-    const host = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        const game = new Phaser.Game(config);
-        return () => game.destroy(true);
-    }, []);
-
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <div className="min-h-dvh bg-slate-900 text-white flex items-start justify-center pt-6">
-                {/* <LogIn></LogIn> */}
-                <div ref={host} id="game-root" />
-                <div className="ml-4 mt-2 text-emerald-400">
-                    Tailwind is working
-                </div>
-            </div>
+            <AuthProvider>
+                <Routes>
+                    <Route path="/" element={<StartPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/signup" element={<SignupPage />} />
+                    <Route path="/setup" element={<SetupPage />} />
+                    <Route path="/story" element={<StoryPage />} />
+                    <Route path="/level-select" element={<LevelSelectPage />} />
+                    <Route path="/game" element={<GameInitialiser />} />
+                </Routes>
+            </AuthProvider>
         </ThemeProvider>
     );
 }
-
-// test page - to be deleted when we start building the game
