@@ -1,10 +1,11 @@
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "./theme/theme";
-import LogIn from "./pages/auth/LoginPage";
-import { useEffect, useRef } from "react";
-import Phaser from "phaser";
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import theme from './theme/theme';
+import LogIn from './pages/auth/LoginPage';
+import { useEffect, useRef } from 'react';
+import Phaser from 'phaser';
 
-import { config } from "./phaser/core/config";
+import { config } from './phaser/core/config';
+import Timer from './components/game/Timer';
 
 export default function App() {
     const host = useRef<HTMLDivElement>(null);
@@ -16,6 +17,11 @@ export default function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
+            <Timer
+                timerInitialValue={60}
+                timeElapsedBackgroundColor="red"
+                timeRemainingBackgroundColor="blue"
+            />
             <div className="min-h-dvh bg-slate-900 text-white flex items-start justify-center pt-6">
                 {/* <LogIn></LogIn> */}
                 <div ref={host} id="game-root" />
