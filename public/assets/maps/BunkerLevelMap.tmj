@@ -354,7 +354,7 @@
         {
          "columns":30,
          "firstgid":1,
-         "image":"..\/..\/..\/..\/..\/..\/..\/assets\/tilesets\/BunkerLevelTileset.png",
+         "image": "/assets/tilesets/BunkerLevelTileset.png",
          "imageheight":3000,
          "imagewidth":3000,
          "margin":0,
@@ -367,7 +367,7 @@
         {
          "columns":30,
          "firstgid":901,
-         "image":"..\/..\/..\/..\/..\/..\/..\/assets\/tilesets\/BunkerLevelTilesetOverlay.png",
+         "image":"assets/maps/BunkerLevelMap.tmj",
          "imageheight":3000,
          "imagewidth":3000,
          "margin":0,
