@@ -7,6 +7,8 @@ import { RollySprite } from "../prefabs/enemies/RollySprite";
 import { Spawner } from "../systems/SpriteSpawner";
 import type { Terminal } from "../prefabs/interactables/Terminal";
 import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
+import { gameState } from "../core/GameState";
+import eventBus from "../core/EventBus";
 
 export class BunkerLevelScene extends Scene {
     player: Player | undefined;
@@ -19,6 +21,10 @@ export class BunkerLevelScene extends Scene {
     }
 
     create() {
+        // example ui overlay
+        this.scene.launch("UIScene");
+        this.scene.get("UIScene").events.emit("updateUI", gameState.stats);
+
         // map load
         const mLoader = new mapLoader(this);
         const { map, collisionLayer } = mLoader.loadMap(
@@ -40,14 +46,18 @@ export class BunkerLevelScene extends Scene {
         this.player.getBody().setCollideWorldBounds(true);
         this.physics.add.collider(this.player, collisionLayer);
 
+        this.physics.add.collider(this.player, this.enemies, () => {
+            console.log("collides");
+            gameState.updateHealth(-10);
+            eventBus.emit("updateUI", gameState.stats);
+            console.log(gameState.stats);
+        });
+        this.physics.add.collider(this.player, this.terminals);
+        this.physics.add.collider(this.player, this.disks);
+
         // Camera;
         const camControl = new CameraController(this);
         camControl.setup(this.player, map);
-
-        // thinker load- no additional fields, just want to see him
-        // const thinker = this.physics.add.sprite(1200, 2900, "thinker");
-        // thinker.setScale(1.25);
-        // thinker.setCollideWorldBounds(true);
 
         // music
         if (this.input.keyboard !== null) {
@@ -59,7 +69,14 @@ export class BunkerLevelScene extends Scene {
     }
 
     update() {
-        this.player?.update();
+        const player = this.player;
+        if (player && this.enemies && this.terminals && this.disks) {
+            player.update();
+
+            this.enemies.forEach((enemy) => enemy.update());
+            this.terminals.forEach((terminal) => terminal.update(player));
+            this.disks.forEach((disk) => disk.update(player));
+        }
     }
 }
 
