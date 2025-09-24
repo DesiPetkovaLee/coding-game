@@ -62,7 +62,7 @@ export class BunkerLevelScene extends Scene {
     // music
     if (this.input.keyboard !== null) {
       this.input.keyboard.once("keydown", () => {
-        const bgMusic = new MusicLoader(this, "WakeyWakey", true, 0.2);
+        const bgMusic = new MusicLoader(this, "WakeyWakey", true, 0.1);
         bgMusic.playMusic();
       });
     }
