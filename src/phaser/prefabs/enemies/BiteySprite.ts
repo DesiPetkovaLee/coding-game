@@ -11,7 +11,7 @@ export class BiteySprite extends BaseSprite {
             key: "bite",
             frames: this.anims.generateFrameNumbers(texture, {
                 start: 0,
-                end: 24,
+                end: 23,
             }),
             frameRate: 2,
             delay: 6000,
