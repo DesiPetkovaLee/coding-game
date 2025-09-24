@@ -17,6 +17,7 @@ export class CameraController {
         camera.setBounds(0, 0, boundsX, boundsY);
         camera.startFollow(player, true, 0.1, 0.1);
         camera.zoom = 1;
+        camera.fadeIn(4000);
         return camera;
     }
 }

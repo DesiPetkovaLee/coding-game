@@ -1,12 +1,4 @@
 { "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"json",
-         "target":"BunkerLevelMap.tmj"
-        }
-    },
  "height":30,
  "infinite":false,
  "layers":[
@@ -315,23 +307,12 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":-936,
-                 "y":712
+                 "x":-600,
+                 "y":796
                 }, 
                 {
                  "height":0,
-                 "id":14,
-                 "name":"terminal",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":756,
-                 "y":1460
-                }, 
-                {
-                 "height":0,
-                 "id":15,
+                 "id":17,
                  "name":"floppy-disk",
                  "properties":[
                         {
@@ -343,8 +324,19 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":532,
-                 "y":1444
+                 "x":764,
+                 "y":1368
+                }, 
+                {
+                 "height":0,
+                 "id":18,
+                 "name":"terminal",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":560,
+                 "y":956
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -353,7 +345,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":16,
+ "nextobjectid":19,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
