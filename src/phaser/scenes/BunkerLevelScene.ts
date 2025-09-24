@@ -6,58 +6,60 @@ import { CameraController } from "../systems/CameraControl";
 import { RollySprite } from "../prefabs/RollySprite";
 
 export class BunkerLevelScene extends Scene {
-    player!: any;
-    playerTwo: Player | undefined;
-    rolly: RollySprite | undefined;
-    constructor() {
-        super("BunkerLevelScene");
+  player!: any;
+  playerTwo: Player | undefined;
+  rolly: RollySprite | undefined;
+  constructor() {
+    super("BunkerLevelScene");
+  }
+
+  create() {
+    // map load
+    const mLoader = new mapLoader(this);
+    const { map, collisionLayer } = mLoader.loadMap(
+      "BunkerLevelMap",
+      "BunkerLevelTileset",
+      "BunkerLevelTileset",
+      "BunkerLevelTilesetOverlay",
+      "BunkerLevelTilesetOverlay"
+    );
+
+    // player load
+    this.playerTwo = new Player(this, 1300, 2900);
+    this.playerTwo.setScale(1);
+    this.playerTwo.getBody().setCollideWorldBounds(true);
+
+    //
+    this.physics.add.collider(this.playerTwo, collisionLayer);
+
+    // rolly enemy
+    this.rolly = new RollySprite(this, 1400, 2700, "rolly");
+    this.rolly.setCollideWorldBounds(true);
+    this.physics.add.collider(this.rolly, collisionLayer);
+    this.physics.add.collider(this.rolly, this.player);
+    this.physics.add.collider(this.rolly, this.playerTwo);
+
+    // Camera
+    const camControl = new CameraController(this);
+    camControl.setup(this.playerTwo, map);
+
+    // thinker load- no additional fields, just want to see him
+    this.player = this.physics.add.sprite(1200, 2900, "thinker");
+    this.player.setScale(1.25);
+    this.player.setCollideWorldBounds(true);
+
+    // music
+    if (this.input.keyboard !== null) {
+      this.input.keyboard.once("keydown", () => {
+        const bgMusic = new MusicLoader(this, "WakeyWakey", true, 0.5);
+        bgMusic.playMusic();
+      });
     }
+  }
 
-    create() {
-        // map load
-        const mLoader = new mapLoader(this);
-        const { map, collisionLayer } = mLoader.loadMap(
-            "BunkerLevelMap",
-            "level-0-map.tsx",
-            "BunkerLevelTileset"
-        );
-
-        // player load
-        this.playerTwo = new Player(this, 1300, 2900);
-        this.playerTwo.setScale(1);
-        this.playerTwo.getBody().setCollideWorldBounds(true);
-
-        //
-        this.physics.add.collider(this.playerTwo, collisionLayer);
-
-        // rolly enemy
-        this.rolly = new RollySprite(this, 1400, 2700, "rolly");
-        this.rolly.setCollideWorldBounds(true);
-        this.physics.add.collider(this.rolly, collisionLayer);
-        this.physics.add.collider(this.rolly, this.player);
-        this.physics.add.collider(this.rolly, this.playerTwo);
-
-        // Camera
-        const camControl = new CameraController(this);
-        camControl.setup(this.playerTwo, map);
-
-        // thinker load- no additional fields, just want to see him
-        this.player = this.physics.add.sprite(1200, 2900, "thinker");
-        this.player.setScale(1.25);
-        this.player.setCollideWorldBounds(true);
-
-        // music
-        // if (this.input.keyboard !== null) {
-        //     this.input.keyboard.once("keydown", () => {
-        //         const bgMusic = new MusicLoader(this, "menu", true, 0.5);
-        //         bgMusic.playMusic();
-        //     });
-        // }
-    }
-
-    update() {
-        this.playerTwo?.update();
-    }
+  update() {
+    this.playerTwo?.update();
+  }
 }
 
 // // --- Groups ---
