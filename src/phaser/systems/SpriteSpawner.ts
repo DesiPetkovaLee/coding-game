@@ -2,6 +2,8 @@ import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
 import { Terminal } from "../prefabs/interactables/Terminal";
 import { Player } from "../prefabs/characters/Player";
 import { RollySprite } from "../prefabs/enemies/RollySprite";
+import type { BaseSprite } from "../prefabs/BaseSprite";
+import { BiteySprite } from "../prefabs/enemies/BiteySprite";
 
 export class Spawner {
     private scene: Phaser.Scene;
@@ -15,7 +17,7 @@ export class Spawner {
         const objects = this.map.getObjectLayer("Object")?.objects ?? [];
 
         let player!: Player;
-        const enemies: RollySprite[] = [];
+        const enemies: BaseSprite[] = [];
         const disks: FloppyDisk[] = [];
         const terminals: Terminal[] = [];
 
@@ -38,7 +40,22 @@ export class Spawner {
                     console.log("player spawned at " + x + y);
                     break;
                 case "enemy":
-                    enemies.push(new RollySprite(this.scene, x, y, "rolly"));
+                    {
+                        const type = tiledProps.type ?? "rolly";
+
+                        let enemy;
+                        if (type === "rolly") {
+                            enemy = new RollySprite(this.scene, x, y, "rolly");
+                        } else if (type === "bitey") {
+                            enemy = new BiteySprite(this.scene, x, y, "bitey");
+                        } else {
+                            console.log(
+                                `Unknown enemy type: ${type}, defaulting generated at x ${x} and ${y}`
+                            );
+                            enemy = new RollySprite(this.scene, x, y, "rolly");
+                        }
+                        enemies.push(enemy);
+                    }
                     break;
                 case "floppy-disk": {
                     const colour = tiledProps.colour ?? "default";
@@ -71,7 +88,7 @@ export class Spawner {
 }
 type SpawnerResult = {
     player: Player;
-    enemies: RollySprite[];
+    enemies: BaseSprite[];
     disks: FloppyDisk[];
     terminals: Terminal[];
 };
