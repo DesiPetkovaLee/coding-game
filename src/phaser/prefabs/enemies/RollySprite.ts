@@ -1,4 +1,4 @@
-import { BaseSprite } from "./BaseSprite";
+import { BaseSprite } from "../BaseSprite";
 
 export class RollySprite extends BaseSprite {
     constructor(
