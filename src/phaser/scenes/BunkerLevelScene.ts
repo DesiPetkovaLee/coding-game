@@ -75,7 +75,18 @@ export class BunkerLevelScene extends Scene {
 
             this.enemies.forEach((enemy) => enemy.update());
             this.terminals.forEach((terminal) => terminal.update(player));
-            this.disks.forEach((disk) => disk.update(player));
+
+            // this.disks.forEach((disk) => disk.update(player));
+
+            this.disks = this.disks.filter((disk) => {
+                if (disk.toDelete) {
+                    disk.destroy();
+                    return false;
+                }
+
+                disk.update(player);
+                return true;
+            });
         }
     }
 }
