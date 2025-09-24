@@ -18,13 +18,12 @@ export class PreloadScene extends Scene {
 
         // enemies
         this.load.setPath("assets/enemy-sprites");
-        // this.load.image("bitey", "bitey.png");
         this.load.spritesheet("rolly", "rolly-ss.png", {
             frameWidth: 128,
             frameHeight: 128,
         });
         this.load.spritesheet("bitey", "bitey-anim-ss.png", {
-            frameWidth: 56,
+            frameWidth: 70,
             frameHeight: 100,
         });
 
