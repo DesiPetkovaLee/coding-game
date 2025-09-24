@@ -4,10 +4,16 @@ import { Player } from "../prefabs/characters/Player";
 import { MusicLoader } from "../systems/MusicLoader";
 import { CameraController } from "../systems/CameraControl";
 import { RollySprite } from "../prefabs/enemies/RollySprite";
+import { Spawner } from "../systems/SpriteSpawner";
+import type { Terminal } from "../prefabs/interactables/Terminal";
+import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
 
 export class BunkerLevelScene extends Scene {
     player: Player | undefined;
-    rolly: RollySprite | undefined;
+    // rolly: RollySprite | undefined;
+    enemies: RollySprite[] | undefined;
+    terminals: Terminal[] | undefined;
+    disks: FloppyDisk[] | undefined;
     constructor() {
         super("BunkerLevelScene");
     }
@@ -23,28 +29,25 @@ export class BunkerLevelScene extends Scene {
             "BunkerLevelTilesetOverlay"
         );
 
-        // player load
-        this.player = new Player(this, 1300, 2900);
-        this.player.setScale(1);
-        this.player.getBody().setCollideWorldBounds(true);
+        const spawner = new Spawner(this, map);
+        const { player, enemies, terminals, disks } = spawner.spawnEntities();
+        this.player = player;
+        this.enemies = enemies;
+        this.terminals = terminals;
+        this.disks = disks;
 
-        //
+        // player
+        this.player.getBody().setCollideWorldBounds(true);
         this.physics.add.collider(this.player, collisionLayer);
 
-        // rolly enemy
-        this.rolly = new RollySprite(this, 1400, 2700, "rolly");
-        this.rolly.setCollideWorldBounds(true);
-        this.physics.add.collider(this.rolly, collisionLayer);
-        this.physics.add.collider(this.rolly, this.player);
-
-        // Camera
+        // Camera;
         const camControl = new CameraController(this);
         camControl.setup(this.player, map);
 
         // thinker load- no additional fields, just want to see him
-        const thinker = this.physics.add.sprite(1200, 2900, "thinker");
-        thinker.setScale(1.25);
-        thinker.setCollideWorldBounds(true);
+        // const thinker = this.physics.add.sprite(1200, 2900, "thinker");
+        // thinker.setScale(1.25);
+        // thinker.setCollideWorldBounds(true);
 
         // music
         if (this.input.keyboard !== null) {
