@@ -1,10 +1,10 @@
+import type { Palette } from '@mui/material/styles';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useEffect, useState } from 'react';
 
 interface TimerProps {
     timerInitialValue: number;
-    timeElapsedBackgroundColor: string;
-    timeRemainingBackgroundColor: string;
+    colors: string[];
     onTimerComplete?: () => void;
 }
 
@@ -35,18 +35,10 @@ const Timer = (props: TimerProps) => {
         console.log('Time Elapsed: ', timeElapsed);
     }, [timeRemaining, timeElapsed]);
 
-    useEffect(() => {
-        console.log(
-            'Time Elapsed: ',
-            timeElapsed,
-            'Time Remaining: ',
-            timeRemaining,
-        );
-    }, [timeElapsed]);
-
     return (
         <div>
             <PieChart
+                colors={props.colors}
                 series={[
                     {
                         data: [

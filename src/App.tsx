@@ -17,8 +17,10 @@ export default function App() {
             <CssBaseline />
             <Timer
                 timerInitialValue={5}
-                timeElapsedBackgroundColor="red"
-                timeRemainingBackgroundColor="blue"
+                colors={[
+                    theme.palette.secondary.main,
+                    theme.palette.primary.main,
+                ]}
             />
             <AuthProvider>
                 <Routes>
