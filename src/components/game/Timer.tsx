@@ -5,13 +5,35 @@ interface TimerProps {
     timerInitialValue: number;
     timeElapsedBackgroundColor: string;
     timeRemainingBackgroundColor: string;
+    onTimerComplete?: () => void;
 }
 
 const Timer = (props: TimerProps) => {
     const [timeElapsed, setTimeElapsed] = useState(0);
-    const [timeRemaining, setTimeRemaining] = useState(
-        props.timerInitialValue - timeElapsed,
-    );
+    const [timeRemaining, setTimeRemaining] = useState(props.timerInitialValue);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTimeElapsed((prev) => prev + 1);
+            setTimeRemaining((prev) => {
+                const newValue = prev - 1;
+                if (newValue <= 0) {
+                    clearInterval(interval);
+                    if (props.onTimerComplete) {
+                        props.onTimerComplete();
+                    }
+                }
+                return newValue;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        console.log('Time Remaining: ', timeRemaining);
+        console.log('Time Elapsed: ', timeElapsed);
+    }, [timeRemaining, timeElapsed]);
 
     useEffect(() => {
         console.log(
