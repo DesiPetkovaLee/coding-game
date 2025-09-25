@@ -16,9 +16,9 @@ export class FloppyDisk extends BaseInteractable {
             eventBus.emit("updateUI", gameState.stats);
             // fade out when clicked
             this.scene.tweens.add({
-                targets: this,
+                targets: this.postFX.addPixelate(2),
                 alpha: 0,
-                duration: 500,
+                duration: 600,
                 onComplete: () => {
                     this.toDelete = true;
                 },
