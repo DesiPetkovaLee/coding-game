@@ -18,8 +18,8 @@ export class Player extends BaseSprite {
         this.keyS = scene.input.keyboard.addKey("S");
         this.keyD = scene.input.keyboard.addKey("D");
 
-        this.getBody().setSize(30, 95);
-        this.getBody().setOffset(48, 15);
+        this.getBody().setSize(30, 110);
+        this.getBody().setOffset(48, 5);
 
         this.anims.create({
             key: "blink",
@@ -32,17 +32,59 @@ export class Player extends BaseSprite {
         });
 
         this.anims.create({
-            key: "walk",
+            key: "walk-sideways",
             frames: [
                 { key: "player-sheet", frame: 2 },
                 { key: "player-sheet", frame: 3 },
                 { key: "player-sheet", frame: 4 },
                 { key: "player-sheet", frame: 5 },
                 { key: "player-sheet", frame: 6 },
+                { key: "player-sheet", frame: 7 },
+                { key: "player-sheet", frame: 8 },
+                { key: "player-sheet", frame: 9 },
             ],
-            frameRate: 2,
+            frameRate: 4,
             repeat: -1,
-            yoyo: true,
+        });
+
+        this.anims.create({
+            key: "walk-towards",
+            frames: [
+                { key: "player-sheet", frame: 22 },
+                { key: "player-sheet", frame: 23 },
+                { key: "player-sheet", frame: 24 },
+                { key: "player-sheet", frame: 25 },
+                { key: "player-sheet", frame: 26 },
+                { key: "player-sheet", frame: 27 },
+                { key: "player-sheet", frame: 28 },
+                { key: "player-sheet", frame: 29 },
+                { key: "player-sheet", frame: 30 },
+                { key: "player-sheet", frame: 31 },
+                { key: "player-sheet", frame: 32 },
+                { key: "player-sheet", frame: 33 },
+            ],
+            frameRate: 4,
+            repeat: -1,
+        });
+
+        this.anims.create({
+            key: "walk-away",
+            frames: [
+                { key: "player-sheet", frame: 10 },
+                { key: "player-sheet", frame: 11 },
+                { key: "player-sheet", frame: 12 },
+                { key: "player-sheet", frame: 13 },
+                { key: "player-sheet", frame: 14 },
+                { key: "player-sheet", frame: 15 },
+                { key: "player-sheet", frame: 16 },
+                { key: "player-sheet", frame: 17 },
+                { key: "player-sheet", frame: 18 },
+                { key: "player-sheet", frame: 19 },
+                { key: "player-sheet", frame: 20 },
+                { key: "player-sheet", frame: 21 },
+            ],
+            frameRate: 4,
+            repeat: -1,
         });
     }
     // these should be change able for diff textures
@@ -51,17 +93,17 @@ export class Player extends BaseSprite {
         body.setVelocity(0);
 
         if (this.keyW?.isDown) {
-            this.setTexture("player-sheet", 7);
+            this.anims.play("walk-away", true);
             body.velocity.y = -320;
         } else if (this.keyS?.isDown) {
-            this.anims.play("walk", true);
+            this.anims.play("walk-towards", true);
             body.velocity.y = 320;
         } else if (this.keyA?.isDown) {
             body.velocity.x = -320;
-            this.anims.play("walk", true);
+            this.anims.play("walk-sideways", true);
             this.setFlipX(false);
         } else if (this.keyD?.isDown) {
-            this.anims.play("walk", true);
+            this.anims.play("walk-sideways", true);
             body.velocity.x = 320;
             this.setFlipX(true);
         } else {
