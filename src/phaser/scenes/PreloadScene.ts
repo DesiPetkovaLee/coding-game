@@ -11,7 +11,7 @@ export class PreloadScene extends Scene {
 
         // main characters
         this.load.setPath("/assets/character-sprites/");
-        this.load.spritesheet("player-sheet", "dreamer-spritesheet.png", {
+        this.load.spritesheet("player-sheet", "dreamer-ss-directions.png", {
             frameHeight: 128,
             frameWidth: 128,
         });
