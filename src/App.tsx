@@ -17,10 +17,10 @@ export default function App() {
             <CssBaseline />
             <Timer
                 timerInitialValue={5}
-                colors={[
-                    theme.palette.secondary.main,
-                    theme.palette.primary.main,
-                ]}
+                // colors={[
+                //     theme.palette.secondary.main,
+                //     theme.palette.primary.main,
+                // ]}
             />
             <AuthProvider>
                 <Routes>

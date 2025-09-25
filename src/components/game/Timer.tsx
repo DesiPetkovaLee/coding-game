@@ -4,13 +4,15 @@ import { useEffect, useState } from 'react';
 
 interface TimerProps {
     timerInitialValue: number;
-    colors: string[];
+    colors?: string[];
     onTimerComplete?: () => void;
 }
 
 const Timer = (props: TimerProps) => {
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [timeRemaining, setTimeRemaining] = useState(props.timerInitialValue);
+
+    const timerColors = props.colors ? props.colors : ['red', 'blue'];
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -38,7 +40,7 @@ const Timer = (props: TimerProps) => {
     return (
         <div>
             <PieChart
-                colors={props.colors}
+                colors={timerColors}
                 series={[
                     {
                         data: [
