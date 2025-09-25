@@ -3,7 +3,7 @@ export type PlayerStats = {
     score: number;
     character: string;
     health: number;
-    disks: number;
+    disks: string[];
 };
 
 class GameState {
@@ -17,7 +17,7 @@ class GameState {
             score: 0,
             character: "Dreamer",
             health: 100,
-            disks: 0,
+            disks: [],
         };
 
         this.preferences = {
@@ -49,8 +49,8 @@ class GameState {
         }
     }
 
-    updateDisksFound(amount: number) {
-        this.stats.disks += amount;
+    updateDisksFound(diskColour: string) {
+        this.stats.disks.push(diskColour);
     }
 }
 

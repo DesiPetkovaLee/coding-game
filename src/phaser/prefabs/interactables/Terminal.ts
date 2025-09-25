@@ -7,6 +7,8 @@ export class Terminal extends BaseInteractable {
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture);
 
+        this.flipX = true;
+
         this.on("pointerdown", () => {
             console.log("clicked terminal");
             gameState.updateScore(10);

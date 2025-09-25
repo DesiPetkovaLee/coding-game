@@ -67,7 +67,9 @@ export class Spawner {
                     };
 
                     const texture = textureMap[colour] ?? textureMap.default;
-                    disks.push(new FloppyDisk(this.scene, x, y, texture));
+                    disks.push(
+                        new FloppyDisk(this.scene, x, y, texture, colour)
+                    );
                     console.log(tiledProps.colour);
                     break;
                 }
