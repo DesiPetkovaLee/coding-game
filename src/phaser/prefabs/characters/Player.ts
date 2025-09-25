@@ -18,8 +18,8 @@ export class Player extends BaseSprite {
         this.keyS = scene.input.keyboard.addKey("S");
         this.keyD = scene.input.keyboard.addKey("D");
 
-        this.getBody().setSize(30, 95);
-        this.getBody().setOffset(48, 15);
+        this.getBody().setSize(30, 110);
+        this.getBody().setOffset(48, 5);
 
         this.anims.create({
             key: "blink",
