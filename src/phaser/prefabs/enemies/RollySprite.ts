@@ -12,6 +12,7 @@ export class RollySprite extends BaseSprite {
 
         this.getBody().setSize(30, 60);
         this.getBody().setBounce(0.2, 0.2);
+        this.setScale(1.1);
         this.setVelocity(
             Phaser.Math.Between(-60, 60),
             Phaser.Math.Between(-60, 60)
@@ -23,7 +24,7 @@ export class RollySprite extends BaseSprite {
                 start: 0,
                 end: 4,
             }),
-            frameRate: 2,
+            frameRate: 3,
             repeat: -1,
         });
     }
@@ -31,10 +32,10 @@ export class RollySprite extends BaseSprite {
         const body = this.getBody();
         if (body.velocity.x > 0) {
             this.anims.play("roll", true);
-            this.setFlipX(false);
+            this.setFlipX(true);
         } else if (body.velocity.x < 0) {
             this.anims.play("roll", true);
-            this.setFlipX(true);
+            this.setFlipX(false);
         }
     }
 }
