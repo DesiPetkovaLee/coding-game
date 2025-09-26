@@ -18,7 +18,7 @@ export class Player extends BaseSprite {
         this.keyS = scene.input.keyboard.addKey("S");
         this.keyD = scene.input.keyboard.addKey("D");
 
-        this.getBody().setSize(30, 110);
+        this.getBody().setSize(30, 95);
         this.getBody().setOffset(48, 5);
 
         this.anims.create({
@@ -94,17 +94,17 @@ export class Player extends BaseSprite {
 
         if (this.keyW?.isDown) {
             this.anims.play("walk-away", true);
-            body.velocity.y = -320;
+            body.velocity.y = -220;
         } else if (this.keyS?.isDown) {
             this.anims.play("walk-towards", true);
-            body.velocity.y = 320;
+            body.velocity.y = 220;
         } else if (this.keyA?.isDown) {
-            body.velocity.x = -320;
+            body.velocity.x = -220;
             this.anims.play("walk-sideways", true);
             this.setFlipX(false);
         } else if (this.keyD?.isDown) {
             this.anims.play("walk-sideways", true);
-            body.velocity.x = 320;
+            body.velocity.x = 220;
             this.setFlipX(true);
         } else {
             this.anims.play("blink", true);

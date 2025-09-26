@@ -54,6 +54,12 @@ export class BunkerLevelScene extends Scene {
         });
         this.physics.add.collider(this.player, this.terminals);
         this.physics.add.collider(this.player, this.disks);
+        this.physics.add.collider(this.enemies, collisionLayer);
+        this.physics.add.collider(this.enemies, this.terminals);
+
+        this.enemies.forEach((enemy) =>
+            enemy.getBody().setCollideWorldBounds(true)
+        );
 
         // Camera;
         const camControl = new CameraController(this);
