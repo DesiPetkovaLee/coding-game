@@ -1,5 +1,6 @@
 import { Physics } from "phaser";
 export abstract class BaseSprite extends Physics.Arcade.Sprite {
+    toDelete?: boolean;
     constructor(
         scene: Phaser.Scene,
         x: number,
@@ -8,12 +9,13 @@ export abstract class BaseSprite extends Physics.Arcade.Sprite {
         frame?: string | number
     ) {
         super(scene, x, y, texture, frame);
+
         if (!scene.physics || !scene.physics.add) {
             throw new Error("Scene physics system not initialized");
         }
-
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        this.setInteractive();
     }
 
     getBody(): Phaser.Physics.Arcade.Body {
@@ -21,6 +23,14 @@ export abstract class BaseSprite extends Physics.Arcade.Sprite {
             throw new Error("Body is not initialized");
         }
         return this.body as Phaser.Physics.Arcade.Body;
+    }
+
+    public getXCoord() {
+        return this.x;
+    }
+
+    public getYCoord() {
+        return this.y;
     }
 
     // flip image

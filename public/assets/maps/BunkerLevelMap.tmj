@@ -198,6 +198,11 @@
                  "name":"enemy",
                  "properties":[
                         {
+                         "name":"id",
+                         "type":"string",
+                         "value":"bitey-1"
+                        }, 
+                        {
                          "name":"type",
                          "type":"string",
                          "value":"bitey"
@@ -214,6 +219,11 @@
                  "id":6,
                  "name":"enemy",
                  "properties":[
+                        {
+                         "name":"id",
+                         "type":"string",
+                         "value":"bitey-2"
+                        }, 
                         {
                          "name":"type",
                          "type":"string",
@@ -232,6 +242,11 @@
                  "name":"enemy",
                  "properties":[
                         {
+                         "name":"id",
+                         "type":"string",
+                         "value":"rolly-1"
+                        }, 
+                        {
                          "name":"type",
                          "type":"string",
                          "value":"rolly"
@@ -249,6 +264,11 @@
                  "name":"enemy",
                  "properties":[
                         {
+                         "name":"id",
+                         "type":"string",
+                         "value":"rolly-3"
+                        }, 
+                        {
                          "name":"type",
                          "type":"string",
                          "value":"rolly"
@@ -265,6 +285,11 @@
                  "id":10,
                  "name":"enemy",
                  "properties":[
+                        {
+                         "name":"id",
+                         "type":"string",
+                         "value":"rolly-2"
+                        }, 
                         {
                          "name":"type",
                          "type":"string",
@@ -328,15 +353,21 @@
                  "y":1368
                 }, 
                 {
-                 "height":0,
-                 "id":18,
-                 "name":"terminal",
+                 "height":198.5,
+                 "id":20,
+                 "name":"trigger",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"string",
+                         "value":"exit"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":560,
-                 "y":956
+                 "width":12.5,
+                 "x":2986.5,
+                 "y":1400
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -345,7 +376,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":19,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -354,7 +385,7 @@
         {
          "columns":30,
          "firstgid":1,
-         "image": "/assets/tilesets/BunkerLevelTileset.png",
+         "image":"..\/..\/..\/..\/..\/..\/..\/assets\/tilesets\/BunkerLevelTileset.png",
          "imageheight":3000,
          "imagewidth":3000,
          "margin":0,
@@ -367,7 +398,7 @@
         {
          "columns":30,
          "firstgid":901,
-         "image":"assets/maps/BunkerLevelMap.tmj",
+         "image":"assets\/maps\/BunkerLevelMap.tmj",
          "imageheight":3000,
          "imagewidth":3000,
          "margin":0,

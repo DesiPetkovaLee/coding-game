@@ -1,25 +1,46 @@
+import { worldState } from "../../core/States/WorldState";
 import { BaseSprite } from "../BaseSprite";
 
 export class BiteySprite extends BaseSprite {
-  constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
-    super(scene, x, y, texture);
+    id: string | number;
+    toDelete: boolean = false;
+    constructor(
+        scene: Phaser.Scene,
+        x: number,
+        y: number,
+        texture: string,
+        id: string | number
+    ) {
+        super(scene, x, y, texture);
+        this.id = id;
 
-    this.getBody().setSize(56, 100);
-    this.setImmovable(true);
+        this.getBody().setSize(56, 100);
+        this.setImmovable(true);
 
-    this.anims.create({
-      key: "bite",
-      frames: this.anims.generateFrameNumbers(texture, {
-        start: 0,
-        end: 24,
-      }),
-      frameRate: 12,
-      delay: 6000,
-      repeat: -1,
-      repeatDelay: 6000,
-    });
-  }
-  update() {
-    this.anims.play("bite", true);
-  }
+        this.anims.create({
+            key: "bite",
+            frames: this.anims.generateFrameNumbers(texture, {
+                start: 0,
+                end: 24,
+            }),
+            frameRate: 12,
+            delay: 6000,
+            repeat: -1,
+            repeatDelay: 6000,
+        });
+
+        this.on("pointerdown", () => {
+            console.log("bitey clicked");
+            if (worldState.getCollectedDiskCount() === 4) {
+                this.toDelete = true;
+            } else {
+                console.log("You need all 4 disks to delete Bitey!");
+            }
+        });
+        // will need to update if bitey moves out of the way
+        worldState.setEnemyPosition(this.id, { x: this.x, y: this.y });
+    }
+    update() {
+        this.anims.play("bite", true);
+    }
 }
