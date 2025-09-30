@@ -1,14 +1,17 @@
 import { BaseSprite } from "../BaseSprite";
 
 export class RollySprite extends BaseSprite {
+    id: string | number;
     constructor(
         scene: Phaser.Scene,
         x: number,
         y: number,
-        texture: string
+        texture: string,
+        id: string | number
         // frame: string | number
     ) {
         super(scene, x, y, texture);
+        this.id = id;
 
         this.getBody().setSize(30, 60);
         this.getBody().setBounce(0.2, 0.2);

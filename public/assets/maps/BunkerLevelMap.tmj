@@ -198,6 +198,11 @@
                  "name":"enemy",
                  "properties":[
                         {
+                         "name":"id",
+                         "type":"string",
+                         "value":"bitey-1"
+                        }, 
+                        {
                          "name":"type",
                          "type":"string",
                          "value":"bitey"
@@ -214,6 +219,11 @@
                  "id":6,
                  "name":"enemy",
                  "properties":[
+                        {
+                         "name":"id",
+                         "type":"string",
+                         "value":"bitey-2"
+                        }, 
                         {
                          "name":"type",
                          "type":"string",
@@ -232,6 +242,11 @@
                  "name":"enemy",
                  "properties":[
                         {
+                         "name":"id",
+                         "type":"string",
+                         "value":"rolly-1"
+                        }, 
+                        {
                          "name":"type",
                          "type":"string",
                          "value":"rolly"
@@ -249,6 +264,11 @@
                  "name":"enemy",
                  "properties":[
                         {
+                         "name":"id",
+                         "type":"string",
+                         "value":"rolly-3"
+                        }, 
+                        {
                          "name":"type",
                          "type":"string",
                          "value":"rolly"
@@ -265,6 +285,11 @@
                  "id":10,
                  "name":"enemy",
                  "properties":[
+                        {
+                         "name":"id",
+                         "type":"string",
+                         "value":"rolly-2"
+                        }, 
                         {
                          "name":"type",
                          "type":"string",

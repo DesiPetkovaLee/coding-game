@@ -9,10 +9,11 @@ import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
 import { gameState } from "../core/States/GameState";
 import eventBus from "../core/EventBus";
 import type { BaseSprite } from "../prefabs/BaseSprite";
+import { playerState } from "../core/States/PlayerState";
+import { worldState } from "../core/States/WorldState";
 
 export class BunkerLevelScene extends Scene {
     player: Player | undefined;
-    // rolly: RollySprite | undefined;
     enemies: BaseSprite[] | undefined;
     terminals: Terminal[] | undefined;
     disks: FloppyDisk[] | undefined;
@@ -24,6 +25,9 @@ export class BunkerLevelScene extends Scene {
         // example ui overlay
         this.scene.launch("UIScene");
         this.scene.get("UIScene").events.emit("updateUI", gameState.stats);
+
+        playerState.init();
+        worldState.init("BunkerLevelScene");
 
         // map load
         const mLoader = new mapLoader(this);

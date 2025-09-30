@@ -3,14 +3,17 @@
 import { Physics } from "phaser";
 import type { Player } from "../characters/Player";
 export abstract class BaseInteractable extends Physics.Arcade.Sprite {
+    id: string | number;
     constructor(
         scene: Phaser.Scene,
         x: number,
         y: number,
         texture: string = "default-texture",
+        id: string | number,
         frame?: string | number
     ) {
         super(scene, x, y, texture, frame);
+        this.id = id;
 
         if (!scene.physics || !scene.physics.add) {
             throw new Error("Scene physics system not initialised");

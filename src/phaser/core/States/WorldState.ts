@@ -1,4 +1,5 @@
 import type { Coords } from "../../systems/TiledParser";
+import eventBus from "../EventBus";
 
 type TriggerZone = {
     id?: string;
@@ -24,13 +25,14 @@ type EnemyState = {
 
 class WorldState {
     private static instance: WorldState;
+    private initialised = false;
     private terminals: Record<
         string,
         { attempted: boolean; completed: boolean; position: Coords }
     > = {};
     private triggerZones: Record<string, TriggerZone[]> = {};
     private levelProgress: Record<string, LevelProgress> = {};
-    private currentLevel: string = "";
+    private currentLevel: string | number = "";
     private enemyStates: Record<string, EnemyState> = {};
     private floppyDisks: Record<
         string,
@@ -44,11 +46,19 @@ class WorldState {
         return WorldState.instance;
     }
 
-    init(levelId: string) {
+    init(levelId: string | number) {
+        if (this.initialised) return;
         this.currentLevel = levelId;
         if (!this.levelProgress[levelId]) {
             this.levelProgress[levelId] = {};
         }
+        //  event listeners
+        eventBus.on("diskCollected", this.markFloppyCollected.bind(this));
+        eventBus.on("terminalCompleted", this.markTerminalComplete.bind(this));
+        eventBus.on("enemyDefeated", this.markEnemyRemoved.bind(this));
+        eventBus.on("enemyInteracted", this.markEnemyInteracted.bind(this));
+
+        this.initialised = true;
     }
 
     setTriggerZones(levelId: string, zones: TriggerZone[]) {
@@ -79,6 +89,18 @@ class WorldState {
     }
     getAllEnemyStates(): EnemyState[] {
         return Object.values(this.enemyStates);
+    }
+    markEnemyRemoved(id: string | number) {
+        return (this.enemyStates[id] = {
+            ...this.enemyStates[id],
+            alive: false,
+        });
+    }
+    markEnemyInteracted(id: string | number) {
+        return (this.enemyStates[id] = {
+            ...this.enemyStates[id],
+            interacted: true,
+        });
     }
 
     // terminals
@@ -150,6 +172,10 @@ class WorldState {
         this.currentLevel = data.currentLevel;
         this.floppyDisks = data.floppyDisks;
         this.enemyStates = data.enemyStates;
+    }
+
+    reset() {
+        this.initialised = false;
     }
 }
 export const worldState = WorldState.getInstance();
