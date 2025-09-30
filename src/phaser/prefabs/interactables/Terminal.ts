@@ -1,7 +1,6 @@
 import eventBus from "../../core/EventBus";
-import { gameState } from "../../core/GameState";
+import { gameState } from "../../core/States/GameState";
 import { BaseInteractable } from "./BaseInteractable";
-// import type { Player } from "../characters/Player";
 
 export class Terminal extends BaseInteractable {
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {

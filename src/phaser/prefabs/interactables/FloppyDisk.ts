@@ -1,7 +1,6 @@
 import eventBus from "../../core/EventBus";
-import { gameState } from "../../core/GameState";
+import { gameState } from "../../core/States/GameState";
 import { BaseInteractable } from "./BaseInteractable";
-// import type { Player } from "../characters/Player";
 
 export class FloppyDisk extends BaseInteractable {
     toDelete: boolean = false;
@@ -23,7 +22,7 @@ export class FloppyDisk extends BaseInteractable {
             gameState.updateDisksFound(this.colour);
             eventBus.emit("updateUI", gameState.stats);
             console.log(this.colour);
-            // fade out when clicked
+            // pixellate and fade when clicked
             this.scene.tweens.add({
                 targets: this.postFX.addPixelate(2),
                 alpha: 0,

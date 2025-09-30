@@ -6,7 +6,7 @@ import { CameraController } from "../systems/CameraControl";
 import { Spawner } from "../systems/SpriteSpawner";
 import type { Terminal } from "../prefabs/interactables/Terminal";
 import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
-import { gameState } from "../core/GameState";
+import { gameState } from "../core/States/GameState";
 import eventBus from "../core/EventBus";
 import type { BaseSprite } from "../prefabs/BaseSprite";
 

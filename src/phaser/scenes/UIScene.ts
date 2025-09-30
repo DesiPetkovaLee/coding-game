@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import eventBus from "../core/EventBus";
 import { COLOURS } from "../../theme/theme";
-import { gameState, type PlayerStats } from "../core/GameState";
+import { gameState, type PlayerStats } from "../core/States/GameState";
 
 export class UIScene extends Scene {
     private scoreText!: Phaser.GameObjects.Text;
