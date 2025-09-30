@@ -1,5 +1,4 @@
 import eventBus from "../../core/EventBus";
-import { gameState } from "../../core/States/GameState";
 import { BaseInteractable } from "./BaseInteractable";
 
 export class Terminal extends BaseInteractable {
@@ -16,9 +15,8 @@ export class Terminal extends BaseInteractable {
 
         this.on("pointerdown", () => {
             console.log("clicked terminal");
-            gameState.updateScore(10);
-            eventBus.emit("updateUI", gameState.stats);
             eventBus.emit("playerScored", 10);
+            eventBus.emit("updateUI");
         });
     }
 }

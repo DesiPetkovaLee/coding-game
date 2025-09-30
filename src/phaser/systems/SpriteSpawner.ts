@@ -78,7 +78,7 @@ export class Spawner {
                     break;
                 case "floppy-disk": {
                     const colour = tiledProps.colour ?? "default";
-                    const id = tiledProps.id;
+                    const id = obj.id?.toString();
                     const textureMap: Record<string, string> = {
                         red: "floppy-red",
                         green: "floppy-green",
@@ -88,14 +88,14 @@ export class Spawner {
 
                     const texture = textureMap[colour] ?? textureMap.default;
                     disks.push(
-                        new FloppyDisk(this.scene, x, y, texture, id, colour)
+                        new FloppyDisk(this.scene, x, y, texture, colour, id)
                     );
                     console.log(tiledProps.colour);
                     break;
                 }
 
                 case "terminal": {
-                    const id = tiledProps.id;
+                    const id = obj.id?.toString();
                     terminals.push(
                         new Terminal(this.scene, x, y, "terminal", id)
                     );

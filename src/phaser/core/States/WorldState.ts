@@ -126,15 +126,16 @@ class WorldState {
     }
 
     // floppydisks
-    setFloppyDisk(id: string, colour: string, position: Coords) {
+    setFloppyDisk(id: string | number, colour: string, position: Coords) {
         this.floppyDisks[id] = { colour, collected: false, position };
     }
-    markFloppyCollected(id: string) {
+    markFloppyCollected(id: string | number) {
         if (this.floppyDisks[id]) {
             this.floppyDisks[id].collected = true;
         }
+        console.log(this.getAllFloppyDisks());
     }
-    isFloppyCollected(id: string): boolean {
+    isFloppyCollected(id: string | number): boolean {
         return this.floppyDisks[id]?.collected ?? false;
     }
     getCollectedDiskCount(): number {
@@ -174,7 +175,7 @@ class WorldState {
         this.enemyStates = data.enemyStates;
     }
 
-    reset() {
+    resetAllCAREFUL() {
         this.initialised = false;
     }
 }

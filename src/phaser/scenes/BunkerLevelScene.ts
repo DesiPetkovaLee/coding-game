@@ -6,7 +6,6 @@ import { CameraController } from "../systems/CameraControl";
 import { Spawner } from "../systems/SpriteSpawner";
 import type { Terminal } from "../prefabs/interactables/Terminal";
 import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
-import { gameState } from "../core/States/GameState";
 import eventBus from "../core/EventBus";
 import type { BaseSprite } from "../prefabs/BaseSprite";
 import { playerState } from "../core/States/PlayerState";
@@ -24,7 +23,7 @@ export class BunkerLevelScene extends Scene {
     create() {
         // example ui overlay
         this.scene.launch("UIScene");
-        this.scene.get("UIScene").events.emit("updateUI", gameState.stats);
+        this.scene.get("UIScene").events.emit("updateUI");
 
         playerState.init();
         worldState.init("BunkerLevelScene");
@@ -46,15 +45,18 @@ export class BunkerLevelScene extends Scene {
         this.terminals = terminals;
         this.disks = disks;
 
+        this.disks.forEach((disk) => {
+            worldState.setFloppyDisk(disk.id, disk.colour, disk.getCoords());
+        });
+
         // player
         this.player.getBody().setCollideWorldBounds(true);
         this.physics.add.collider(this.player, collisionLayer);
 
         this.physics.add.collider(this.player, this.enemies, () => {
             console.log("collides");
-            gameState.updateHealth(-10);
-            eventBus.emit("updateUI", gameState.stats);
-            console.log(gameState.stats);
+            eventBus.emit("playerDamaged", -10);
+            eventBus.emit("updateUI");
         });
         this.physics.add.collider(this.player, this.terminals);
         this.physics.add.collider(this.player, this.disks);
@@ -86,8 +88,7 @@ export class BunkerLevelScene extends Scene {
             this.enemies.forEach((enemy) => enemy.update());
             this.terminals.forEach((terminal) => terminal.update(player));
 
-            // this.disks.forEach((disk) => disk.update(player));
-
+            // removing clicked disks
             this.disks = this.disks.filter((disk) => {
                 if (disk.toDelete) {
                     disk.destroy();

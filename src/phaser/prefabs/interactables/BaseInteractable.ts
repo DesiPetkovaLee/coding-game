@@ -1,6 +1,7 @@
 // for immovable but interactive objects
 // not sure if we should just use this and the constructor to make diff interactable or have seperate classes
 import { Physics } from "phaser";
+import type { Coords } from "../../systems/TiledParser";
 import type { Player } from "../characters/Player";
 export abstract class BaseInteractable extends Physics.Arcade.Sprite {
     id: string | number;
@@ -30,6 +31,13 @@ export abstract class BaseInteractable extends Physics.Arcade.Sprite {
             throw new Error("Body is not initialized");
         }
         return this.body as Phaser.Physics.Arcade.Body;
+    }
+
+    getCoords(): Coords {
+        const x = this.x;
+        const y = this.y;
+
+        return { x, y };
     }
 
     // sets proximity for interactions

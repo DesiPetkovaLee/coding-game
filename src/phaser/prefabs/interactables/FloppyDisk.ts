@@ -1,6 +1,4 @@
 import eventBus from "../../core/EventBus";
-import { gameState } from "../../core/States/GameState";
-import { playerState } from "../../core/States/PlayerState";
 import { BaseInteractable } from "./BaseInteractable";
 
 export class FloppyDisk extends BaseInteractable {
@@ -20,12 +18,11 @@ export class FloppyDisk extends BaseInteractable {
 
         this.on("pointerdown", () => {
             console.log("clicked floppydisk");
-            gameState.updateScore(50);
-            gameState.updateDisksFound(this.colour);
-            eventBus.emit("updateUI", gameState.stats);
             eventBus.emit("playerScored", 50);
+            eventBus.emit("diskCollected", this.id);
+            eventBus.emit("updateUI");
             console.log(this.id);
-            console.table(playerState.getSaveData());
+            console.log(this.colour);
             // pixellate and fade when clicked
             this.scene.tweens.add({
                 targets: this.postFX.addPixelate(2),
