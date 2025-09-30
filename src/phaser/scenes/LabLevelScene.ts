@@ -1,8 +1,13 @@
+// lots of errors on this file don't be alarmed just bc im choosing to load as if there is from the json atm and still working on mocking the save data!
+
 const SaveData = false;
 //  {
 //     levelId: "LabLevelMap",
+// mapId: "LabLevelMap",
 //     tilesetKey: "tileset1",
 //     tilesetImage: "LabLevelTileset",
+// tilesetOverlayKey: "tileset1",
+// tilesetOverlayName: "LabLevelTileset",
 //     musicKey: "WakeyWakey",
 //     playerStart: { x: 100, y: 200 } as Coords,
 //     floppyDisks: [
@@ -29,6 +34,16 @@ const SaveData = false;
 //         },
 //     ],
 // };
+
+const defaultLevelData = {
+    defaultlevelId: "LabLevelMap",
+    defaultmapId: "LabLevelMap",
+    defaulttilesetName: "tileset1",
+    defaulttilesetKey: "LabLevelTileset",
+    defaulttilesetOverlayName: "tileset1",
+    defaulttilesetOverlayKey: "LabLevelTileset",
+    defaultmusicKey: "WakeyWakey",
+};
 
 import { Scene } from "phaser";
 import { Player } from "../prefabs/characters/Player";
@@ -62,18 +77,21 @@ export class LabLevelScene extends Scene {
             this.scene.launch("UIScene");
             this.scene.get("UIScene").events.emit("updateUI");
         }
-
+        let mapId: string;
         let levelId: string;
+        let tilesetName: string;
         let tilesetKey: string;
-        let tilesetImage: string;
+        let tilesetOverlayName: string;
+        let tilesetOverlayKey: string;
         let musicKey: string;
         let playerStart: Coords;
 
         if (SaveData) {
             const {
                 levelId: mockLevelId,
+                mapId: mockMapId,
+                tilesetName: mockTilesetName,
                 tilesetKey: mockTilesetKey,
-                tilesetImage: mockTilesetImage,
                 musicKey: mockMusicKey,
                 playerStart: mockPlayerStart,
                 enemies,
@@ -83,8 +101,9 @@ export class LabLevelScene extends Scene {
             } = SaveData;
 
             levelId = mockLevelId;
+            mapId = mockMapId;
+            tilesetName = mockTilesetName;
             tilesetKey = mockTilesetKey;
-            tilesetImage = mockTilesetImage;
             musicKey = mockMusicKey;
             playerStart = mockPlayerStart;
 
@@ -103,22 +122,24 @@ export class LabLevelScene extends Scene {
             playerState.init({ position: playerStart });
         } else {
             // would need to be getting defaults here- get tilemap json, tileset, keys for default
+            mapId = defaultLevelData.defaultmapId;
+            levelId = defaultLevelData.defaultlevelId;
+            tilesetName = defaultLevelData.defaulttilesetName;
+            tilesetKey = defaultLevelData.defaulttilesetKey;
+            musicKey = defaultLevelData.defaultmusicKey;
+
             const mLoader = new mapLoader(this);
             const { map } = mLoader.loadMap(
-                "LabLevelMap",
-                "tileset1",
-                "LabLevelTileset",
-                "tileset1",
-                "LabLevelTileset"
+                mapId,
+                tilesetName,
+                tilesetKey,
+                tilesetName,
+                tilesetKey
             );
 
             const spawnData = TiledParser.extractData(map);
             if (!spawnData) throw new Error("spawn data not found");
 
-            levelId = "LabLevelMap";
-            tilesetKey = "tileset1";
-            tilesetImage = "LabLevelTileset";
-            musicKey = "WakeyWakey";
             playerStart = spawnData.player;
 
             worldState.init(levelId);
@@ -142,13 +163,14 @@ export class LabLevelScene extends Scene {
 
         // all the following happens whether data has come from save file or using default level data
         // load map based on incoming data- will need to retrieve tileset names etc alongside user data
+
         const mLoader = new mapLoader(this);
         const { map, collisionLayer } = mLoader.loadMap(
-            levelId,
+            mapId,
+            tilesetName,
             tilesetKey,
-            tilesetImage,
-            tilesetKey,
-            tilesetImage
+            tilesetName,
+            tilesetKey
         );
 
         // actual spawning of players and enemies

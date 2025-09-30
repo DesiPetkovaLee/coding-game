@@ -108,20 +108,20 @@ export class Player extends BaseSprite {
 
         if (this.keyW?.isDown) {
             this.anims.play("walk-away", true);
-            body.velocity.y = -520;
+            body.velocity.y = -320;
             this.emit("moved");
         } else if (this.keyS?.isDown) {
             this.anims.play("walk-towards", true);
-            body.velocity.y = 520;
+            body.velocity.y = 320;
             this.emit("moved");
         } else if (this.keyA?.isDown) {
-            body.velocity.x = -520;
+            body.velocity.x = -320;
             this.anims.play("walk-sideways", true);
             this.setFlipX(false);
             this.emit("moved");
         } else if (this.keyD?.isDown) {
             this.anims.play("walk-sideways", true);
-            body.velocity.x = 520;
+            body.velocity.x = 320;
             this.setFlipX(true);
             this.emit("moved");
         } else {
