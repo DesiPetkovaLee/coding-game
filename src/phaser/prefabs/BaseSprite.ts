@@ -1,5 +1,6 @@
 import { Physics } from "phaser";
 export abstract class BaseSprite extends Physics.Arcade.Sprite {
+    toDelete?: boolean;
     constructor(
         scene: Phaser.Scene,
         x: number,
@@ -14,6 +15,7 @@ export abstract class BaseSprite extends Physics.Arcade.Sprite {
         }
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        this.setInteractive();
     }
 
     getBody(): Phaser.Physics.Arcade.Body {

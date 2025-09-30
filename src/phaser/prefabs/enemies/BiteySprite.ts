@@ -1,7 +1,9 @@
+import { worldState } from "../../core/States/WorldState";
 import { BaseSprite } from "../BaseSprite";
 
 export class BiteySprite extends BaseSprite {
     id: string | number;
+    toDelete: boolean = false;
     constructor(
         scene: Phaser.Scene,
         x: number,
@@ -25,6 +27,15 @@ export class BiteySprite extends BaseSprite {
             delay: 6000,
             repeat: -1,
             repeatDelay: 6000,
+        });
+
+        this.on("pointerdown", () => {
+            console.log("bitey clicked");
+            if (worldState.getCollectedDiskCount() === 4) {
+                this.toDelete = true;
+            } else {
+                console.log("You need all 4 disks to delete Bitey!");
+            }
         });
     }
     update() {

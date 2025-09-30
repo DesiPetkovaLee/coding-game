@@ -13,7 +13,7 @@ export abstract class BaseInteractable extends Physics.Arcade.Sprite {
         id: string | number,
         frame?: string | number
     ) {
-        super(scene, x, y, texture, frame);
+        super(scene, x, y, texture, frame); // frame can be undefined
         this.id = id;
 
         if (!scene.physics || !scene.physics.add) {
@@ -48,7 +48,7 @@ export abstract class BaseInteractable extends Physics.Arcade.Sprite {
             player.x,
             player.y
         );
-        const inRange = distance < 100;
+        const inRange = distance < 300;
 
         if (inRange && !this.input?.enabled) {
             this.setInteractive();

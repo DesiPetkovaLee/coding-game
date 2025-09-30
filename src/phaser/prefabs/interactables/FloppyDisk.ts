@@ -10,8 +10,8 @@ export class FloppyDisk extends BaseInteractable {
         x: number,
         y: number,
         texture: string,
-        colour: string,
-        id: number | string
+        id: number | string,
+        colour: string
     ) {
         super(scene, x, y, texture, id);
         this.colour = colour;
@@ -23,6 +23,7 @@ export class FloppyDisk extends BaseInteractable {
             eventBus.emit("updateUI");
             console.log(this.id);
             console.log(this.colour);
+
             // pixellate and fade when clicked
             this.scene.tweens.add({
                 targets: this.postFX.addPixelate(2),

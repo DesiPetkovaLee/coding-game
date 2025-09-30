@@ -16,6 +16,7 @@ export class BunkerLevelScene extends Scene {
     enemies: BaseSprite[] | undefined;
     terminals: Terminal[] | undefined;
     disks: FloppyDisk[] | undefined;
+    exitZone: Phaser.Geom.Rectangle | undefined;
     constructor() {
         super("BunkerLevelScene");
     }
@@ -48,7 +49,7 @@ export class BunkerLevelScene extends Scene {
         this.disks.forEach((disk) => {
             worldState.setFloppyDisk(disk.id, disk.colour, disk.getCoords());
         });
-
+        this.exitZone = spawner.exitZone();
         // player
         this.player.getBody().setCollideWorldBounds(true);
         this.physics.add.collider(this.player, collisionLayer);
@@ -82,7 +83,13 @@ export class BunkerLevelScene extends Scene {
 
     update() {
         const player = this.player;
-        if (player && this.enemies && this.terminals && this.disks) {
+        if (
+            player &&
+            this.enemies &&
+            this.terminals &&
+            this.disks &&
+            this.exitZone
+        ) {
             player.update();
 
             this.enemies.forEach((enemy) => enemy.update());
@@ -98,6 +105,29 @@ export class BunkerLevelScene extends Scene {
                 disk.update(player);
                 return true;
             });
+
+            this.enemies = this.enemies.filter((enemy) => {
+                if (enemy.toDelete) {
+                    enemy.destroy();
+                    return false;
+                }
+                enemy.update();
+                return true;
+            });
+
+            // if player walks into trigger zone and has collected all disks, starts next scene
+            const playerBounds = player.getBounds();
+
+            if (
+                Phaser.Geom.Intersects.RectangleToRectangle(
+                    playerBounds,
+                    this.exitZone
+                )
+            ) {
+                if (worldState.getCollectedDiskCount() == 4) {
+                    console.log("start next scene");
+                }
+            }
         }
     }
 }

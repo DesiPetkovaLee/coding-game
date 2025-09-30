@@ -88,7 +88,7 @@ export class Spawner {
 
                     const texture = textureMap[colour] ?? textureMap.default;
                     disks.push(
-                        new FloppyDisk(this.scene, x, y, texture, colour, id)
+                        new FloppyDisk(this.scene, x, y, texture, id, colour)
                     );
                     console.log(tiledProps.colour);
                     break;
@@ -110,6 +110,26 @@ export class Spawner {
             disks,
             terminals,
         };
+    }
+
+    exitZone() {
+        const triggerLayer = this.map.getObjectLayer("Object");
+        const exitZoneData = triggerLayer?.objects.find(
+            (obj: { name: string }) => obj.name === "trigger"
+        );
+        if (
+            exitZoneData &&
+            exitZoneData.x &&
+            exitZoneData.y &&
+            exitZoneData.height
+        ) {
+            return new Phaser.Geom.Rectangle(
+                exitZoneData?.x,
+                exitZoneData?.y - exitZoneData.height,
+                exitZoneData.width,
+                exitZoneData.height
+            );
+        }
     }
 }
 type SpawnerResult = {
