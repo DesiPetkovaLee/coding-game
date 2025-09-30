@@ -1,4 +1,5 @@
 import eventBus from "../../core/EventBus";
+import { worldState } from "../../core/States/WorldState";
 import { BaseInteractable } from "./BaseInteractable";
 
 export class FloppyDisk extends BaseInteractable {
@@ -23,7 +24,7 @@ export class FloppyDisk extends BaseInteractable {
             eventBus.emit("updateUI");
             console.log(this.id);
             console.log(this.colour);
-
+            console.log(worldState.getAllEnemyStates());
             // pixellate and fade when clicked
             this.scene.tweens.add({
                 targets: this.postFX.addPixelate(2),

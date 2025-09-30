@@ -125,6 +125,14 @@ export class BunkerLevelScene extends Scene {
                 )
             ) {
                 if (worldState.getCollectedDiskCount() == 4) {
+                    console.log(
+                        JSON.stringify(worldState.getSaveData(), null, 2)
+                    );
+                    console.log("------------------");
+
+                    console.log(
+                        JSON.stringify(playerState.getSaveData(), null, 2)
+                    );
                     console.log("start next scene");
                 }
             }

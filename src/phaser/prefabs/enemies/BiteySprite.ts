@@ -37,6 +37,8 @@ export class BiteySprite extends BaseSprite {
                 console.log("You need all 4 disks to delete Bitey!");
             }
         });
+        // will need to update if bitey moves out of the way
+        worldState.setEnemyPosition(this.id, { x: this.x, y: this.y });
     }
     update() {
         this.anims.play("bite", true);

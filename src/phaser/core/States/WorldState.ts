@@ -24,6 +24,7 @@ type EnemyState = {
 };
 
 class WorldState {
+    // different for each level
     private static instance: WorldState;
     private initialised = false;
     private terminals: Record<
@@ -57,6 +58,7 @@ class WorldState {
         eventBus.on("terminalCompleted", this.markTerminalComplete.bind(this));
         eventBus.on("enemyDefeated", this.markEnemyRemoved.bind(this));
         eventBus.on("enemyInteracted", this.markEnemyInteracted.bind(this));
+        eventBus.on("enemyMoved", this.setEnemyPosition.bind(this));
 
         this.initialised = true;
     }
@@ -84,6 +86,12 @@ class WorldState {
             ...state,
         };
     }
+    setEnemyPosition(id: string | number, newPosition: Coords) {
+        return (this.enemyStates[id] = {
+            ...this.enemyStates[id],
+            position: newPosition,
+        });
+    }
     getEnemyState(id: string): EnemyState | undefined {
         return this.enemyStates[id];
     }
@@ -104,10 +112,14 @@ class WorldState {
     }
 
     // terminals
-    setTerminal(levelId: string, position: Coords, attempted: boolean = false) {
+    setTerminal(
+        levelId: string | number,
+        position: Coords,
+        attempted: boolean = false
+    ) {
         this.terminals[levelId] = { completed: false, position, attempted };
     }
-    getTerminal(levelId: string):
+    getTerminal(levelId: string | number):
         | {
               attempted: boolean;
               completed: boolean;
@@ -116,12 +128,12 @@ class WorldState {
         | undefined {
         return this.terminals[levelId];
     }
-    markTerminalComplete(levelId: string) {
-        if (this.terminals[levelId]) {
-            this.terminals[levelId].completed = true;
+    markTerminalComplete(id: string | number) {
+        if (this.terminals[id]) {
+            this.terminals[id].completed = true;
         }
     }
-    isTerminalComplete(levelId: string): boolean {
+    isTerminalComplete(levelId: string | number): boolean {
         return this.terminals[levelId]?.completed ?? false;
     }
 
