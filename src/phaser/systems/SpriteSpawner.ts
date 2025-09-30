@@ -2,7 +2,7 @@ import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
 import { Terminal } from "../prefabs/interactables/Terminal";
 import { Player } from "../prefabs/characters/Player";
 import { RollySprite } from "../prefabs/enemies/RollySprite";
-import type { BaseSprite } from "../prefabs/BaseSprite";
+import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
 import { BiteySprite } from "../prefabs/enemies/BiteySprite";
 
 export class Spawner {
@@ -17,9 +17,9 @@ export class Spawner {
         const objects = this.map.getObjectLayer("Object")?.objects ?? [];
 
         let player!: Player;
-        const enemies: BaseSprite[] = [];
+        const enemies: BaseEnemy[] = [];
         const disks: FloppyDisk[] = [];
-        const terminals: Terminal[] = [];
+        let terminals!: Terminal;
 
         for (const obj of objects) {
             const { x = 0, y = 0, name, properties = [] } = obj;
@@ -96,9 +96,7 @@ export class Spawner {
 
                 case "terminal": {
                     const id = obj.id?.toString();
-                    terminals.push(
-                        new Terminal(this.scene, x, y, "terminal", id)
-                    );
+                    terminals = new Terminal(this.scene, x, y, "terminal", id);
                     break;
                 }
             }
@@ -125,7 +123,7 @@ export class Spawner {
         ) {
             return new Phaser.Geom.Rectangle(
                 exitZoneData?.x,
-                exitZoneData?.y - exitZoneData.height,
+                exitZoneData?.y,
                 exitZoneData.width,
                 exitZoneData.height
             );
@@ -134,7 +132,7 @@ export class Spawner {
 }
 type SpawnerResult = {
     player: Player;
-    enemies: BaseSprite[];
+    enemies: BaseEnemy[];
     disks: FloppyDisk[];
-    terminals: Terminal[];
+    terminals: Terminal;
 };

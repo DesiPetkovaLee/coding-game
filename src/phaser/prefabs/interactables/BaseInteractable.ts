@@ -2,7 +2,6 @@
 // not sure if we should just use this and the constructor to make diff interactable or have seperate classes
 import { Physics } from "phaser";
 import type { Coords } from "../../systems/TiledParser";
-import type { Player } from "../characters/Player";
 export abstract class BaseInteractable extends Physics.Arcade.Sprite {
     id: string | number;
     constructor(
@@ -40,20 +39,5 @@ export abstract class BaseInteractable extends Physics.Arcade.Sprite {
         return { x, y };
     }
 
-    // sets proximity for interactions
-    update(player: Player) {
-        const distance = Phaser.Math.Distance.Between(
-            this.x,
-            this.y,
-            player.x,
-            player.y
-        );
-        const inRange = distance < 300;
-
-        if (inRange && !this.input?.enabled) {
-            this.setInteractive();
-        } else if (!inRange && this.input?.enabled) {
-            this.disableInteractive();
-        }
-    }
+    abstract interact(): void;
 }

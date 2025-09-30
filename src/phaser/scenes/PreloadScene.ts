@@ -37,6 +37,7 @@ export class PreloadScene extends Scene {
         // maps and tilesets
         this.load.setPath("/assets/maps/");
         this.load.tilemapTiledJSON("BunkerLevelMap", "BunkerLevelMap.tmj");
+        this.load.tilemapTiledJSON("LabLevelMap", "LabLevelMap.tmj");
 
         this.load.setPath("assets/tilesets/");
         this.load.image("BunkerLevelTileset", "BunkerLevelTileset.png");
@@ -44,6 +45,7 @@ export class PreloadScene extends Scene {
             "BunkerLevelTilesetOverlay",
             "BunkerLevelTilesetOverlay.png"
         );
+        this.load.image("LabLevelTileset", "LabLevelTileset.png");
     }
 
     create() {

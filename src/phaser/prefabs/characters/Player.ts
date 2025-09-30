@@ -6,6 +6,7 @@ export class Player extends BaseSprite {
     keyA: Phaser.Input.Keyboard.Key;
     keyS: Phaser.Input.Keyboard.Key;
     keyD: Phaser.Input.Keyboard.Key;
+    keyEnter: Phaser.Input.Keyboard.Key;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, "player-sheet", 0);
@@ -18,9 +19,16 @@ export class Player extends BaseSprite {
         this.keyA = scene.input.keyboard.addKey("A");
         this.keyS = scene.input.keyboard.addKey("S");
         this.keyD = scene.input.keyboard.addKey("D");
+        this.keyEnter = scene.input.keyboard.addKey(
+            Phaser.Input.Keyboard.KeyCodes.ENTER
+        );
 
         this.getBody().setSize(30, 95);
         this.getBody().setOffset(48, 5);
+
+        this.keyEnter.on("down", () => {
+            this.tryInteract();
+        });
 
         this.anims.create({
             key: "blink",
@@ -92,6 +100,7 @@ export class Player extends BaseSprite {
             eventBus.emit("playerMoved", { x: this.x, y: this.y });
         });
     }
+
     // these should be change able for diff textures
     update() {
         const body = this.getBody();
@@ -99,20 +108,20 @@ export class Player extends BaseSprite {
 
         if (this.keyW?.isDown) {
             this.anims.play("walk-away", true);
-            body.velocity.y = -420;
+            body.velocity.y = -320;
             this.emit("moved");
         } else if (this.keyS?.isDown) {
             this.anims.play("walk-towards", true);
-            body.velocity.y = 420;
+            body.velocity.y = 320;
             this.emit("moved");
         } else if (this.keyA?.isDown) {
-            body.velocity.x = -420;
+            body.velocity.x = -320;
             this.anims.play("walk-sideways", true);
             this.setFlipX(false);
             this.emit("moved");
         } else if (this.keyD?.isDown) {
             this.anims.play("walk-sideways", true);
-            body.velocity.x = 420;
+            body.velocity.x = 320;
             this.setFlipX(true);
             this.emit("moved");
         } else {
@@ -121,5 +130,9 @@ export class Player extends BaseSprite {
     }
     faceAway() {
         this.setTexture("player-sheet", 7);
+    }
+
+    tryInteract() {
+        eventBus.emit("playerInteract", this.x, this.y);
     }
 }

@@ -2,7 +2,7 @@ import type { Coords } from "../../systems/TiledParser";
 import eventBus from "../EventBus";
 
 type TriggerZone = {
-    id?: string;
+    id?: string | number;
     type: string;
     x: number;
     y: number;
@@ -16,7 +16,7 @@ type LevelProgress = {
 };
 
 type EnemyState = {
-    id: string;
+    id: string | number;
     position: { x: number; y: number };
     interacted: boolean;
     type?: string;
@@ -29,7 +29,12 @@ class WorldState {
     private initialised = false;
     private terminals: Record<
         string,
-        { attempted: boolean; completed: boolean; position: Coords }
+        {
+            attempted: boolean;
+            completed: boolean;
+            position: Coords;
+            id: string | number;
+        }
     > = {};
     private triggerZones: Record<string, TriggerZone[]> = {};
     private levelProgress: Record<string, LevelProgress> = {};
@@ -63,6 +68,15 @@ class WorldState {
         this.initialised = true;
     }
 
+    // putting here to remember to add to if as we add more event listeners- but if we clear worldstate between levels we don't want to add to them
+    cleanupListeners() {
+        eventBus.off("diskCollected", this.markFloppyCollected);
+        eventBus.off("terminalCompleted", this.markTerminalComplete);
+        eventBus.off("enemyDefeated", this.markEnemyRemoved);
+        eventBus.off("enemyInteracted", this.markEnemyInteracted);
+        eventBus.off("enemyMoved", this.setEnemyPosition);
+    }
+
     setTriggerZones(levelId: string, zones: TriggerZone[]) {
         this.triggerZones[levelId] = zones;
     }
@@ -72,7 +86,7 @@ class WorldState {
     }
 
     // enemies
-    setEnemyState(id: string, state: Partial<EnemyState>) {
+    setEnemyState(id: string | number, state: Partial<EnemyState>) {
         if (!this.enemyStates[id]) {
             this.enemyStates[id] = {
                 id,
@@ -92,7 +106,7 @@ class WorldState {
             position: newPosition,
         });
     }
-    getEnemyState(id: string): EnemyState | undefined {
+    getEnemyState(id: string | number): EnemyState | undefined {
         return this.enemyStates[id];
     }
     getAllEnemyStates(): EnemyState[] {
@@ -113,28 +127,29 @@ class WorldState {
 
     // terminals
     setTerminal(
-        levelId: string | number,
+        id: string | number,
         position: Coords,
         attempted: boolean = false
     ) {
-        this.terminals[levelId] = { completed: false, position, attempted };
+        this.terminals[id] = { completed: false, position, attempted, id };
     }
-    getTerminal(levelId: string | number):
+    getTerminal(id: string | number):
         | {
+              id: string | number;
               attempted: boolean;
               completed: boolean;
               position: Coords;
           }
         | undefined {
-        return this.terminals[levelId];
+        return this.terminals[id];
     }
     markTerminalComplete(id: string | number) {
         if (this.terminals[id]) {
             this.terminals[id].completed = true;
         }
     }
-    isTerminalComplete(levelId: string | number): boolean {
-        return this.terminals[levelId]?.completed ?? false;
+    isTerminalComplete(id: string | number): boolean {
+        return this.terminals[id]?.completed ?? false;
     }
 
     // floppydisks
@@ -189,6 +204,13 @@ class WorldState {
 
     resetAllCAREFUL() {
         this.initialised = false;
+        this.currentLevel = "";
+        this.levelProgress = {};
+        this.floppyDisks = {};
+        this.terminals = {};
+        this.enemyStates = {};
+        this.triggerZones = {};
+        this.cleanupListeners();
     }
 }
 export const worldState = WorldState.getInstance();
