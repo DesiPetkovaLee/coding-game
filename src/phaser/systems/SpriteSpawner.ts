@@ -125,7 +125,7 @@ export class Spawner {
         ) {
             return new Phaser.Geom.Rectangle(
                 exitZoneData?.x,
-                exitZoneData?.y - exitZoneData.height,
+                exitZoneData?.y,
                 exitZoneData.width,
                 exitZoneData.height
             );

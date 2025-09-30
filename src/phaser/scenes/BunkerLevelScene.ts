@@ -49,7 +49,6 @@ export class BunkerLevelScene extends Scene {
         this.disks.forEach((disk) => {
             worldState.setFloppyDisk(disk.id, disk.colour, disk.getCoords());
         });
-        this.exitZone = spawner.exitZone();
         // player
         this.player.getBody().setCollideWorldBounds(true);
         this.physics.add.collider(this.player, collisionLayer);
@@ -67,6 +66,21 @@ export class BunkerLevelScene extends Scene {
         this.enemies.forEach((enemy) =>
             enemy.getBody().setCollideWorldBounds(true)
         );
+
+        this.exitZone = spawner.exitZone();
+        if (this.exitZone) {
+            this.add
+                .rectangle(
+                    this.exitZone.x,
+                    this.exitZone.y,
+                    this.exitZone.width,
+                    this.exitZone.height,
+                    0xff0000,
+                    0.3
+                )
+                .setOrigin(0, 0);
+            console.table(this.exitZone);
+        }
 
         // Camera;
         const camControl = new CameraController(this);
@@ -134,6 +148,7 @@ export class BunkerLevelScene extends Scene {
                         JSON.stringify(playerState.getSaveData(), null, 2)
                     );
                     console.log("start next scene");
+                    this.scene.start("LabLevelScene");
                 }
             }
         }

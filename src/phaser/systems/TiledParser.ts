@@ -49,12 +49,10 @@ export class TiledParser {
         const enemies = objectLayer?.objects
             .filter((obj) => obj.name === "enemy")
             .map((obj, i) => ({
-                // set the enemy id in tiled or just load as random num .
                 id: obj.id || `enemy-${i}`,
                 type:
                     obj.properties?.find(
-                        (p: { type: string }) => p.type === "enemyType"
-                        // setting rolly as default- might just want to catch as a diff error or not load
+                        (p: { name: string }) => p.name === "type"
                     )?.value || "rolly",
                 coords: {
                     x: obj.x ?? 0,
@@ -94,7 +92,7 @@ export class TiledParser {
                     id: obj.id,
                     type: obj.type || "generic-trigger",
                     x: obj.x ?? 0,
-                    y: (obj.y ?? 0) - (obj.height ?? 0),
+                    y: obj.y ?? 0,
                     width: obj.width ?? 0,
                     height: obj.height ?? 0,
                 })) ?? [];
