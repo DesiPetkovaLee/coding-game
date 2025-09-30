@@ -18,6 +18,7 @@ export class BunkerLevelScene extends Scene {
     disks: FloppyDisk[] | undefined;
     exitZone: Phaser.Geom.Rectangle | undefined;
     interactables: (BaseEnemy | Terminal | FloppyDisk)[] | undefined;
+    musicLoader: MusicLoader | undefined;
     constructor() {
         super("BunkerLevelScene");
     }
@@ -109,12 +110,10 @@ export class BunkerLevelScene extends Scene {
         camControl.setup(this.player, map);
 
         // music
-        if (this.input.keyboard !== null) {
-            this.input.keyboard.once("keydown", () => {
-                const bgMusic = new MusicLoader(this, "WakeyWakey", true, 0.1);
-                bgMusic.playMusic();
-            });
-        }
+        this.musicLoader = new MusicLoader(this, "WakeyWakey", true, 0.1);
+        this.input.keyboard?.once("keydown", () => {
+            this.musicLoader?.playMusic();
+        });
     }
 
     update() {
@@ -171,6 +170,8 @@ export class BunkerLevelScene extends Scene {
                     );
                     console.log("start next scene");
                     worldState.resetAllCAREFUL();
+                    this.musicLoader?.stopMusic();
+                    eventBus.emit("updateUI");
                     this.scene.start("LabLevelScene");
                 }
             }

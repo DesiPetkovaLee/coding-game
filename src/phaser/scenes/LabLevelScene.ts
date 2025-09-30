@@ -52,13 +52,16 @@ export class LabLevelScene extends Scene {
     disks: FloppyDisk[] | undefined;
     exitZone: Phaser.Geom.Rectangle | undefined;
     interactables: (BaseEnemy | Terminal | FloppyDisk)[] | undefined;
+    musicLoader: MusicLoader | undefined;
     constructor() {
         super("LabLevelScene");
     }
 
     create() {
-        this.scene.launch("UIScene");
-        this.scene.get("UIScene").events.emit("updateUI");
+        if (!this.scene.isActive("UIScene")) {
+            this.scene.launch("UIScene");
+            this.scene.get("UIScene").events.emit("updateUI");
+        }
 
         let levelId: string;
         let tilesetKey: string;
@@ -130,7 +133,11 @@ export class LabLevelScene extends Scene {
                     type: e.type,
                 })
             );
-            playerState.init({ position: playerStart });
+            //
+            // would want to keep this in if its the first/ only scene!
+            //
+            // playerState.init({ position: playerStart });
+            playerState.setPosition(playerStart);
         }
 
         // all the following happens whether data has come from save file or using default level data
@@ -146,6 +153,7 @@ export class LabLevelScene extends Scene {
 
         // actual spawning of players and enemies
         // player
+
         const { x, y } = playerState.getPosition();
         this.player = new Player(this, x, y);
         // enemies- can be added to with diff types and we could make an enemy factory to slim down this logic
@@ -282,10 +290,9 @@ export class LabLevelScene extends Scene {
         // music and cameras
         const camControl = new CameraController(this);
         camControl.setup(this.player, map);
-
+        this.musicLoader = new MusicLoader(this, musicKey, true, 0.1);
         this.input.keyboard?.once("keydown", () => {
-            const bgMusic = new MusicLoader(this, musicKey, true, 0.1);
-            bgMusic.playMusic();
+            this.musicLoader?.playMusic();
         });
     }
     update() {
@@ -320,6 +327,7 @@ export class LabLevelScene extends Scene {
                 return true;
             });
 
+            // this is essentially level ending section- need to reset all that needs resetting at the end of it
             const playerBounds = player.getBounds();
 
             if (
@@ -337,8 +345,12 @@ export class LabLevelScene extends Scene {
                     console.log(
                         JSON.stringify(playerState.getSaveData(), null, 2)
                     );
+                    // might put these inside of phaser scene shutdown instead if it gets bloated
+                    worldState.resetAllCAREFUL();
+                    eventBus.emit("updateUI");
+                    this.musicLoader?.stopMusic();
                     console.log("start next scene");
-                    this.scene.start("LabLevelScene");
+                    this.scene.start("BunkerLevelScene");
                 }
             }
         }
