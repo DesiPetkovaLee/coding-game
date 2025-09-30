@@ -1,7 +1,7 @@
 import eventBus from "../../core/EventBus";
-import { BaseSprite } from "../BaseSprite";
+import { BaseEnemy } from "./BaseEnemy";
 
-export class RollySprite extends BaseSprite {
+export class RollySprite extends BaseEnemy {
     id: string | number;
     constructor(
         scene: Phaser.Scene,
@@ -35,6 +35,9 @@ export class RollySprite extends BaseSprite {
         this.on("moved", () => {
             eventBus.emit("enemyMoved", this.id, { x: this.x, y: this.y });
         });
+    }
+    interact(): void {
+        console.log("rolly interaction");
     }
     update() {
         const body = this.getBody();

@@ -1,7 +1,7 @@
 import { worldState } from "../../core/States/WorldState";
-import { BaseSprite } from "../BaseSprite";
+import { BaseEnemy } from "./RoamingEnemy";
 
-export class BiteySprite extends BaseSprite {
+export class BiteySprite extends BaseEnemy {
     id: string | number;
     toDelete: boolean = false;
     constructor(
@@ -29,16 +29,16 @@ export class BiteySprite extends BaseSprite {
             repeatDelay: 6000,
         });
 
-        this.on("pointerdown", () => {
-            console.log("bitey clicked");
-            if (worldState.getCollectedDiskCount() === 4) {
-                this.toDelete = true;
-            } else {
-                console.log("You need all 4 disks to delete Bitey!");
-            }
-        });
         // will need to update if bitey moves out of the way
         worldState.setEnemyPosition(this.id, { x: this.x, y: this.y });
+    }
+    interact(): void {
+        console.log("bitey clicked");
+        if (worldState.getCollectedDiskCount() === 4) {
+            this.toDelete = true;
+        } else {
+            console.log("You need all 4 disks to delete Bitey!");
+        }
     }
     update() {
         this.anims.play("bite", true);

@@ -43,6 +43,8 @@ import { playerState } from "../core/States/PlayerState";
 import { mapLoader } from "../systems/mapLoader";
 import { BiteySprite } from "../prefabs/enemies/BiteySprite";
 import { RollySprite } from "../prefabs/enemies/RollySprite";
+import eventBus from "../core/EventBus";
+import type { Interactable } from "../systems/interactableInterface";
 
 export class LabLevelScene extends Scene {
     player: Player | undefined;
@@ -50,6 +52,7 @@ export class LabLevelScene extends Scene {
     terminals: Terminal | undefined;
     disks: FloppyDisk[] | undefined;
     exitZone: Phaser.Geom.Rectangle | undefined;
+    interactables: (Terminal | FloppyDisk | undefined)[] | undefined;
     constructor() {
         super("LabLevelScene");
     }
@@ -239,6 +242,20 @@ export class LabLevelScene extends Scene {
             )
             .setOrigin(0, 0);
 
+        // interactions
+        const allEntities = [...this.enemies, this.terminals, ...this.disks];
+        function isInteractable(obj: any): obj is Interactable {
+            return obj && typeof obj.interact === "function";
+        }
+        this.interactables = allEntities.filter(isInteractable);
+
+        eventBus.on("playerInteract", (x: number, y: number) => {
+            const nearby = this.interactables?.filter(
+                (i) => i && Phaser.Math.Distance.Between(x, y, i.x, i.y) < 100
+            );
+            nearby?.forEach((i) => i.interact?.());
+        });
+
         // collisions
         this.physics.add.collider(this.player, this.disks);
         this.physics.add.collider(this.player, collisionLayer);
@@ -269,7 +286,7 @@ export class LabLevelScene extends Scene {
             player.update();
 
             this.enemies.forEach((enemy) => enemy.update());
-            this.terminals.update(player);
+            // this.terminals.update(player);
 
             this.disks = this.disks.filter((disk) => {
                 if (disk.toDelete) {
