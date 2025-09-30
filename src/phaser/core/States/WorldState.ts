@@ -68,6 +68,15 @@ class WorldState {
         this.initialised = true;
     }
 
+    // putting here to remember to add to if as we add more event listeners- but if we clear worldstate between levels we don't want to add to them
+    cleanupListeners() {
+        eventBus.off("diskCollected", this.markFloppyCollected);
+        eventBus.off("terminalCompleted", this.markTerminalComplete);
+        eventBus.off("enemyDefeated", this.markEnemyRemoved);
+        eventBus.off("enemyInteracted", this.markEnemyInteracted);
+        eventBus.off("enemyMoved", this.setEnemyPosition);
+    }
+
     setTriggerZones(levelId: string, zones: TriggerZone[]) {
         this.triggerZones[levelId] = zones;
     }
@@ -126,6 +135,7 @@ class WorldState {
     }
     getTerminal(id: string | number):
         | {
+              id: string | number;
               attempted: boolean;
               completed: boolean;
               position: Coords;
@@ -194,6 +204,13 @@ class WorldState {
 
     resetAllCAREFUL() {
         this.initialised = false;
+        this.currentLevel = "";
+        this.levelProgress = {};
+        this.floppyDisks = {};
+        this.terminals = {};
+        this.enemyStates = {};
+        this.triggerZones = {};
+        this.cleanupListeners();
     }
 }
 export const worldState = WorldState.getInstance();

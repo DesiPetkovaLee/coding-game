@@ -7,16 +7,17 @@ import { Spawner } from "../systems/SpriteSpawner";
 import type { Terminal } from "../prefabs/interactables/Terminal";
 import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
 import eventBus from "../core/EventBus";
-import type { BaseSprite } from "../prefabs/BaseSprite";
 import { playerState } from "../core/States/PlayerState";
 import { worldState } from "../core/States/WorldState";
+import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
 
 export class BunkerLevelScene extends Scene {
     player: Player | undefined;
-    enemies: BaseSprite[] | undefined;
-    terminals: Terminal[] | undefined;
+    enemies: BaseEnemy[] | undefined;
+    terminals: Terminal | undefined;
     disks: FloppyDisk[] | undefined;
     exitZone: Phaser.Geom.Rectangle | undefined;
+    interactables: (BaseEnemy | Terminal | FloppyDisk)[] | undefined;
     constructor() {
         super("BunkerLevelScene");
     }
@@ -49,7 +50,29 @@ export class BunkerLevelScene extends Scene {
         this.disks.forEach((disk) => {
             worldState.setFloppyDisk(disk.id, disk.colour, disk.getCoords());
         });
+        // interactions
+        // if we add interactables they need to be added here
+        const allEntities = [
+            ...this.enemies,
+            ...(this.terminals ? [this.terminals] : []),
+            ...this.disks,
+        ].filter((e): e is BaseEnemy | Terminal | FloppyDisk => !!e);
+        // filtering based on if they have a function called interact
+        this.interactables = allEntities.filter(
+            (e): e is BaseEnemy | Terminal | FloppyDisk =>
+                typeof e.interact === "function"
+        );
+        // when the interact event is emitted from player checks if any interactables are near and if so calls their interact function
+        eventBus.on("playerInteract", (x: number, y: number) => {
+            const nearby = this.interactables?.filter(
+                (i) => Phaser.Math.Distance.Between(x, y, i.x, i.y) < 100
+            );
+
+            nearby?.forEach((i) => i.interact());
+        });
+
         // player
+        // collisions
         this.player.getBody().setCollideWorldBounds(true);
         this.physics.add.collider(this.player, collisionLayer);
 
@@ -81,7 +104,6 @@ export class BunkerLevelScene extends Scene {
                 .setOrigin(0, 0);
             console.table(this.exitZone);
         }
-
         // Camera;
         const camControl = new CameraController(this);
         camControl.setup(this.player, map);
@@ -107,7 +129,7 @@ export class BunkerLevelScene extends Scene {
             player.update();
 
             this.enemies.forEach((enemy) => enemy.update());
-            this.terminals.forEach((terminal) => terminal.update(player));
+            this.terminals.update(player);
 
             // removing clicked disks
             this.disks = this.disks.filter((disk) => {
@@ -148,6 +170,7 @@ export class BunkerLevelScene extends Scene {
                         JSON.stringify(playerState.getSaveData(), null, 2)
                     );
                     console.log("start next scene");
+                    worldState.resetAllCAREFUL();
                     this.scene.start("LabLevelScene");
                 }
             }

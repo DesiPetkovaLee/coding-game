@@ -1,5 +1,5 @@
 import { worldState } from "../../core/States/WorldState";
-import { BaseEnemy } from "./RoamingEnemy";
+import { BaseEnemy } from "./BaseEnemy";
 
 export class BiteySprite extends BaseEnemy {
     id: string | number;
@@ -34,6 +34,7 @@ export class BiteySprite extends BaseEnemy {
     }
     interact(): void {
         console.log("bitey clicked");
+        console.log(worldState.getCollectedDiskCount());
         if (worldState.getCollectedDiskCount() === 4) {
             this.toDelete = true;
         } else {

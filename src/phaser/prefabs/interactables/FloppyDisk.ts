@@ -24,9 +24,10 @@ export class FloppyDisk extends BaseInteractable implements Interactable {
         eventBus.emit("playerScored", 50);
         eventBus.emit("diskCollected", this.id);
         eventBus.emit("updateUI");
+        console.log(worldState.getCollectedDiskCount());
         console.log(this.id);
         console.log(this.colour);
-        console.log(worldState.getAllEnemyStates());
+        console.log(worldState.getCollectedDiskCount());
         // pixellate and fade when clicked
         this.scene.tweens.add({
             targets: this.postFX.addPixelate(2),

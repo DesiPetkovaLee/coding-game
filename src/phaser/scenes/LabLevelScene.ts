@@ -31,7 +31,6 @@ const SaveData = false;
 // };
 
 import { Scene } from "phaser";
-import type { BaseSprite } from "../prefabs/BaseSprite";
 import { Player } from "../prefabs/characters/Player";
 import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
 import { Terminal } from "../prefabs/interactables/Terminal";
@@ -44,25 +43,27 @@ import { mapLoader } from "../systems/mapLoader";
 import { BiteySprite } from "../prefabs/enemies/BiteySprite";
 import { RollySprite } from "../prefabs/enemies/RollySprite";
 import eventBus from "../core/EventBus";
-import type { Interactable } from "../systems/interactableInterface";
+import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
 
 export class LabLevelScene extends Scene {
     player: Player | undefined;
-    enemies: BaseSprite[] | undefined;
+    enemies: BaseEnemy[] | undefined;
     terminals: Terminal | undefined;
     disks: FloppyDisk[] | undefined;
     exitZone: Phaser.Geom.Rectangle | undefined;
-    interactables: (Terminal | FloppyDisk | undefined)[] | undefined;
+    interactables: (BaseEnemy | Terminal | FloppyDisk)[] | undefined;
     constructor() {
         super("LabLevelScene");
     }
 
     create() {
+        this.scene.launch("UIScene");
+        this.scene.get("UIScene").events.emit("updateUI");
+
         let levelId: string;
         let tilesetKey: string;
         let tilesetImage: string;
         let musicKey: string;
-
         let playerStart: Coords;
 
         if (SaveData) {
@@ -152,8 +153,7 @@ export class LabLevelScene extends Scene {
             .getAllEnemyStates()
             .filter((e) => e.alive !== false)
             .map((data) => {
-                let enemy: BaseSprite;
-                console.log(data.type);
+                let enemy: BaseEnemy;
                 switch (data.type) {
                     case "bitey":
                         enemy = new BiteySprite(
@@ -222,7 +222,8 @@ export class LabLevelScene extends Scene {
                     d.colour
                 );
             });
-
+        // exit zone
+        console.log(worldState.getTriggerZones());
         const exitZoneData = worldState.getTriggerZones();
         console.log(exitZoneData[0]);
         this.exitZone = new Phaser.Geom.Rectangle(
@@ -243,17 +244,24 @@ export class LabLevelScene extends Scene {
             .setOrigin(0, 0);
 
         // interactions
-        const allEntities = [...this.enemies, this.terminals, ...this.disks];
-        function isInteractable(obj: any): obj is Interactable {
-            return obj && typeof obj.interact === "function";
-        }
-        this.interactables = allEntities.filter(isInteractable);
-
+        // if we add interactables they need to be added here
+        const allEntities = [
+            ...this.enemies,
+            ...(this.terminals ? [this.terminals] : []),
+            ...this.disks,
+        ].filter((e): e is BaseEnemy | Terminal | FloppyDisk => !!e);
+        // filtering based on if they have a function called interact
+        this.interactables = allEntities.filter(
+            (e): e is BaseEnemy | Terminal | FloppyDisk =>
+                typeof e.interact === "function"
+        );
+        // when the interact event is emitted from player checks if any interactables are near and if so calls their interact function
         eventBus.on("playerInteract", (x: number, y: number) => {
             const nearby = this.interactables?.filter(
-                (i) => i && Phaser.Math.Distance.Between(x, y, i.x, i.y) < 100
+                (i) => Phaser.Math.Distance.Between(x, y, i.x, i.y) < 100
             );
-            nearby?.forEach((i) => i.interact?.());
+
+            nearby?.forEach((i) => i.interact());
         });
 
         // collisions
@@ -282,7 +290,13 @@ export class LabLevelScene extends Scene {
     }
     update() {
         const player = this.player;
-        if (player && this.enemies && this.terminals && this.disks) {
+        if (
+            player &&
+            this.enemies &&
+            this.terminals &&
+            this.disks &&
+            this.exitZone
+        ) {
             player.update();
 
             this.enemies.forEach((enemy) => enemy.update());
@@ -296,6 +310,37 @@ export class LabLevelScene extends Scene {
                 disk.update(player);
                 return true;
             });
+
+            this.enemies = this.enemies.filter((enemy) => {
+                if (enemy.toDelete) {
+                    enemy.destroy();
+                    return false;
+                }
+                enemy.update();
+                return true;
+            });
+
+            const playerBounds = player.getBounds();
+
+            if (
+                Phaser.Geom.Intersects.RectangleToRectangle(
+                    playerBounds,
+                    this.exitZone
+                )
+            ) {
+                if (worldState.getCollectedDiskCount() == 4) {
+                    console.log(
+                        JSON.stringify(worldState.getSaveData(), null, 2)
+                    );
+                    console.log("------------------");
+
+                    console.log(
+                        JSON.stringify(playerState.getSaveData(), null, 2)
+                    );
+                    console.log("start next scene");
+                    this.scene.start("LabLevelScene");
+                }
+            }
         }
     }
 }
