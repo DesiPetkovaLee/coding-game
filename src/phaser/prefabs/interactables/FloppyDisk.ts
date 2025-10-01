@@ -1,5 +1,5 @@
 import eventBus from '../../core/EventBus';
-import { worldState } from '../../core/state/WorldState';
+import { worldState } from '../../core/States/WorldState';
 import { BaseInteractable } from './BaseInteractable';
 import type { Interactable } from '../../systems/interactableInterface';
 

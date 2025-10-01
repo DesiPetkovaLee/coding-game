@@ -7,8 +7,8 @@ import { Spawner } from '../systems/SpriteSpawner';
 import type { Terminal } from '../prefabs/interactables/Terminal';
 import { FloppyDisk } from '../prefabs/interactables/FloppyDisk';
 import eventBus from '../core/EventBus';
-import { playerState } from '../core/state/PlayerState';
-import { worldState } from '../core/state/WorldState';
+import { playerState } from '../core/States/PlayerState';
+import { worldState } from '../core/States/WorldState';
 import type { BaseEnemy } from '../prefabs/enemies/BaseEnemy';
 
 export class BunkerLevelScene extends Scene {

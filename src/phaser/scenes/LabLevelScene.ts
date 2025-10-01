@@ -1,39 +1,4 @@
-// lots of errors on this file don't be alarmed just bc im choosing to load as if there is from the json atm and still working on mocking the save data!
-
-const SaveData = false;
-//  {
-//     levelId: "LabLevelMap",
-// mapId: "LabLevelMap",
-//     tilesetKey: "tileset1",
-//     tilesetImage: "LabLevelTileset",
-// tilesetOverlayKey: "tileset1",
-// tilesetOverlayName: "LabLevelTileset",
-//     musicKey: "WakeyWakey",
-//     playerStart: { x: 100, y: 200 } as Coords,
-//     floppyDisks: [
-//         { id: "disk-red", colour: "red", coords: { x: 150, y: 250 } },
-//         { id: "disk-blue", colour: "blue", coords: { x: 600, y: 400 } },
-//     ],
-//     terminal: {
-//         id: "terminal-1",
-//         coords: { x: 400, y: 300 },
-//     },
-//     enemies: [
-//         { id: "bitey-1", type: "bitey", coords: { x: 300, y: 400 } },
-//         { id: "rolly-2", type: "rolly", coords: { x: 600, y: 200 } },
-//     ],
-//     triggerZones: [
-//         {
-//             id: "exit-zone",
-//             type: "levelExit",
-//             targetLevel: "NextLevelMap",
-//             x: 1200,
-//             y: 300,
-//             width: 64,
-//             height: 64,
-//         },
-//     ],
-// };
+const SaveData = {};
 
 const defaultLevelData = {
     defaultlevelId: 'LabLevelMap',
@@ -52,8 +17,8 @@ import { Terminal } from '../prefabs/interactables/Terminal';
 import { TiledParser, type Coords } from '../systems/TiledParser';
 import { CameraController } from '../systems/CameraControl';
 import { MusicLoader } from '../systems/MusicLoader';
-import { worldState } from '../core/state/WorldState';
-import { playerState } from '../core/state/PlayerState';
+import { worldState } from '../core/States/WorldState';
+import { playerState } from '../core/States/PlayerState';
 import { mapLoader } from '../systems/mapLoader';
 import { BiteySprite } from '../prefabs/enemies/BiteySprite';
 import { RollySprite } from '../prefabs/enemies/RollySprite';
@@ -92,6 +57,8 @@ export class LabLevelScene extends Scene {
                 mapId: mockMapId,
                 tilesetName: mockTilesetName,
                 tilesetKey: mockTilesetKey,
+                tilesetOverlayName: mockTilesetOverlayName,
+                tilesetOverlayKey: mockTilesetOverlayKey,
                 musicKey: mockMusicKey,
                 playerStart: mockPlayerStart,
                 enemies,
@@ -104,6 +71,8 @@ export class LabLevelScene extends Scene {
             mapId = mockMapId;
             tilesetName = mockTilesetName;
             tilesetKey = mockTilesetKey;
+            tilesetOverlayName = mockTilesetOverlayName;
+            tilesetOverlayKey = mockTilesetOverlayKey;
             musicKey = mockMusicKey;
             playerStart = mockPlayerStart;
 
@@ -126,6 +95,8 @@ export class LabLevelScene extends Scene {
             levelId = defaultLevelData.defaultlevelId;
             tilesetName = defaultLevelData.defaulttilesetName;
             tilesetKey = defaultLevelData.defaulttilesetKey;
+            tilesetOverlayName = defaultLevelData.defaulttilesetOverlayName;
+            tilesetOverlayKey = defaultLevelData.defaulttilesetOverlayKey;
             musicKey = defaultLevelData.defaultmusicKey;
 
             const mLoader = new mapLoader(this);
@@ -133,8 +104,8 @@ export class LabLevelScene extends Scene {
                 mapId,
                 tilesetName,
                 tilesetKey,
-                tilesetName,
-                tilesetKey,
+                tilesetOverlayName,
+                tilesetOverlayKey,
             );
 
             const spawnData = TiledParser.extractData(map);
@@ -143,7 +114,7 @@ export class LabLevelScene extends Scene {
             playerStart = spawnData.player;
 
             worldState.init(levelId);
-            worldState.setTriggerZones(levelId, spawnData.triggerZones);
+            worldState.setTriggerZones(spawnData.triggerZones);
             worldState.setTerminal(levelId, spawnData.terminals[0].coords);
             spawnData.floppyDisks.forEach((d) =>
                 worldState.setFloppyDisk(d.id, d.colour, d.coords),
@@ -169,8 +140,8 @@ export class LabLevelScene extends Scene {
             mapId,
             tilesetName,
             tilesetKey,
-            tilesetName,
-            tilesetKey,
+            tilesetOverlayName,
+            tilesetOverlayKey,
         );
 
         // actual spawning of players and enemies
@@ -219,17 +190,18 @@ export class LabLevelScene extends Scene {
                 enemy.alive = data.alive;
                 return enemy;
             });
-        const terminalData = worldState.getTerminal(levelId);
+        const terminalData = worldState.getTerminal();
         this.terminals =
             terminalData && !terminalData.completed
                 ? new Terminal(
                       this,
                       terminalData.position.x,
                       terminalData.position.y,
-                      'terminal-1',
+                      'terminal',
                       terminalData.id,
                   )
                 : undefined;
+        console.log(this.terminals?.id);
 
         this.disks = worldState
             .getAllFloppyDisks()
@@ -317,19 +289,22 @@ export class LabLevelScene extends Scene {
             this.musicLoader?.playMusic();
         });
 
-        // Listen for music control events from React
-        const globalEventBus = (
-            window as unknown as Window & { globalEventBus: any }
-        ).globalEventBus;
-        if (globalEventBus) {
-            globalEventBus.on('toggle-music-mute', () => {
-                this.musicLoader?.toggleMute();
-            });
-
-            globalEventBus.on('stop-music', () => {
-                this.musicLoader?.stopMusic();
-            });
-        }
+        // 'save' data
+        const space = this.input.keyboard?.addKey(
+            Phaser.Input.Keyboard.KeyCodes.SPACE,
+        );
+        space?.on('down', () => {
+            const worldSaveData = worldState.getSaveData();
+            console.log(
+                'WorldState Save:\n',
+                JSON.stringify(worldSaveData, null, 2),
+            );
+            const playerStateData = playerState.getSaveData();
+            console.log(
+                'playerStateData Save:\n',
+                JSON.stringify(playerStateData, null, 2),
+            );
+        });
     }
     update() {
         const player = this.player;
