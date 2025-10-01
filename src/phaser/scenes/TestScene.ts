@@ -8,7 +8,7 @@ const worldstateSaveData = {
             y: 1015.65,
         },
         attempted: false,
-        completed: false,
+        completed: true,
     },
     triggerZones: [
         {
@@ -27,7 +27,7 @@ const worldstateSaveData = {
     floppyDisks: {
         "1": {
             colour: "green",
-            collected: true,
+            collected: false,
             position: {
                 x: 2413.13,
                 y: 103.093,
@@ -35,7 +35,7 @@ const worldstateSaveData = {
         },
         "2": {
             colour: "blue",
-            collected: false,
+            collected: true,
             position: {
                 x: 2810.23,
                 y: 2317.68,
@@ -122,12 +122,12 @@ const worldstateSaveData = {
 
 const playerStateSaveData = {
     position: {
-        x: 2337.6666666666674,
-        y: 159,
+        x: 2571.0000000000023,
+        y: 2364,
     },
     health: 100,
     character: "Dreamer",
-    score: 100,
+    score: 110,
     level: 1,
     lives: 3,
 };
@@ -182,8 +182,8 @@ import { Terminal } from "../prefabs/interactables/Terminal";
 import { TiledParser } from "../systems/TiledParser";
 import { CameraController } from "../systems/CameraControl";
 import { MusicLoader } from "../systems/MusicLoader";
-import { worldState } from "../core/States/WorldState";
-import { playerState } from "../core/States/PlayerState";
+import { worldState } from "../core/state/WorldState";
+import { playerState } from "../core/state/PlayerState";
 import { mapLoader } from "../systems/mapLoader";
 import { BiteySprite } from "../prefabs/enemies/BiteySprite";
 import { RollySprite } from "../prefabs/enemies/RollySprite";

@@ -1,7 +1,7 @@
-import eventBus from '../../core/EventBus';
-import { worldState } from '../../core/States/WorldState';
-import { BaseInteractable } from './BaseInteractable';
-import type { Interactable } from '../../systems/interactableInterface';
+import eventBus from "../../core/EventBus";
+import { worldState } from "../../core/state/WorldState";
+import { BaseInteractable } from "./BaseInteractable";
+import type { Interactable } from "../../systems/interactableInterface";
 
 export class FloppyDisk extends BaseInteractable implements Interactable {
     toDelete: boolean = false;
@@ -13,17 +13,16 @@ export class FloppyDisk extends BaseInteractable implements Interactable {
         y: number,
         texture: string,
         id: number | string,
-        colour: string,
+        colour: string
     ) {
         super(scene, x, y, texture, id);
         this.colour = colour;
     }
 
     interact() {
-        console.log('clicked floppydisk');
-        eventBus.emit('playerScored', 50);
-        eventBus.emit('diskCollected', this.id);
-        eventBus.emit('updateUI');
+        console.log("clicked floppydisk");
+        eventBus.emit("playerScored", 50);
+        eventBus.emit("diskCollected", this.id);
         console.log(worldState.getCollectedDiskCount());
         // pixellate and fade when clicked
         this.scene.tweens.add({
