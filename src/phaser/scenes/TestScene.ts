@@ -1,6 +1,6 @@
 // lots of errors on this file don't be alarmed just bc im choosing to load as if there is from the json atm and still working on mocking the save data!
 
-const SaveData = {
+const worldstateSaveData = {
     terminals: {
         id: "BunkerLevelScene",
         position: {
@@ -163,12 +163,23 @@ const levelDefaults: Record<string, LevelDefaults> = {
         musicKey: "WakeyWakey",
     },
 };
+const playerDefaults = {
+    position: {
+        x: 2337.6666666666674,
+        y: 159,
+    },
+    health: 50,
+    character: "Dreamer",
+    score: 100,
+    level: 1,
+    lives: 3,
+};
 
 import { Scene } from "phaser";
 import { Player } from "../prefabs/characters/Player";
 import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
 import { Terminal } from "../prefabs/interactables/Terminal";
-import { TiledParser, type Coords } from "../systems/TiledParser";
+import { TiledParser } from "../systems/TiledParser";
 import { CameraController } from "../systems/CameraControl";
 import { MusicLoader } from "../systems/MusicLoader";
 import { worldState } from "../core/States/WorldState";
@@ -206,9 +217,15 @@ export class TestScene extends Scene {
         let tilesetOverlayName = defaults.tilesetOverlayName;
         let tilesetOverlayKey = defaults.tilesetOverlayKey;
         let musicKey = defaults.musicKey;
-        let playerStart: Coords;
 
-        if (SaveData) {
+        let playerStart = playerDefaults.position;
+        let playerScore = playerDefaults.score;
+        let playerHealth = playerDefaults.health;
+        let playerCharacter = playerDefaults.character;
+        let playerLives = playerDefaults.lives;
+
+        if (worldstateSaveData && playerStateSaveData) {
+            // initialising worldstate with save data
             const {
                 levelId: mockLevelId,
                 levelInfo,
@@ -216,7 +233,7 @@ export class TestScene extends Scene {
                 triggerZones,
                 terminals,
                 floppyDisks,
-            } = SaveData;
+            } = worldstateSaveData;
 
             levelId = mockLevelId;
             tilesetName = levelInfo.tilesetName;
@@ -225,10 +242,6 @@ export class TestScene extends Scene {
             tilesetOverlayKey = levelInfo.tilesetOverlayKey;
             musicKey = levelInfo.musicKey;
             mapId = levelInfo.mapId;
-            playerStart = {
-                x: playerStateSaveData.position.x,
-                y: playerStateSaveData.position.y,
-            };
 
             worldState.init(levelId);
             worldState.setTriggerZones(triggerZones);
@@ -247,7 +260,22 @@ export class TestScene extends Scene {
                 });
             });
 
-            playerState.init({ position: playerStart });
+            // initialising playerState with save data
+            ({
+                position: playerStart,
+                score: playerScore,
+                health: playerHealth,
+                character: playerCharacter,
+                lives: playerLives,
+            } = playerStateSaveData);
+
+            playerState.init({
+                position: playerStart,
+                health: playerHealth,
+                character: playerCharacter,
+                score: playerScore,
+                lives: playerLives,
+            });
         } else {
             //  otherwise, use the default data- will also come from backend
             const mLoader = new mapLoader(this);
