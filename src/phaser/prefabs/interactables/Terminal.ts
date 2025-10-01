@@ -1,19 +1,23 @@
 import eventBus from "../../core/EventBus";
-import { gameState } from "../../core/GameState";
 import { BaseInteractable } from "./BaseInteractable";
-// import type { Player } from "../characters/Player";
+import type { Interactable } from "../../systems/interactableInterface";
 
-export class Terminal extends BaseInteractable {
-    constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
-        super(scene, x, y, texture);
+export class Terminal extends BaseInteractable implements Interactable {
+    constructor(
+        scene: Phaser.Scene,
+        x: number,
+        y: number,
+        texture: string,
+        id: string | number
+    ) {
+        super(scene, x, y, texture, id);
 
         this.flipX = true;
-
-        this.on("pointerdown", () => {
-            console.log("clicked terminal");
-            gameState.updateScore(10);
-            eventBus.emit("updateUI", gameState.stats);
-            console.log(gameState.stats);
-        });
+    }
+    interact() {
+        console.log("clicked terminal");
+        eventBus.emit("playerScored", 10);
+        eventBus.emit("terminalCompleted", this.id);
+        eventBus.emit("updateUI");
     }
 }

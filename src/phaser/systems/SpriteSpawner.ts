@@ -2,7 +2,7 @@ import { FloppyDisk } from '../prefabs/interactables/FloppyDisk';
 import { Terminal } from '../prefabs/interactables/Terminal';
 import { Player } from '../prefabs/characters/Player';
 import { RollySprite } from '../prefabs/enemies/RollySprite';
-import type { BaseSprite } from '../prefabs/BaseSprite';
+import type { BaseEnemy } from '../prefabs/enemies/BaseEnemy';
 import { BiteySprite } from '../prefabs/enemies/BiteySprite';
 
 export class Spawner {
@@ -17,9 +17,9 @@ export class Spawner {
         const objects = this.map.getObjectLayer('Object')?.objects ?? [];
 
         let player!: Player;
-        const enemies: BaseSprite[] = [];
+        const enemies: BaseEnemy[] = [];
         const disks: FloppyDisk[] = [];
-        const terminals: Terminal[] = [];
+        let terminals!: Terminal;
 
         for (const obj of objects) {
             const { x = 0, y = 0, name, properties = [] } = obj;
@@ -42,23 +42,43 @@ export class Spawner {
                 case 'enemy':
                     {
                         const type = tiledProps.type ?? 'rolly';
+                        const id = tiledProps.id;
 
                         let enemy;
                         if (type === 'rolly') {
-                            enemy = new RollySprite(this.scene, x, y, 'rolly');
+                            enemy = new RollySprite(
+                                this.scene,
+                                x,
+                                y,
+                                'rolly',
+                                id,
+                            );
                         } else if (type === 'bitey') {
-                            enemy = new BiteySprite(this.scene, x, y, 'bitey');
+                            enemy = new BiteySprite(
+                                this.scene,
+                                x,
+                                y,
+                                'bitey',
+                                id,
+                            );
                         } else {
                             console.log(
                                 `Unknown enemy type: ${type}, defaulting generated at x ${x} and ${y}`,
                             );
-                            enemy = new RollySprite(this.scene, x, y, 'rolly');
+                            enemy = new RollySprite(
+                                this.scene,
+                                x,
+                                y,
+                                'rolly',
+                                id,
+                            );
                         }
                         enemies.push(enemy);
                     }
                     break;
                 case 'floppy-disk': {
                     const colour = tiledProps.colour ?? 'default';
+                    const id = obj.id?.toString();
                     const textureMap: Record<string, string> = {
                         red: 'floppy-red',
                         green: 'floppy-green',
@@ -68,15 +88,17 @@ export class Spawner {
 
                     const texture = textureMap[colour] ?? textureMap.default;
                     disks.push(
-                        new FloppyDisk(this.scene, x, y, texture, colour),
+                        new FloppyDisk(this.scene, x, y, texture, id, colour),
                     );
                     // console.log(tiledProps.colour);
                     break;
                 }
 
-                case 'terminal':
-                    terminals.push(new Terminal(this.scene, x, y, 'terminal'));
+                case 'terminal': {
+                    const id = obj.id?.toString();
+                    terminals = new Terminal(this.scene, x, y, 'terminal', id);
                     break;
+                }
             }
         }
 
@@ -87,10 +109,30 @@ export class Spawner {
             terminals,
         };
     }
+
+    exitZone() {
+        const triggerLayer = this.map.getObjectLayer('Object');
+        const exitZoneData = triggerLayer?.objects.find(
+            (obj: { name: string }) => obj.name === 'trigger',
+        );
+        if (
+            exitZoneData &&
+            exitZoneData.x &&
+            exitZoneData.y &&
+            exitZoneData.height
+        ) {
+            return new Phaser.Geom.Rectangle(
+                exitZoneData?.x,
+                exitZoneData?.y,
+                exitZoneData.width,
+                exitZoneData.height,
+            );
+        }
+    }
 }
 type SpawnerResult = {
     player: Player;
-    enemies: BaseSprite[];
+    enemies: BaseEnemy[];
     disks: FloppyDisk[];
-    terminals: Terminal[];
+    terminals: Terminal;
 };

@@ -1,16 +1,19 @@
 // for immovable but interactive objects
 // not sure if we should just use this and the constructor to make diff interactable or have seperate classes
 import { Physics } from "phaser";
-import type { Player } from "../characters/Player";
+import type { Coords } from "../../systems/TiledParser";
 export abstract class BaseInteractable extends Physics.Arcade.Sprite {
+    id: string | number;
     constructor(
         scene: Phaser.Scene,
         x: number,
         y: number,
         texture: string = "default-texture",
+        id: string | number,
         frame?: string | number
     ) {
-        super(scene, x, y, texture, frame);
+        super(scene, x, y, texture, frame); // frame can be undefined
+        this.id = id;
 
         if (!scene.physics || !scene.physics.add) {
             throw new Error("Scene physics system not initialised");
@@ -29,20 +32,12 @@ export abstract class BaseInteractable extends Physics.Arcade.Sprite {
         return this.body as Phaser.Physics.Arcade.Body;
     }
 
-    // sets proximity for interactions
-    update(player: Player) {
-        const distance = Phaser.Math.Distance.Between(
-            this.x,
-            this.y,
-            player.x,
-            player.y
-        );
-        const inRange = distance < 100;
+    getCoords(): Coords {
+        const x = this.x;
+        const y = this.y;
 
-        if (inRange && !this.input?.enabled) {
-            this.setInteractive();
-        } else if (!inRange && this.input?.enabled) {
-            this.disableInteractive();
-        }
+        return { x, y };
     }
+
+    abstract interact(): void;
 }

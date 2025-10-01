@@ -11,7 +11,7 @@ export class PreloadScene extends Scene {
 
         // main characters
         this.load.setPath("/assets/character-sprites/");
-        this.load.spritesheet("player-sheet", "dreamer-spritesheet.png", {
+        this.load.spritesheet("player-sheet", "dreamer-ss-directions.png", {
             frameHeight: 128,
             frameWidth: 128,
         });
@@ -37,6 +37,7 @@ export class PreloadScene extends Scene {
         // maps and tilesets
         this.load.setPath("/assets/maps/");
         this.load.tilemapTiledJSON("BunkerLevelMap", "BunkerLevelMap.tmj");
+        this.load.tilemapTiledJSON("LabLevelMap", "LabLevelMap.tmj");
 
         this.load.setPath("assets/tilesets/");
         this.load.image("BunkerLevelTileset", "BunkerLevelTileset.png");
@@ -44,6 +45,7 @@ export class PreloadScene extends Scene {
             "BunkerLevelTilesetOverlay",
             "BunkerLevelTilesetOverlay.png"
         );
+        this.load.image("LabLevelTileset", "LabLevelTileset.png");
     }
 
     create() {
