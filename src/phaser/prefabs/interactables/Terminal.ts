@@ -18,6 +18,5 @@ export class Terminal extends BaseInteractable implements Interactable {
         console.log("clicked terminal");
         eventBus.emit("playerScored", 10);
         eventBus.emit("terminalCompleted", this.id);
-        eventBus.emit("updateUI");
     }
 }
