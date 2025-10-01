@@ -1,31 +1,185 @@
-const SaveData = {};
+// lots of errors on this file don't be alarmed just bc im choosing to load as if there is from the json atm and still working on mocking the save data!
 
-const defaultLevelData = {
-    defaultlevelId: 'LabLevelMap',
-    defaultmapId: 'LabLevelMap',
-    defaulttilesetName: 'tileset1',
-    defaulttilesetKey: 'LabLevelTileset',
-    defaulttilesetOverlayName: 'tileset1',
-    defaulttilesetOverlayKey: 'LabLevelTileset',
-    defaultmusicKey: 'WakeyWakey',
+const SaveData = {
+    terminals: {
+        id: "BunkerLevelScene",
+        position: {
+            x: 1722.03,
+            y: 1015.65,
+        },
+        attempted: false,
+        completed: false,
+    },
+    triggerZones: [
+        {
+            id: 20,
+            type: "generic-trigger",
+            x: 2986.5,
+            y: 1400,
+            width: 13,
+            height: 198.5,
+        },
+    ],
+    levelProgress: {
+        BunkerLevelScene: {},
+    },
+    levelId: "BunkerLevelScene",
+    floppyDisks: {
+        "1": {
+            colour: "green",
+            collected: true,
+            position: {
+                x: 2413.13,
+                y: 103.093,
+            },
+        },
+        "2": {
+            colour: "blue",
+            collected: false,
+            position: {
+                x: 2810.23,
+                y: 2317.68,
+            },
+        },
+        "3": {
+            colour: "red",
+            collected: false,
+            position: {
+                x: 603.284,
+                y: 2107.67,
+            },
+        },
+        "17": {
+            colour: "red",
+            collected: true,
+            position: {
+                x: 764,
+                y: 1368,
+            },
+        },
+    },
+    enemyStates: {
+        "5": {
+            id: 5,
+            position: {
+                x: 2917.14,
+                y: 1424.21,
+            },
+            interacted: false,
+            alive: true,
+            type: "bitey",
+        },
+        "6": {
+            id: 6,
+            position: {
+                x: 2923.4568489628,
+                y: 1540.23260414881,
+            },
+            interacted: false,
+            alive: true,
+            type: "bitey",
+        },
+        "7": {
+            id: 7,
+            position: {
+                x: 1254.92885307732,
+                y: 349.734270529745,
+            },
+            interacted: false,
+            alive: true,
+            type: "rolly",
+        },
+        "9": {
+            id: 9,
+            position: {
+                x: 1368,
+                y: 1952,
+            },
+            interacted: false,
+            alive: true,
+            type: "rolly",
+        },
+        "10": {
+            id: 10,
+            position: {
+                x: 852,
+                y: 788,
+            },
+            interacted: false,
+            alive: true,
+            type: "rolly",
+        },
+    },
+    levelInfo: {
+        mapId: "BunkerLevelMap",
+        tilesetName: "BunkerLevelTileset",
+        tilesetKey: "BunkerLevelTileset",
+        tilesetOverlayName: "BunkerLevelTilesetOverlay",
+        tilesetOverlayKey: "BunkerLevelTilesetOverlay",
+        musicKey: "WakeyWakey",
+    },
 };
 
-import { Scene } from 'phaser';
-import { Player } from '../prefabs/characters/Player';
-import { FloppyDisk } from '../prefabs/interactables/FloppyDisk';
-import { Terminal } from '../prefabs/interactables/Terminal';
-import { TiledParser, type Coords } from '../systems/TiledParser';
-import { CameraController } from '../systems/CameraControl';
-import { MusicLoader } from '../systems/MusicLoader';
-import { worldState } from '../core/States/WorldState';
-import { playerState } from '../core/States/PlayerState';
-import { mapLoader } from '../systems/mapLoader';
-import { BiteySprite } from '../prefabs/enemies/BiteySprite';
-import { RollySprite } from '../prefabs/enemies/RollySprite';
-import eventBus from '../core/EventBus';
-import type { BaseEnemy } from '../prefabs/enemies/BaseEnemy';
+const playerStateSaveData = {
+    position: {
+        x: 2337.6666666666674,
+        y: 159,
+    },
+    health: 100,
+    character: "Dreamer",
+    score: 100,
+    level: 1,
+    lives: 3,
+};
 
-export class LabLevelScene extends Scene {
+// currently what we need to build a level (and player info)
+type LevelDefaults = {
+    levelId: string;
+    mapId: string;
+    tilesetName: string;
+    tilesetKey: string;
+    tilesetOverlayName: string;
+    tilesetOverlayKey: string;
+    musicKey: string;
+};
+
+const levelDefaults: Record<string, LevelDefaults> = {
+    bunker: {
+        levelId: "BunkerLevelScene",
+        mapId: "BunkerLevelMap",
+        tilesetName: "BunkerLevelTileset",
+        tilesetKey: "BunkerLevelTileset",
+        tilesetOverlayName: "BunkerLevelTilesetOverlay",
+        tilesetOverlayKey: "BunkerLevelTilesetOverlay",
+        musicKey: "WakeyWakey",
+    },
+    lab: {
+        levelId: "LabLevelScene",
+        mapId: "LabLevelMap",
+        tilesetName: "tileset1",
+        tilesetKey: "LabLevelTileset",
+        tilesetOverlayName: "tileset1",
+        tilesetOverlayKey: "LabLevelTileset",
+        musicKey: "WakeyWakey",
+    },
+};
+
+import { Scene } from "phaser";
+import { Player } from "../prefabs/characters/Player";
+import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
+import { Terminal } from "../prefabs/interactables/Terminal";
+import { TiledParser, type Coords } from "../systems/TiledParser";
+import { CameraController } from "../systems/CameraControl";
+import { MusicLoader } from "../systems/MusicLoader";
+import { worldState } from "../core/States/WorldState";
+import { playerState } from "../core/States/PlayerState";
+import { mapLoader } from "../systems/mapLoader";
+import { BiteySprite } from "../prefabs/enemies/BiteySprite";
+import { RollySprite } from "../prefabs/enemies/RollySprite";
+import eventBus from "../core/EventBus";
+import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
+
+export class TestScene extends Scene {
     player: Player | undefined;
     enemies: BaseEnemy[] | undefined;
     terminals: Terminal | undefined;
@@ -34,71 +188,68 @@ export class LabLevelScene extends Scene {
     interactables: (BaseEnemy | Terminal | FloppyDisk)[] | undefined;
     musicLoader: MusicLoader | undefined;
     constructor() {
-        super('LabLevelScene');
+        super("TestScene");
     }
 
     create() {
-        if (!this.scene.isActive('UIScene')) {
-            this.scene.launch('UIScene');
-            this.scene.get('UIScene').events.emit('updateUI');
+        if (!this.scene.isActive("UIScene")) {
+            this.scene.launch("UIScene");
+            this.scene.get("UIScene").events.emit("updateUI");
         }
-        let mapId: string;
-        let levelId: string;
-        let tilesetName: string;
-        let tilesetKey: string;
-        let tilesetOverlayName: string;
-        let tilesetOverlayKey: string;
-        let musicKey: string;
+        const selectedScene = "bunker";
+        const defaults = levelDefaults[selectedScene];
+
+        let mapId = defaults.mapId;
+        let levelId = defaults.levelId;
+        let tilesetName = defaults.tilesetName;
+        let tilesetKey = defaults.tilesetKey;
+        let tilesetOverlayName = defaults.tilesetOverlayName;
+        let tilesetOverlayKey = defaults.tilesetOverlayKey;
+        let musicKey = defaults.musicKey;
         let playerStart: Coords;
 
         if (SaveData) {
             const {
                 levelId: mockLevelId,
-                mapId: mockMapId,
-                tilesetName: mockTilesetName,
-                tilesetKey: mockTilesetKey,
-                tilesetOverlayName: mockTilesetOverlayName,
-                tilesetOverlayKey: mockTilesetOverlayKey,
-                musicKey: mockMusicKey,
-                playerStart: mockPlayerStart,
-                enemies,
+                levelInfo,
+                enemyStates,
                 triggerZones,
-                terminal,
+                terminals,
                 floppyDisks,
             } = SaveData;
 
             levelId = mockLevelId;
-            mapId = mockMapId;
-            tilesetName = mockTilesetName;
-            tilesetKey = mockTilesetKey;
-            tilesetOverlayName = mockTilesetOverlayName;
-            tilesetOverlayKey = mockTilesetOverlayKey;
-            musicKey = mockMusicKey;
-            playerStart = mockPlayerStart;
+            tilesetName = levelInfo.tilesetName;
+            tilesetKey = levelInfo.tilesetKey;
+            tilesetOverlayName = levelInfo.tilesetOverlayName;
+            tilesetOverlayKey = levelInfo.tilesetOverlayKey;
+            musicKey = levelInfo.musicKey;
+            mapId = levelInfo.mapId;
+            playerStart = {
+                x: playerStateSaveData.position.x,
+                y: playerStateSaveData.position.y,
+            };
 
             worldState.init(levelId);
-            worldState.setTriggerZones(levelId, triggerZones);
-            worldState.setTerminal(levelId, terminal.coords);
-            floppyDisks.forEach((d) =>
-                worldState.setFloppyDisk(d.id, d.colour, d.coords),
-            );
-            enemies.forEach((e) =>
-                worldState.setEnemyState(e.id, {
-                    position: e.coords,
-                    type: e.type,
-                }),
-            );
+            worldState.setTriggerZones(triggerZones);
+            worldState.setTerminal(levelId, {
+                x: terminals.position.x,
+                y: terminals.position.y,
+            });
+            Object.entries(floppyDisks).forEach(([id, disk]) => {
+                worldState.setFloppyDisk(id, disk.colour, disk.position);
+            });
+
+            Object.values(enemyStates).forEach((enemy) => {
+                worldState.setEnemyState(enemy.id, {
+                    position: enemy.position,
+                    type: enemy.type,
+                });
+            });
+
             playerState.init({ position: playerStart });
         } else {
-            // would need to be getting defaults here- get tilemap json, tileset, keys for default
-            mapId = defaultLevelData.defaultmapId;
-            levelId = defaultLevelData.defaultlevelId;
-            tilesetName = defaultLevelData.defaulttilesetName;
-            tilesetKey = defaultLevelData.defaulttilesetKey;
-            tilesetOverlayName = defaultLevelData.defaulttilesetOverlayName;
-            tilesetOverlayKey = defaultLevelData.defaulttilesetOverlayKey;
-            musicKey = defaultLevelData.defaultmusicKey;
-
+            //  otherwise, use the default data- will also come from backend
             const mLoader = new mapLoader(this);
             const { map } = mLoader.loadMap(
                 mapId,
@@ -109,27 +260,35 @@ export class LabLevelScene extends Scene {
             );
 
             const spawnData = TiledParser.extractData(map);
-            if (!spawnData) throw new Error('spawn data not found');
+            if (!spawnData) throw new Error("spawn data not found");
 
-            playerStart = spawnData.player;
+            const playerStart = spawnData.player;
 
             worldState.init(levelId);
             worldState.setTriggerZones(spawnData.triggerZones);
             worldState.setTerminal(levelId, spawnData.terminals[0].coords);
             spawnData.floppyDisks.forEach((d) =>
-                worldState.setFloppyDisk(d.id, d.colour, d.coords),
+                worldState.setFloppyDisk(d.id, d.colour, d.coords)
             );
             spawnData.enemies.forEach((e) =>
                 worldState.setEnemyState(e.id, {
                     position: e.coords,
                     type: e.type,
-                }),
+                })
+            );
+            worldState.setLevelInfo(
+                mapId,
+                tilesetName,
+                tilesetKey,
+                tilesetOverlayName,
+                tilesetOverlayKey,
+                musicKey
             );
             //
             // would want to keep this in if its the first/ only scene!
             //
-            // playerState.init({ position: playerStart });
-            playerState.setPosition(playerStart);
+            playerState.init({ position: playerStart });
+            // playerState.setPosition(playerStart);
         }
 
         // all the following happens whether data has come from save file or using default level data
@@ -156,22 +315,22 @@ export class LabLevelScene extends Scene {
             .map((data) => {
                 let enemy: BaseEnemy;
                 switch (data.type) {
-                    case 'bitey':
+                    case "bitey":
                         enemy = new BiteySprite(
                             this,
                             data.position.x,
                             data.position.y,
                             data.type,
-                            data.id,
+                            data.id
                         );
                         break;
-                    case 'rolly':
+                    case "rolly":
                         enemy = new RollySprite(
                             this,
                             data.position.x,
                             data.position.y,
                             data.type,
-                            data.id,
+                            data.id
                         );
                         break;
                     default:
@@ -179,8 +338,8 @@ export class LabLevelScene extends Scene {
                             this,
                             data.position.x,
                             data.position.y,
-                            (data.type = 'rolly'),
-                            data.id,
+                            (data.type = "rolly"),
+                            data.id
                         );
                         break;
                 }
@@ -201,18 +360,17 @@ export class LabLevelScene extends Scene {
                       terminalData.id
                   )
                 : undefined;
-        console.log(this.terminals?.id);
 
         this.disks = worldState
             .getAllFloppyDisks()
             .filter((d) => !d.collected)
             .map((d) => {
-                const colour = d.colour ?? 'default';
+                const colour = d.colour ?? "default";
                 const textureMap: Record<string, string> = {
-                    red: 'floppy-red',
-                    green: 'floppy-green',
-                    blue: 'floppy-blue',
-                    default: 'floppy-red',
+                    red: "floppy-red",
+                    green: "floppy-green",
+                    blue: "floppy-blue",
+                    default: "floppy-red",
                 };
                 const texture = textureMap[colour] ?? textureMap.default;
                 return new FloppyDisk(
@@ -221,7 +379,7 @@ export class LabLevelScene extends Scene {
                     d.position.y,
                     texture,
                     d.id,
-                    d.colour,
+                    d.colour
                 );
             });
         // exit zone
@@ -232,7 +390,7 @@ export class LabLevelScene extends Scene {
             exitZoneData[0].x,
             exitZoneData[0].y,
             exitZoneData[0].width,
-            exitZoneData[0].height,
+            exitZoneData[0].height
         );
         this.add
             .rectangle(
@@ -241,7 +399,7 @@ export class LabLevelScene extends Scene {
                 this.exitZone.width,
                 this.exitZone.height,
                 0xff0000,
-                0.3,
+                0.3
             )
             .setOrigin(0, 0);
 
@@ -255,12 +413,12 @@ export class LabLevelScene extends Scene {
         // filtering based on if they have a function called interact
         this.interactables = allEntities.filter(
             (e): e is BaseEnemy | Terminal | FloppyDisk =>
-                typeof e.interact === 'function',
+                typeof e.interact === "function"
         );
         // when the interact event is emitted from player checks if any interactables are near and if so calls their interact function
-        eventBus.on('playerInteract', (x: number, y: number) => {
+        eventBus.on("playerInteract", (x: number, y: number) => {
             const nearby = this.interactables?.filter(
-                (i) => Phaser.Math.Distance.Between(x, y, i.x, i.y) < 100,
+                (i) => Phaser.Math.Distance.Between(x, y, i.x, i.y) < 100
             );
 
             nearby?.forEach((i) => i.interact());
@@ -277,7 +435,7 @@ export class LabLevelScene extends Scene {
             this.physics.add.collider(this.enemies, this.disks);
         }
         this.enemies.forEach((enemy) =>
-            enemy.getBody().setCollideWorldBounds(true),
+            enemy.getBody().setCollideWorldBounds(true)
         );
         this.player.getBody().setCollideWorldBounds(true);
 
@@ -285,7 +443,7 @@ export class LabLevelScene extends Scene {
         const camControl = new CameraController(this);
         camControl.setup(this.player, map);
         this.musicLoader = new MusicLoader(this, musicKey, true, 0.1);
-        this.input.keyboard?.once('keydown', () => {
+        this.input.keyboard?.once("keydown", () => {
             this.musicLoader?.playMusic();
         });
 
@@ -344,24 +502,24 @@ export class LabLevelScene extends Scene {
             if (
                 Phaser.Geom.Intersects.RectangleToRectangle(
                     playerBounds,
-                    this.exitZone,
+                    this.exitZone
                 )
             ) {
                 if (worldState.getCollectedDiskCount() == 4) {
                     console.log(
-                        JSON.stringify(worldState.getSaveData(), null, 2),
+                        JSON.stringify(worldState.getSaveData(), null, 2)
                     );
-                    console.log('------------------');
+                    console.log("------------------");
 
                     console.log(
-                        JSON.stringify(playerState.getSaveData(), null, 2),
+                        JSON.stringify(playerState.getSaveData(), null, 2)
                     );
                     // might put these inside of phaser scene shutdown instead if it gets bloated
                     worldState.resetAllCAREFUL();
-                    eventBus.emit('updateUI');
+                    eventBus.emit("updateUI");
                     this.musicLoader?.stopMusic();
-                    console.log('start next scene');
-                    this.scene.start('BunkerLevelScene');
+                    console.log("start next scene");
+                    // this.scene.start("TestScene");
                 }
             }
         }

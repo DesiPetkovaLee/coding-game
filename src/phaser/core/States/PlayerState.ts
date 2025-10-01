@@ -1,13 +1,15 @@
+import type { Coords } from "../../systems/TiledParser";
 import eventBus from "../EventBus";
 
 class PlayerState {
     private static instance: PlayerState;
-    private intialised = false;
-    private position = { x: 100, y: 200 };
-    private health = 100;
-    private character = "Dreamer";
-    private score = 0;
-    private level = 1;
+    private intialised: boolean = false;
+    private position: Coords = { x: 100, y: 200 };
+    private health: number = 100;
+    private character: string = "Dreamer";
+    private score: number = 0;
+    private level: number = 1;
+    private lives: number = 3;
 
     static getInstance(): PlayerState {
         if (!PlayerState.instance) {
@@ -24,12 +26,14 @@ class PlayerState {
     }
     public setHealth(amount: number) {
         this.health = this.health += amount;
+        eventBus.emit("updateUI");
     }
     public getHealth() {
         return this.health;
     }
     public setScore(amount: number) {
         this.score = this.score += amount;
+        eventBus.emit("updateUI");
     }
     public getScore() {
         return this.score;
@@ -40,12 +44,19 @@ class PlayerState {
     public setLevel(amount: number) {
         this.level = this.level += amount;
     }
+    public getLives() {
+        return this.lives;
+    }
+    public setLives(amount: number) {
+        return (this.lives += amount);
+    }
     public getAllStats() {
         return `
     position: (${this.position.x}, ${this.position.y}),
     health: ${this.health},
     score: ${this.score},
-    level: ${this.level}
+    level: ${this.level},
+    lives: ${this.lives}
   `;
     }
     init(defaults?: Partial<PlayerData>) {
@@ -75,6 +86,7 @@ class PlayerState {
             character: this.character,
             score: this.score,
             level: this.level,
+            lives: this.lives,
         };
     }
 
@@ -84,6 +96,7 @@ class PlayerState {
         this.character = data.character;
         this.score = data.score;
         this.level = data.level;
+        this.lives = data.lives;
     }
 }
 type PlayerData = {
@@ -92,6 +105,7 @@ type PlayerData = {
     character: string;
     score: number;
     level: number;
+    lives: number;
 };
 
 export const playerState = PlayerState.getInstance();
