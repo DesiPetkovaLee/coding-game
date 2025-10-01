@@ -1,11 +1,14 @@
-import type { Palette } from '@mui/material/styles';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useEffect, useState } from 'react';
+
+// IDEAS: timer displaying smiley face to sad face as timer goes down.
 
 interface TimerProps {
     timerInitialValue: number;
     colors?: string[];
     onTimerComplete?: () => void;
+    size?: { width: number; height: number };
+    // event emitter to unpause current scene
 }
 
 const Timer = (props: TimerProps) => {
@@ -30,6 +33,7 @@ const Timer = (props: TimerProps) => {
         }, 1000);
 
         return () => clearInterval(interval);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -49,8 +53,8 @@ const Timer = (props: TimerProps) => {
                         ],
                     },
                 ]}
-                width={200}
-                height={200}
+                width={props.size?.width || 200}
+                height={props.size?.height || 200}
             />
         </div>
     );

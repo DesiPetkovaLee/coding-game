@@ -9,19 +9,11 @@ import LevelSelectPage from './pages/levelSelect/LevelSelectPage';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './appState/auth/AuthContext';
 import GameInitialiser from './phaser/GameInitialiser';
-import Timer from './components/game/Timer';
 
 export default function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Timer
-                timerInitialValue={5}
-                // colors={[
-                //     theme.palette.secondary.main,
-                //     theme.palette.primary.main,
-                // ]}
-            />
             <AuthProvider>
                 <Routes>
                     <Route path="/" element={<StartPage />} />
