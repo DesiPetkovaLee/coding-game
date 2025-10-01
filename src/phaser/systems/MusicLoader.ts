@@ -31,7 +31,6 @@ export class MusicLoader {
     }
 
     stopMusic() {
-        console.log('stopped music');
         this.bgMusic?.stop();
         this.bgMusic?.destroy();
         this.bgMusic = undefined;
@@ -42,23 +41,6 @@ export class MusicLoader {
         if (this.bgMusic) {
             (this.bgMusic as any).setVolume(this.isMuted ? 0 : this.volume);
         }
-        console.log(this.isMuted ? 'music muted' : 'music unmuted');
-    }
-
-    mute() {
-        this.isMuted = true;
-        if (this.bgMusic) {
-            (this.bgMusic as any).setVolume(0);
-        }
-        console.log('music muted');
-    }
-
-    unmute() {
-        this.isMuted = false;
-        if (this.bgMusic) {
-            (this.bgMusic as any).setVolume(this.volume);
-        }
-        console.log('music unmuted');
     }
 
     isCurrentlyMuted(): boolean {

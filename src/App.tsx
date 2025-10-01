@@ -1,4 +1,5 @@
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import theme from './theme/theme';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
