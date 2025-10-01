@@ -1,4 +1,4 @@
-const SaveData = false;
+// this level is now static like the bunker level. to use save data use/clone testscene
 
 const defaultLevelData = {
     defaultlevelId: "LabLevelMap",
@@ -14,7 +14,7 @@ import { Scene } from "phaser";
 import { Player } from "../prefabs/characters/Player";
 import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
 import { Terminal } from "../prefabs/interactables/Terminal";
-import { TiledParser, type Coords } from "../systems/TiledParser";
+import { TiledParser } from "../systems/TiledParser";
 import { CameraController } from "../systems/CameraControl";
 import { MusicLoader } from "../systems/MusicLoader";
 import { worldState } from "../core/state/WorldState";
@@ -42,98 +42,14 @@ export class LabLevelScene extends Scene {
             this.scene.launch("UIScene");
             this.scene.get("UIScene").events.emit("updateUI");
         }
-        let mapId: string;
-        let levelId: string;
-        let tilesetName: string;
-        let tilesetKey: string;
-        let tilesetOverlayName: string;
-        let tilesetOverlayKey: string;
-        let musicKey: string;
-        let playerStart: Coords;
-
-        if (SaveData) {
-            const {
-                levelId: mockLevelId,
-                mapId: mockMapId,
-                tilesetName: mockTilesetName,
-                tilesetKey: mockTilesetKey,
-                tilesetOverlayName: mockTilesetOverlayName,
-                tilesetOverlayKey: mockTilesetOverlayKey,
-                musicKey: mockMusicKey,
-                playerStart: mockPlayerStart,
-                enemies,
-                triggerZones,
-                terminal,
-                floppyDisks,
-            } = SaveData;
-
-            levelId = mockLevelId;
-            mapId = mockMapId;
-            tilesetName = mockTilesetName;
-            tilesetKey = mockTilesetKey;
-            tilesetOverlayName = mockTilesetOverlayName;
-            tilesetOverlayKey = mockTilesetOverlayKey;
-            musicKey = mockMusicKey;
-            playerStart = mockPlayerStart;
-
-            worldState.init(levelId);
-            worldState.setTriggerZones(levelId, triggerZones);
-            worldState.setTerminal(levelId, terminal.coords);
-            floppyDisks.forEach((d) =>
-                worldState.setFloppyDisk(d.id, d.colour, d.coords)
-            );
-            enemies.forEach((e) =>
-                worldState.setEnemyState(e.id, {
-                    position: e.coords,
-                    type: e.type,
-                })
-            );
-            playerState.init({ position: playerStart });
-        } else {
-            // would need to be getting defaults here- get tilemap json, tileset, keys for default
-            mapId = defaultLevelData.defaultmapId;
-            levelId = defaultLevelData.defaultlevelId;
-            tilesetName = defaultLevelData.defaulttilesetName;
-            tilesetKey = defaultLevelData.defaulttilesetKey;
-            tilesetOverlayName = defaultLevelData.defaulttilesetOverlayName;
-            tilesetOverlayKey = defaultLevelData.defaulttilesetOverlayKey;
-            musicKey = defaultLevelData.defaultmusicKey;
-
-            const mLoader = new mapLoader(this);
-            const { map } = mLoader.loadMap(
-                mapId,
-                tilesetName,
-                tilesetKey,
-                tilesetOverlayName,
-                tilesetOverlayKey
-            );
-
-            const spawnData = TiledParser.extractData(map);
-            if (!spawnData) throw new Error("spawn data not found");
-
-            playerStart = spawnData.player;
-
-            worldState.init(levelId);
-            worldState.setTriggerZones(spawnData.triggerZones);
-            worldState.setTerminal(levelId, spawnData.terminals[0].coords);
-            spawnData.floppyDisks.forEach((d) =>
-                worldState.setFloppyDisk(d.id, d.colour, d.coords)
-            );
-            spawnData.enemies.forEach((e) =>
-                worldState.setEnemyState(e.id, {
-                    position: e.coords,
-                    type: e.type,
-                })
-            );
-            //
-            // would want to keep this in if its the first/ only scene!
-            //
-            // playerState.init({ position: playerStart });
-            playerState.setPosition(playerStart);
-        }
-
-        // all the following happens whether data has come from save file or using default level data
-        // load map based on incoming data- will need to retrieve tileset names etc alongside user data
+        // would need to be getting defaults here- get tilemap json, tileset, keys for default
+        const mapId = defaultLevelData.defaultmapId;
+        const levelId = defaultLevelData.defaultlevelId;
+        const tilesetName = defaultLevelData.defaulttilesetName;
+        const tilesetKey = defaultLevelData.defaulttilesetKey;
+        const tilesetOverlayName = defaultLevelData.defaulttilesetOverlayName;
+        const tilesetOverlayKey = defaultLevelData.defaulttilesetOverlayKey;
+        const musicKey = defaultLevelData.defaultmusicKey;
 
         const mLoader = new mapLoader(this);
         const { map, collisionLayer } = mLoader.loadMap(
@@ -144,9 +60,26 @@ export class LabLevelScene extends Scene {
             tilesetOverlayKey
         );
 
-        // actual spawning of players and enemies
-        // player
+        const spawnData = TiledParser.extractData(map);
+        if (!spawnData) throw new Error("spawn data not found");
 
+        const playerStart = spawnData.player;
+        playerState.setPosition(playerStart);
+
+        worldState.init(levelId);
+        worldState.setTriggerZones(spawnData.triggerZones);
+        worldState.setTerminal(levelId, spawnData.terminals[0].coords);
+        spawnData.floppyDisks.forEach((d) =>
+            worldState.setFloppyDisk(d.id, d.colour, d.coords, false)
+        );
+        spawnData.enemies.forEach((e) =>
+            worldState.setEnemyState(e.id, {
+                position: e.coords,
+                type: e.type,
+            })
+        );
+
+        // spawning
         const { x, y } = playerState.getPosition();
         this.player = new Player(this, x, y);
         // enemies- can be added to with diff types and we could make an enemy factory to slim down this logic
@@ -316,7 +249,7 @@ export class LabLevelScene extends Scene {
             this.exitZone
         ) {
             player.update();
-
+            this.terminals.update(player);
             this.enemies.forEach((enemy) => enemy.update());
             // this.terminals.update(player);
 
@@ -340,7 +273,6 @@ export class LabLevelScene extends Scene {
 
             // this is essentially level ending section- need to reset all that needs resetting at the end of it
             const playerBounds = player.getBounds();
-
             if (
                 Phaser.Geom.Intersects.RectangleToRectangle(
                     playerBounds,
@@ -348,14 +280,6 @@ export class LabLevelScene extends Scene {
                 )
             ) {
                 if (worldState.getCollectedDiskCount() == 4) {
-                    console.log(
-                        JSON.stringify(worldState.getSaveData(), null, 2)
-                    );
-                    console.log("------------------");
-
-                    console.log(
-                        JSON.stringify(playerState.getSaveData(), null, 2)
-                    );
                     // might put these inside of phaser scene shutdown instead if it gets bloated
                     worldState.resetAllCAREFUL();
                     eventBus.emit("updateUI");

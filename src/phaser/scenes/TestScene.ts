@@ -2,78 +2,78 @@
 
 const worldstateSaveData = {
     terminals: {
-        id: "BunkerLevelScene",
+        id: "LabLevelScene",
         position: {
-            x: 1722.03,
-            y: 1015.65,
+            x: 3520.75,
+            y: 1682.83333333333,
         },
         attempted: false,
         completed: true,
     },
     triggerZones: [
         {
-            id: 20,
+            id: 13,
             type: "generic-trigger",
-            x: 2986.5,
-            y: 1400,
-            width: 13,
-            height: 198.5,
+            x: 3799.16666666667,
+            y: 2428.83333333333,
+            width: 40.3333333333335,
+            height: 260.833333333333,
         },
     ],
     levelProgress: {
-        BunkerLevelScene: {},
+        LabLevelScene: {},
     },
-    levelId: "BunkerLevelScene",
+    levelId: "LabLevelScene",
     floppyDisks: {
-        "1": {
-            colour: "green",
-            collected: false,
+        "4": {
+            colour: "red",
+            collected: true,
             position: {
-                x: 2413.13,
-                y: 103.093,
+                x: 174,
+                y: 706,
             },
         },
-        "2": {
+        "5": {
             colour: "blue",
             collected: true,
             position: {
-                x: 2810.23,
-                y: 2317.68,
+                x: 3253.33333333333,
+                y: 323.666666666667,
             },
         },
-        "3": {
-            colour: "red",
+        "11": {
+            colour: "green",
             collected: false,
             position: {
-                x: 603.284,
-                y: 2107.67,
+                x: 1596.66666666667,
+                y: 406.666666666667,
             },
         },
-        "17": {
-            colour: "red",
-            collected: true,
+        "14": {
+            colour: "blue",
+            collected: false,
             position: {
-                x: 764,
-                y: 1368,
+                x: 3774,
+                y: 3292,
             },
         },
     },
     enemyStates: {
-        "5": {
-            id: 5,
+        "2": {
+            id: 2,
             position: {
-                x: 2917.14,
-                y: 1424.21,
+                x: 3765.37878787879,
+                y: 2644.30303030303,
             },
             interacted: false,
             alive: true,
             type: "bitey",
         },
-        "6": {
-            id: 6,
+        "3": {
+            id: 3,
             position: {
-                x: 2923.4568489628,
-                y: 1540.23260414881,
+                x: 3767.66666666667,
+                y: 2505.33333333333,
             },
             interacted: false,
             alive: true,
@@ -82,8 +82,18 @@ const worldstateSaveData = {
         "7": {
             id: 7,
             position: {
-                x: 1254.92885307732,
-                y: 349.734270529745,
+                x: 1174.5,
+                y: 2295.08333333333,
+            },
+            interacted: false,
+            alive: true,
+            type: "rolly",
+        },
+        "8": {
+            id: 8,
+            position: {
+                x: 2565.25,
+                y: 1738.5,
             },
             interacted: false,
             alive: true,
@@ -92,8 +102,8 @@ const worldstateSaveData = {
         "9": {
             id: 9,
             position: {
-                x: 1368,
-                y: 1952,
+                x: 584,
+                y: 3262.75,
             },
             interacted: false,
             alive: true,
@@ -102,8 +112,8 @@ const worldstateSaveData = {
         "10": {
             id: 10,
             position: {
-                x: 852,
-                y: 788,
+                x: 1580.5,
+                y: 3138.5,
             },
             interacted: false,
             alive: true,
@@ -111,23 +121,23 @@ const worldstateSaveData = {
         },
     },
     levelInfo: {
-        mapId: "BunkerLevelMap",
-        tilesetName: "BunkerLevelTileset",
-        tilesetKey: "BunkerLevelTileset",
-        tilesetOverlayName: "BunkerLevelTilesetOverlay",
-        tilesetOverlayKey: "BunkerLevelTilesetOverlay",
+        mapId: "LabLevelMap",
+        tilesetName: "tileset1",
+        tilesetKey: "LabLevelTileset",
+        tilesetOverlayName: "tileset1",
+        tilesetOverlayKey: "LabLevelTileset",
         musicKey: "WakeyWakey",
     },
 };
 
 const playerStateSaveData = {
     position: {
-        x: 2571.0000000000023,
-        y: 2364,
+        x: 1378,
+        y: 458,
     },
     health: 100,
     character: "Dreamer",
-    score: 110,
+    score: 140,
     level: 1,
     lives: 3,
 };
@@ -250,7 +260,12 @@ export class TestScene extends Scene {
                 y: terminals.position.y,
             });
             Object.entries(floppyDisks).forEach(([id, disk]) => {
-                worldState.setFloppyDisk(id, disk.colour, disk.position);
+                worldState.setFloppyDisk(
+                    id,
+                    disk.colour,
+                    disk.position,
+                    disk.collected
+                );
             });
 
             Object.values(enemyStates).forEach((enemy) => {
@@ -296,7 +311,7 @@ export class TestScene extends Scene {
             worldState.setTriggerZones(spawnData.triggerZones);
             worldState.setTerminal(levelId, spawnData.terminals[0].coords);
             spawnData.floppyDisks.forEach((d) =>
-                worldState.setFloppyDisk(d.id, d.colour, d.coords)
+                worldState.setFloppyDisk(d.id, d.colour, d.coords, false)
             );
             spawnData.enemies.forEach((e) =>
                 worldState.setEnemyState(e.id, {
@@ -312,7 +327,6 @@ export class TestScene extends Scene {
                 tilesetOverlayKey,
                 musicKey
             );
-            //
             // would want to keep this in if its the first/ only scene!
             //
             playerState.init({ position: playerStart });
@@ -502,7 +516,7 @@ export class TestScene extends Scene {
             this.exitZone
         ) {
             player.update();
-
+            this.terminals.update(player);
             this.enemies.forEach((enemy) => enemy.update());
             // this.terminals.update(player);
 

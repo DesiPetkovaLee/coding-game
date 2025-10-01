@@ -49,7 +49,12 @@ export class BunkerLevelScene extends Scene {
         this.disks = disks;
 
         this.disks.forEach((disk) => {
-            worldState.setFloppyDisk(disk.id, disk.colour, disk.getCoords());
+            worldState.setFloppyDisk(
+                disk.id,
+                disk.colour,
+                disk.getCoords(),
+                false
+            );
         });
         // interactions
         // if we add interactables they need to be added here
