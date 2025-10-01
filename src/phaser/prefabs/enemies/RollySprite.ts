@@ -1,4 +1,3 @@
-import eventBus from "../../core/EventBus";
 import { BaseEnemy } from "./BaseEnemy";
 
 export class RollySprite extends BaseEnemy {
@@ -31,10 +30,6 @@ export class RollySprite extends BaseEnemy {
             frameRate: 3,
             repeat: -1,
         });
-
-        this.on("moved", () => {
-            eventBus.emit("enemyMoved", this.id, { x: this.x, y: this.y });
-        });
     }
     interact(): void {
         console.log("rolly interaction");
@@ -44,11 +39,9 @@ export class RollySprite extends BaseEnemy {
         if (body.velocity.x > 0) {
             this.anims.play("roll", true);
             this.setFlipX(true);
-            this.emit("moved");
         } else if (body.velocity.x < 0) {
             this.anims.play("roll", true);
             this.setFlipX(false);
-            this.emit("moved");
         }
     }
 }

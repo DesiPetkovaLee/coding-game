@@ -161,6 +161,7 @@ class WorldState {
             this.floppyDisks[id].collected = true;
         }
         console.log(this.getAllFloppyDisks());
+        eventBus.emit("updateUI");
     }
     isFloppyCollected(id: string | number): boolean {
         return this.floppyDisks[id]?.collected ?? false;
