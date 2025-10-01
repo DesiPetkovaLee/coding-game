@@ -9,11 +9,27 @@ import LevelSelectPage from './pages/levelSelect/LevelSelectPage';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './appState/auth/AuthContext';
 import GameInitialiser from './phaser/GameInitialiser';
+import GameButton from './components/ui/GameButton';
+import { useEventBus } from './hooks/useEventBus';
+import { MUSIC_EVENTS } from './constants/events';
 
 export default function App() {
+    const { emit } = useEventBus();
+
+    const handleMuteClick = () => {
+        emit(MUSIC_EVENTS.TOGGLE_MUTE);
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
+            <GameButton
+                onClick={handleMuteClick}
+                variant={'contained'}
+                color={'primary'}
+                size={'small'}>
+                Mute
+            </GameButton>
             <AuthProvider>
                 <Routes>
                     <Route path="/" element={<StartPage />} />

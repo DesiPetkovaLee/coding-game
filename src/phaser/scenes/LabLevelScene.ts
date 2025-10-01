@@ -316,6 +316,20 @@ export class LabLevelScene extends Scene {
         this.input.keyboard?.once('keydown', () => {
             this.musicLoader?.playMusic();
         });
+
+        // Listen for music control events from React
+        const globalEventBus = (
+            window as unknown as Window & { globalEventBus: any }
+        ).globalEventBus;
+        if (globalEventBus) {
+            globalEventBus.on('toggle-music-mute', () => {
+                this.musicLoader?.toggleMute();
+            });
+
+            globalEventBus.on('stop-music', () => {
+                this.musicLoader?.stopMusic();
+            });
+        }
     }
     update() {
         const player = this.player;
