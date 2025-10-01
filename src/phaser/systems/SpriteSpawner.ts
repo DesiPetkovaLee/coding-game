@@ -1,9 +1,9 @@
-import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
-import { Terminal } from "../prefabs/interactables/Terminal";
-import { Player } from "../prefabs/characters/Player";
-import { RollySprite } from "../prefabs/enemies/RollySprite";
-import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
-import { BiteySprite } from "../prefabs/enemies/BiteySprite";
+import { FloppyDisk } from '../prefabs/interactables/FloppyDisk';
+import { Terminal } from '../prefabs/interactables/Terminal';
+import { Player } from '../prefabs/characters/Player';
+import { RollySprite } from '../prefabs/enemies/RollySprite';
+import type { BaseEnemy } from '../prefabs/enemies/BaseEnemy';
+import { BiteySprite } from '../prefabs/enemies/BiteySprite';
 
 export class Spawner {
     private scene: Phaser.Scene;
@@ -14,7 +14,7 @@ export class Spawner {
     }
 
     spawnEntities(): SpawnerResult {
-        const objects = this.map.getObjectLayer("Object")?.objects ?? [];
+        const objects = this.map.getObjectLayer('Object')?.objects ?? [];
 
         let player!: Player;
         const enemies: BaseEnemy[] = [];
@@ -28,75 +28,75 @@ export class Spawner {
                 properties.map((p: { name: string; value: string }) => [
                     p.name,
                     p.value,
-                ])
+                ]),
             );
 
-            console.log("Disk object:", obj);
-            console.log("Parsed props:", tiledProps);
+            // console.log("Disk object:", obj);
+            // console.log("Parsed props:", tiledProps);
 
             switch (name) {
-                case "player":
+                case 'player':
                     player = new Player(this.scene, x, y);
-                    console.log("player spawned at " + x + y);
+                    // console.log('player spawned at ' + x + y);
                     break;
-                case "enemy":
+                case 'enemy':
                     {
-                        const type = tiledProps.type ?? "rolly";
+                        const type = tiledProps.type ?? 'rolly';
                         const id = tiledProps.id;
 
                         let enemy;
-                        if (type === "rolly") {
+                        if (type === 'rolly') {
                             enemy = new RollySprite(
                                 this.scene,
                                 x,
                                 y,
-                                "rolly",
-                                id
+                                'rolly',
+                                id,
                             );
-                        } else if (type === "bitey") {
+                        } else if (type === 'bitey') {
                             enemy = new BiteySprite(
                                 this.scene,
                                 x,
                                 y,
-                                "bitey",
-                                id
+                                'bitey',
+                                id,
                             );
                         } else {
                             console.log(
-                                `Unknown enemy type: ${type}, defaulting generated at x ${x} and ${y}`
+                                `Unknown enemy type: ${type}, defaulting generated at x ${x} and ${y}`,
                             );
                             enemy = new RollySprite(
                                 this.scene,
                                 x,
                                 y,
-                                "rolly",
-                                id
+                                'rolly',
+                                id,
                             );
                         }
                         enemies.push(enemy);
                     }
                     break;
-                case "floppy-disk": {
-                    const colour = tiledProps.colour ?? "default";
+                case 'floppy-disk': {
+                    const colour = tiledProps.colour ?? 'default';
                     const id = obj.id?.toString();
                     const textureMap: Record<string, string> = {
-                        red: "floppy-red",
-                        green: "floppy-green",
-                        blue: "floppy-blue",
-                        default: "floppy-red",
+                        red: 'floppy-red',
+                        green: 'floppy-green',
+                        blue: 'floppy-blue',
+                        default: 'floppy-red',
                     };
 
                     const texture = textureMap[colour] ?? textureMap.default;
                     disks.push(
-                        new FloppyDisk(this.scene, x, y, texture, id, colour)
+                        new FloppyDisk(this.scene, x, y, texture, id, colour),
                     );
-                    console.log(tiledProps.colour);
+                    // console.log(tiledProps.colour);
                     break;
                 }
 
-                case "terminal": {
+                case 'terminal': {
                     const id = obj.id?.toString();
-                    terminals = new Terminal(this.scene, x, y, "terminal", id);
+                    terminals = new Terminal(this.scene, x, y, 'terminal', id);
                     break;
                 }
             }
@@ -111,9 +111,9 @@ export class Spawner {
     }
 
     exitZone() {
-        const triggerLayer = this.map.getObjectLayer("Object");
+        const triggerLayer = this.map.getObjectLayer('Object');
         const exitZoneData = triggerLayer?.objects.find(
-            (obj: { name: string }) => obj.name === "trigger"
+            (obj: { name: string }) => obj.name === 'trigger',
         );
         if (
             exitZoneData &&
@@ -125,7 +125,7 @@ export class Spawner {
                 exitZoneData?.x,
                 exitZoneData?.y,
                 exitZoneData.width,
-                exitZoneData.height
+                exitZoneData.height,
             );
         }
     }
