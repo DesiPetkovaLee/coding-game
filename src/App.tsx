@@ -22,6 +22,7 @@ const App = () => {
 
     const handleMuteClick = () => {
         emit(MUSIC_EVENTS.TOGGLE_MUTE);
+        setIsMuted(!isMuted);
     };
 
     return (
