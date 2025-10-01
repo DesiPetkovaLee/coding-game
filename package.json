@@ -10,7 +10,6 @@
         "preview": "vite preview"
     },
     "dependencies": {
-
         "@mui/material": "^7.3.2",
         "@mui/x-charts": "^8.11.3",
         "phaser": "^3.90.0",
