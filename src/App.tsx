@@ -1,5 +1,7 @@
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import { useState } from 'react';
 import theme from './theme/theme';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
@@ -14,7 +16,8 @@ import GameButton from './components/ui/GameButton';
 import { useEventBus } from './hooks/useEventBus';
 import { MUSIC_EVENTS } from './constants/events';
 
-export default function App() {
+const App = () => {
+    const [isMuted, setIsMuted] = useState<boolean>(false);
     const { emit } = useEventBus();
 
     const handleMuteClick = () => {
@@ -29,7 +32,7 @@ export default function App() {
                 variant={'contained'}
                 color={'primary'}
                 size={'small'}>
-                Mute
+                {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
             </GameButton>
             <AuthProvider>
                 <Routes>
@@ -44,4 +47,6 @@ export default function App() {
             </AuthProvider>
         </ThemeProvider>
     );
-}
+};
+
+export default App;
