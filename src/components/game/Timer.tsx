@@ -8,6 +8,7 @@ interface TimerProps {
     colors?: string[];
     onTimerComplete?: () => void;
     size?: { width: number; height: number };
+    backgroundImagePath?: string;
     // event emitter to unpause current scene
 }
 
