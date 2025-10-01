@@ -1,39 +1,137 @@
 // lots of errors on this file don't be alarmed just bc im choosing to load as if there is from the json atm and still working on mocking the save data!
 
-const SaveData = false;
-//  {
-//     levelId: "LabLevelMap",
-// mapId: "LabLevelMap",
-//     tilesetKey: "tileset1",
-//     tilesetImage: "LabLevelTileset",
-// tilesetOverlayKey: "tileset1",
-// tilesetOverlayName: "LabLevelTileset",
-//     musicKey: "WakeyWakey",
-//     playerStart: { x: 100, y: 200 } as Coords,
-//     floppyDisks: [
-//         { id: "disk-red", colour: "red", coords: { x: 150, y: 250 } },
-//         { id: "disk-blue", colour: "blue", coords: { x: 600, y: 400 } },
-//     ],
-//     terminal: {
-//         id: "terminal-1",
-//         coords: { x: 400, y: 300 },
-//     },
-//     enemies: [
-//         { id: "bitey-1", type: "bitey", coords: { x: 300, y: 400 } },
-//         { id: "rolly-2", type: "rolly", coords: { x: 600, y: 200 } },
-//     ],
-//     triggerZones: [
-//         {
-//             id: "exit-zone",
-//             type: "levelExit",
-//             targetLevel: "NextLevelMap",
-//             x: 1200,
-//             y: 300,
-//             width: 64,
-//             height: 64,
-//         },
-//     ],
-// };
+const SaveData = {
+    terminals: {
+        id: "BunkerLevelScene",
+        position: {
+            x: 1722.03,
+            y: 1015.65,
+        },
+        attempted: false,
+        completed: false,
+    },
+    triggerZones: [
+        {
+            id: 20,
+            type: "generic-trigger",
+            x: 2986.5,
+            y: 1400,
+            width: 13,
+            height: 198.5,
+        },
+    ],
+    levelProgress: {
+        BunkerLevelScene: {},
+    },
+    levelId: "BunkerLevelScene",
+    floppyDisks: {
+        "1": {
+            colour: "green",
+            collected: true,
+            position: {
+                x: 2413.13,
+                y: 103.093,
+            },
+        },
+        "2": {
+            colour: "blue",
+            collected: false,
+            position: {
+                x: 2810.23,
+                y: 2317.68,
+            },
+        },
+        "3": {
+            colour: "red",
+            collected: false,
+            position: {
+                x: 603.284,
+                y: 2107.67,
+            },
+        },
+        "17": {
+            colour: "red",
+            collected: true,
+            position: {
+                x: 764,
+                y: 1368,
+            },
+        },
+    },
+    enemyStates: {
+        "5": {
+            id: 5,
+            position: {
+                x: 2917.14,
+                y: 1424.21,
+            },
+            interacted: false,
+            alive: true,
+            type: "bitey",
+        },
+        "6": {
+            id: 6,
+            position: {
+                x: 2923.4568489628,
+                y: 1540.23260414881,
+            },
+            interacted: false,
+            alive: true,
+            type: "bitey",
+        },
+        "7": {
+            id: 7,
+            position: {
+                x: 1254.92885307732,
+                y: 349.734270529745,
+            },
+            interacted: false,
+            alive: true,
+            type: "rolly",
+        },
+        "9": {
+            id: 9,
+            position: {
+                x: 1368,
+                y: 1952,
+            },
+            interacted: false,
+            alive: true,
+            type: "rolly",
+        },
+        "10": {
+            id: 10,
+            position: {
+                x: 852,
+                y: 788,
+            },
+            interacted: false,
+            alive: true,
+            type: "rolly",
+        },
+    },
+    levelInfo: {
+        mapId: "BunkerLevelMap",
+        tilesetName: "BunkerLevelTileset",
+        tilesetKey: "BunkerLevelTileset",
+        tilesetOverlayName: "BunkerLevelTilesetOverlay",
+        tilesetOverlayKey: "BunkerLevelTilesetOverlay",
+        musicKey: "WakeyWakey",
+    },
+};
+
+const playerStateSaveData = {
+    position: {
+        x: 2337.6666666666674,
+        y: 159,
+    },
+    health: 100,
+    character: "Dreamer",
+    score: 100,
+    level: 1,
+    lives: 3,
+};
+
 // currently what we need to build a level (and player info)
 type LevelDefaults = {
     levelId: string;
@@ -70,7 +168,7 @@ import { Scene } from "phaser";
 import { Player } from "../prefabs/characters/Player";
 import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
 import { Terminal } from "../prefabs/interactables/Terminal";
-import { TiledParser } from "../systems/TiledParser";
+import { TiledParser, type Coords } from "../systems/TiledParser";
 import { CameraController } from "../systems/CameraControl";
 import { MusicLoader } from "../systems/MusicLoader";
 import { worldState } from "../core/States/WorldState";
@@ -108,44 +206,47 @@ export class TestScene extends Scene {
         let tilesetOverlayName = defaults.tilesetOverlayName;
         let tilesetOverlayKey = defaults.tilesetOverlayKey;
         let musicKey = defaults.musicKey;
+        let playerStart: Coords;
 
         if (SaveData) {
             const {
                 levelId: mockLevelId,
-                mapId: mockMapId,
-                tilesetName: mockTilesetName,
-                tilesetKey: mockTilesetKey,
-                tilesetOverlayName: mockTilesetOverlayName,
-                tilesetOverlayKey: mockTilesetOverlayKey,
-                musicKey: mockMusicKey,
-                playerStart: mockPlayerStart,
-                enemies,
+                levelInfo,
+                enemyStates,
                 triggerZones,
-                terminal,
+                terminals,
                 floppyDisks,
             } = SaveData;
 
             levelId = mockLevelId;
-            mapId = mockMapId;
-            tilesetName = mockTilesetName;
-            tilesetKey = mockTilesetKey;
-            tilesetOverlayName = mockTilesetOverlayName;
-            tilesetOverlayKey = mockTilesetOverlayKey;
-            musicKey = mockMusicKey;
-            playerStart = mockPlayerStart;
+            tilesetName = levelInfo.tilesetName;
+            tilesetKey = levelInfo.tilesetKey;
+            tilesetOverlayName = levelInfo.tilesetOverlayName;
+            tilesetOverlayKey = levelInfo.tilesetOverlayKey;
+            musicKey = levelInfo.musicKey;
+            mapId = levelInfo.mapId;
+            playerStart = {
+                x: playerStateSaveData.position.x,
+                y: playerStateSaveData.position.y,
+            };
 
             worldState.init(levelId);
-            worldState.setTriggerZones(levelId, triggerZones);
-            worldState.setTerminal(levelId, terminal.coords);
-            floppyDisks.forEach((d) =>
-                worldState.setFloppyDisk(d.id, d.colour, d.coords)
-            );
-            enemies.forEach((e) =>
-                worldState.setEnemyState(e.id, {
-                    position: e.coords,
-                    type: e.type,
-                })
-            );
+            worldState.setTriggerZones(triggerZones);
+            worldState.setTerminal(levelId, {
+                x: terminals.position.x,
+                y: terminals.position.y,
+            });
+            Object.entries(floppyDisks).forEach(([id, disk]) => {
+                worldState.setFloppyDisk(id, disk.colour, disk.position);
+            });
+
+            Object.values(enemyStates).forEach((enemy) => {
+                worldState.setEnemyState(enemy.id, {
+                    position: enemy.position,
+                    type: enemy.type,
+                });
+            });
+
             playerState.init({ position: playerStart });
         } else {
             //  otherwise, use the default data- will also come from backend
@@ -164,7 +265,7 @@ export class TestScene extends Scene {
             const playerStart = spawnData.player;
 
             worldState.init(levelId);
-            worldState.setTriggerZones(levelId, spawnData.triggerZones);
+            worldState.setTriggerZones(spawnData.triggerZones);
             worldState.setTerminal(levelId, spawnData.terminals[0].coords);
             spawnData.floppyDisks.forEach((d) =>
                 worldState.setFloppyDisk(d.id, d.colour, d.coords)
@@ -174,6 +275,14 @@ export class TestScene extends Scene {
                     position: e.coords,
                     type: e.type,
                 })
+            );
+            worldState.setLevelInfo(
+                mapId,
+                tilesetName,
+                tilesetKey,
+                tilesetOverlayName,
+                tilesetOverlayKey,
+                musicKey
             );
             //
             // would want to keep this in if its the first/ only scene!
@@ -240,7 +349,7 @@ export class TestScene extends Scene {
                 enemy.alive = data.alive;
                 return enemy;
             });
-        const terminalData = worldState.getTerminal(levelId);
+        const terminalData = worldState.getTerminal();
         this.terminals =
             terminalData && !terminalData.completed
                 ? new Terminal(
@@ -336,6 +445,23 @@ export class TestScene extends Scene {
         this.musicLoader = new MusicLoader(this, musicKey, true, 0.1);
         this.input.keyboard?.once("keydown", () => {
             this.musicLoader?.playMusic();
+        });
+
+        // 'save' data
+        const space = this.input.keyboard?.addKey(
+            Phaser.Input.Keyboard.KeyCodes.SPACE
+        );
+        space?.on("down", () => {
+            const worldSaveData = worldState.getSaveData();
+            console.log(
+                "WorldState Save:\n",
+                JSON.stringify(worldSaveData, null, 2)
+            );
+            const playerStateData = playerState.getSaveData();
+            console.log(
+                "playerStateData Save:\n",
+                JSON.stringify(playerStateData, null, 2)
+            );
         });
     }
     update() {

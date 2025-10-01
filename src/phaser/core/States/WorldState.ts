@@ -22,29 +22,41 @@ type EnemyState = {
     type?: string;
     alive?: boolean;
 };
+type levelInfo = {
+    mapId: string;
+    tilesetName: string;
+    tilesetKey: string;
+    tilesetOverlayName: string;
+    tilesetOverlayKey: string;
+    musicKey: string;
+};
 
 class WorldState {
     // different for each level
     private static instance: WorldState;
     private initialised = false;
-    private terminals: Record<
-        string,
-        {
-            attempted: boolean;
-            completed: boolean;
-            position: Coords;
-            id: string | number;
-        }
-    > = {};
-    private triggerZones: Record<string, TriggerZone[]> = {};
+    private terminal: {
+        id: string | number;
+        attempted: boolean;
+        completed: boolean;
+        position: Coords;
+    } | null = null;
+    private triggerZones: TriggerZone[] = [];
     private levelProgress: Record<string, LevelProgress> = {};
-    private currentLevel: string | number = "";
+    private levelId: string | number = "";
     private enemyStates: Record<string, EnemyState> = {};
     private floppyDisks: Record<
         string,
         { colour: string; collected: boolean; position: Coords }
     > = {};
-
+    private levelInfo: levelInfo = {
+        mapId: "",
+        tilesetName: "",
+        tilesetKey: "",
+        tilesetOverlayName: "",
+        tilesetOverlayKey: "",
+        musicKey: "",
+    };
     static getInstance(): WorldState {
         if (!WorldState.instance) {
             WorldState.instance = new WorldState();
@@ -54,7 +66,7 @@ class WorldState {
 
     init(levelId: string | number) {
         if (this.initialised) return;
-        this.currentLevel = levelId;
+        this.levelId = levelId;
         if (!this.levelProgress[levelId]) {
             this.levelProgress[levelId] = {};
         }
@@ -77,12 +89,34 @@ class WorldState {
         eventBus.off("enemyMoved", this.setEnemyPosition);
     }
 
-    setTriggerZones(levelId: string, zones: TriggerZone[]) {
-        this.triggerZones[levelId] = zones;
+    setTriggerZones(zones: TriggerZone[]) {
+        this.triggerZones = zones;
     }
 
     getTriggerZones(): TriggerZone[] {
-        return this.triggerZones[this.currentLevel] ?? [];
+        return this.triggerZones;
+    }
+
+    // levelInfo
+    setLevelInfo(
+        mapId: string,
+        tilesetName: string,
+        tilesetKey: string,
+        tilesetOverlayName: string,
+        tilesetOverlayKey: string,
+        musicKey: string
+    ) {
+        this.levelInfo = {
+            mapId,
+            tilesetName,
+            tilesetKey,
+            tilesetOverlayName,
+            tilesetOverlayKey,
+            musicKey,
+        };
+    }
+    getLevelInfo(): levelInfo {
+        return this.levelInfo;
     }
 
     // enemies
@@ -126,30 +160,27 @@ class WorldState {
     }
 
     // terminals
-    setTerminal(
-        id: string | number,
-        position: Coords,
-        attempted: boolean = false
-    ) {
-        this.terminals[id] = { completed: false, position, attempted, id };
+    setTerminal(id: string | number, position: Coords, attempted = false) {
+        this.terminal = {
+            id,
+            position,
+            attempted,
+            completed: false,
+        };
     }
-    getTerminal(id: string | number):
-        | {
-              id: string | number;
-              attempted: boolean;
-              completed: boolean;
-              position: Coords;
-          }
-        | undefined {
-        return this.terminals[id];
+
+    getTerminal(): typeof this.terminal {
+        return this.terminal;
     }
-    markTerminalComplete(id: string | number) {
-        if (this.terminals[id]) {
-            this.terminals[id].completed = true;
+
+    markTerminalComplete() {
+        if (this.terminal) {
+            this.terminal.completed = true;
         }
     }
-    isTerminalComplete(id: string | number): boolean {
-        return this.terminals[id]?.completed ?? false;
+
+    isTerminalComplete(): boolean {
+        return this.terminal?.completed ?? false;
     }
 
     // floppydisks
@@ -185,32 +216,42 @@ class WorldState {
     // save / load all data held in this state
     getSaveData() {
         return {
-            terminals: this.terminals,
+            terminals: this.terminal,
             triggerZones: this.triggerZones,
             levelProgress: this.levelProgress,
-            currentLevel: this.currentLevel,
+            levelId: this.levelId,
             floppyDisks: this.floppyDisks,
             enemyStates: this.enemyStates,
+            levelInfo: this.levelInfo,
         };
     }
 
     load(data: ReturnType<WorldState["getSaveData"]>) {
-        this.terminals = data.terminals;
+        this.terminal = data.terminals;
         this.triggerZones = data.triggerZones;
         this.levelProgress = data.levelProgress;
-        this.currentLevel = data.currentLevel;
+        this.levelId = data.levelId;
         this.floppyDisks = data.floppyDisks;
         this.enemyStates = data.enemyStates;
+        this.levelInfo = data.levelInfo;
     }
 
     resetAllCAREFUL() {
         this.initialised = false;
-        this.currentLevel = "";
+        this.levelId = "";
         this.levelProgress = {};
         this.floppyDisks = {};
-        this.terminals = {};
+        this.terminal = null;
         this.enemyStates = {};
-        this.triggerZones = {};
+        this.triggerZones = [];
+        this.levelInfo = {
+            mapId: "",
+            tilesetName: "",
+            tilesetKey: "",
+            tilesetOverlayName: "",
+            tilesetOverlayKey: "",
+            musicKey: "",
+        };
         this.cleanupListeners();
     }
 }
