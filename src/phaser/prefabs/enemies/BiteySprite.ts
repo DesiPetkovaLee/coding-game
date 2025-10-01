@@ -1,4 +1,4 @@
-import { worldState } from '../../core/state/WorldState';
+import { worldState } from '../../core/States/WorldState';
 import { BaseEnemy } from './BaseEnemy';
 
 export class BiteySprite extends BaseEnemy {
