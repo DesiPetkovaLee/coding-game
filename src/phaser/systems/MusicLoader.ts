@@ -40,7 +40,7 @@ export class MusicLoader {
     toggleMute() {
         this.isMuted = !this.isMuted;
         if (this.bgMusic) {
-            this.bgMusic.setVolume(this.isMuted ? 0 : this.volume);
+            (this.bgMusic as any).setVolume(this.isMuted ? 0 : this.volume);
         }
         console.log(this.isMuted ? 'music muted' : 'music unmuted');
     }
@@ -48,7 +48,7 @@ export class MusicLoader {
     mute() {
         this.isMuted = true;
         if (this.bgMusic) {
-            this.bgMusic.setVolume(0);
+            (this.bgMusic as any).setVolume(0);
         }
         console.log('music muted');
     }
@@ -56,12 +56,24 @@ export class MusicLoader {
     unmute() {
         this.isMuted = false;
         if (this.bgMusic) {
-            this.bgMusic.setVolume(this.volume);
+            (this.bgMusic as any).setVolume(this.volume);
         }
         console.log('music unmuted');
     }
 
     isCurrentlyMuted(): boolean {
         return this.isMuted;
+    }
+
+    setVolume(volume: number) {
+        this.volume = Math.max(0, Math.min(1, volume)); // Clamp between 0 and 1
+        if (this.bgMusic && !this.isMuted) {
+            (this.bgMusic as any).setVolume(this.volume);
+        }
+        console.log(`volume set to ${this.volume}`);
+    }
+
+    getVolume(): number {
+        return this.volume;
     }
 }
