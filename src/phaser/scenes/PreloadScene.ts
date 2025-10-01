@@ -49,6 +49,6 @@ export class PreloadScene extends Scene {
     }
 
     create() {
-        this.scene.start("BunkerLevelScene");
+        this.scene.start("TestScene");
     }
 }

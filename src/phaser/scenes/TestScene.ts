@@ -34,22 +34,43 @@ const SaveData = false;
 //         },
 //     ],
 // };
+// currently what we need to build a level (and player info)
+type LevelDefaults = {
+    levelId: string;
+    mapId: string;
+    tilesetName: string;
+    tilesetKey: string;
+    tilesetOverlayName: string;
+    tilesetOverlayKey: string;
+    musicKey: string;
+};
 
-const defaultLevelData = {
-    defaultlevelId: "LabLevelMap",
-    defaultmapId: "LabLevelMap",
-    defaulttilesetName: "tileset1",
-    defaulttilesetKey: "LabLevelTileset",
-    defaulttilesetOverlayName: "tileset1",
-    defaulttilesetOverlayKey: "LabLevelTileset",
-    defaultmusicKey: "WakeyWakey",
+const levelDefaults: Record<string, LevelDefaults> = {
+    bunker: {
+        levelId: "BunkerLevelScene",
+        mapId: "BunkerLevelMap",
+        tilesetName: "BunkerLevelTileset",
+        tilesetKey: "BunkerLevelTileset",
+        tilesetOverlayName: "BunkerLevelTilesetOverlay",
+        tilesetOverlayKey: "BunkerLevelTilesetOverlay",
+        musicKey: "WakeyWakey",
+    },
+    lab: {
+        levelId: "LabLevelScene",
+        mapId: "LabLevelMap",
+        tilesetName: "tileset1",
+        tilesetKey: "LabLevelTileset",
+        tilesetOverlayName: "tileset1",
+        tilesetOverlayKey: "LabLevelTileset",
+        musicKey: "WakeyWakey",
+    },
 };
 
 import { Scene } from "phaser";
 import { Player } from "../prefabs/characters/Player";
 import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
 import { Terminal } from "../prefabs/interactables/Terminal";
-import { TiledParser, type Coords } from "../systems/TiledParser";
+import { TiledParser } from "../systems/TiledParser";
 import { CameraController } from "../systems/CameraControl";
 import { MusicLoader } from "../systems/MusicLoader";
 import { worldState } from "../core/States/WorldState";
@@ -60,7 +81,7 @@ import { RollySprite } from "../prefabs/enemies/RollySprite";
 import eventBus from "../core/EventBus";
 import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
 
-export class LabLevelScene extends Scene {
+export class TestScene extends Scene {
     player: Player | undefined;
     enemies: BaseEnemy[] | undefined;
     terminals: Terminal | undefined;
@@ -69,7 +90,7 @@ export class LabLevelScene extends Scene {
     interactables: (BaseEnemy | Terminal | FloppyDisk)[] | undefined;
     musicLoader: MusicLoader | undefined;
     constructor() {
-        super("LabLevelScene");
+        super("TestScene");
     }
 
     create() {
@@ -77,14 +98,16 @@ export class LabLevelScene extends Scene {
             this.scene.launch("UIScene");
             this.scene.get("UIScene").events.emit("updateUI");
         }
-        let mapId: string;
-        let levelId: string;
-        let tilesetName: string;
-        let tilesetKey: string;
-        let tilesetOverlayName: string;
-        let tilesetOverlayKey: string;
-        let musicKey: string;
-        let playerStart: Coords;
+        const selectedScene = "bunker";
+        const defaults = levelDefaults[selectedScene];
+
+        let mapId = defaults.mapId;
+        let levelId = defaults.levelId;
+        let tilesetName = defaults.tilesetName;
+        let tilesetKey = defaults.tilesetKey;
+        let tilesetOverlayName = defaults.tilesetOverlayName;
+        let tilesetOverlayKey = defaults.tilesetOverlayKey;
+        let musicKey = defaults.musicKey;
 
         if (SaveData) {
             const {
@@ -125,15 +148,7 @@ export class LabLevelScene extends Scene {
             );
             playerState.init({ position: playerStart });
         } else {
-            // would need to be getting defaults here- get tilemap json, tileset, keys for default
-            mapId = defaultLevelData.defaultmapId;
-            levelId = defaultLevelData.defaultlevelId;
-            tilesetName = defaultLevelData.defaulttilesetName;
-            tilesetKey = defaultLevelData.defaulttilesetKey;
-            tilesetOverlayName = defaultLevelData.defaulttilesetOverlayName;
-            tilesetOverlayKey = defaultLevelData.defaulttilesetOverlayKey;
-            musicKey = defaultLevelData.defaultmusicKey;
-
+            //  otherwise, use the default data- will also come from backend
             const mLoader = new mapLoader(this);
             const { map } = mLoader.loadMap(
                 mapId,
@@ -146,7 +161,7 @@ export class LabLevelScene extends Scene {
             const spawnData = TiledParser.extractData(map);
             if (!spawnData) throw new Error("spawn data not found");
 
-            playerStart = spawnData.player;
+            const playerStart = spawnData.player;
 
             worldState.init(levelId);
             worldState.setTriggerZones(levelId, spawnData.triggerZones);
@@ -163,8 +178,8 @@ export class LabLevelScene extends Scene {
             //
             // would want to keep this in if its the first/ only scene!
             //
-            // playerState.init({ position: playerStart });
-            playerState.setPosition(playerStart);
+            playerState.init({ position: playerStart });
+            // playerState.setPosition(playerStart);
         }
 
         // all the following happens whether data has come from save file or using default level data
@@ -236,7 +251,6 @@ export class LabLevelScene extends Scene {
                       terminalData.id
                   )
                 : undefined;
-        console.log(this.terminals?.id);
 
         this.disks = worldState
             .getAllFloppyDisks()
@@ -379,7 +393,7 @@ export class LabLevelScene extends Scene {
                     eventBus.emit("updateUI");
                     this.musicLoader?.stopMusic();
                     console.log("start next scene");
-                    this.scene.start("BunkerLevelScene");
+                    // this.scene.start("TestScene");
                 }
             }
         }

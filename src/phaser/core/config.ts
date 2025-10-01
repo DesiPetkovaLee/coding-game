@@ -3,6 +3,7 @@ import { PreloadScene } from "../scenes/PreloadScene";
 import { BunkerLevelScene } from "../scenes/BunkerLevelScene";
 import { UIScene } from "../scenes/UIScene";
 import { LabLevelScene } from "../scenes/LabLevelScene";
+import { TestScene } from "../scenes/TestScene";
 
 export const config = {
     type: Phaser.AUTO,
@@ -17,7 +18,7 @@ export const config = {
             debug: true,
         },
     },
-    scene: [PreloadScene, BunkerLevelScene, LabLevelScene, UIScene],
+    scene: [PreloadScene, BunkerLevelScene, LabLevelScene, TestScene, UIScene],
     fps: {
         limit: 30,
     },

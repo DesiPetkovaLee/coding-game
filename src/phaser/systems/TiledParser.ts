@@ -56,7 +56,7 @@ export class TiledParser {
                     )?.value || "rolly",
                 coords: {
                     x: obj.x ?? 0,
-                    y: (obj.y ?? 0) - (obj.height ?? 0),
+                    y: obj.y ?? 0,
                 },
             }));
 
@@ -71,7 +71,7 @@ export class TiledParser {
                 // red as default if no other colour
                 coords: {
                     x: obj.x ?? 0,
-                    y: (obj.y ?? 0) - (obj.height ?? 0),
+                    y: obj.y ?? 0,
                 },
             }));
 
@@ -81,7 +81,7 @@ export class TiledParser {
                 id: obj.id || `terminal-${i}`,
                 coords: {
                     x: obj.x ?? 0,
-                    y: (obj.y ?? 0) - (obj.height ?? 0),
+                    y: obj.y ?? 0,
                 },
             }));
 
@@ -101,7 +101,7 @@ export class TiledParser {
             return {
                 player: {
                     x: player.x ?? 100,
-                    y: (player.y ?? 0) - (player.height ?? 0),
+                    y: player.y ?? 0,
                 },
                 enemies,
                 floppyDisks,
