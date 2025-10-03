@@ -30,7 +30,7 @@ export class BiteySprite extends BaseEnemy {
         });
 
         // will need to update if bitey moves out of the way
-        worldState.setEnemyPosition(this.id, { x: this.x, y: this.y });
+        // worldState.setEnemyPosition(this.id, { x: this.x, y: this.y });
     }
     interact(): void {
         console.log("bitey clicked");

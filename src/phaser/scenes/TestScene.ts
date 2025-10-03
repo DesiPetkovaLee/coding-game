@@ -1,4 +1,5 @@
-// currently what we need to build a level (and player info)
+// currently what we need to build a level
+// and the tilemap json - regardless of if a saved user or not
 type LevelDefaults = {
     levelId: string;
     mapId: string;
@@ -48,7 +49,7 @@ import { Terminal } from "../prefabs/interactables/Terminal";
 import { TiledParser } from "../systems/TiledParser";
 import { CameraController } from "../systems/CameraControl";
 import { MusicLoader } from "../systems/MusicLoader";
-import { worldState } from "../core/state/WorldState";
+import { worldState, type EnemyState } from "../core/state/WorldState";
 import { playerState } from "../core/state/PlayerState";
 import { mapLoader } from "../systems/mapLoader";
 import { BiteySprite } from "../prefabs/enemies/BiteySprite";
@@ -85,11 +86,24 @@ export class TestScene extends Scene {
         let tilesetOverlayKey = defaults.tilesetOverlayKey;
         let musicKey = defaults.musicKey;
 
-        let playerStart = playerDefaults.position;
         let playerScore = playerDefaults.score;
         let playerHealth = playerDefaults.health;
         let playerCharacter = playerDefaults.character;
         let playerLives = playerDefaults.lives;
+
+        // changed here to set player and enemy positions based on tilemap
+        const mLoader = new mapLoader(this);
+        const { map, collisionLayer } = mLoader.loadMap(
+            mapId,
+            tilesetName,
+            tilesetKey,
+            tilesetOverlayName,
+            tilesetOverlayKey
+        );
+        const spawnData = TiledParser.extractData(map);
+        if (!spawnData) throw new Error("spawn data not found");
+        worldState.init(levelId);
+        const playerStart = spawnData.player;
 
         if (worldstateSaveData && playerStateSaveData) {
             // initialising worldstate with save data
@@ -97,7 +111,6 @@ export class TestScene extends Scene {
                 levelId: mockLevelId,
                 levelInfo,
                 enemyStates,
-                triggerZones,
                 terminals,
                 floppyDisks,
             } = worldstateSaveData;
@@ -110,12 +123,15 @@ export class TestScene extends Scene {
             musicKey = levelInfo.musicKey;
             mapId = levelInfo.mapId;
 
-            worldState.init(levelId);
-            worldState.setTriggerZones(triggerZones);
-            worldState.setTerminal(levelId, {
-                x: terminals.position.x,
-                y: terminals.position.y,
-            });
+            worldState.setTerminal(
+                terminals.id,
+                {
+                    x: terminals.position.x,
+                    y: terminals.position.y,
+                },
+                terminals.attempted,
+                terminals.completed
+            );
             Object.entries(floppyDisks).forEach(([id, disk]) => {
                 worldState.setFloppyDisk(
                     id,
@@ -124,17 +140,30 @@ export class TestScene extends Scene {
                     disk.collected
                 );
             });
-
-            Object.values(enemyStates).forEach((enemy) => {
-                worldState.setEnemyState(enemy.id, {
-                    position: enemy.position,
-                    type: enemy.type,
+            worldState.setTriggerZones(spawnData.triggerZones);
+            // now using spawn data from map for enemies, but adding fields from save file
+            spawnData.enemies.forEach((spawnedEnemy) => {
+                const saved = (
+                    enemyStates as Record<string | number, Partial<EnemyState>>
+                )[spawnedEnemy.id];
+                worldState.setEnemyState(spawnedEnemy.id, {
+                    position: spawnedEnemy.coords,
+                    type: spawnedEnemy.type,
+                    interacted: saved?.interacted ?? false,
+                    alive: saved?.alive ?? true,
                 });
             });
 
+            worldState.setLevelInfo(
+                mapId,
+                tilesetName,
+                tilesetKey,
+                tilesetOverlayName,
+                tilesetOverlayKey,
+                musicKey
+            );
             // initialising playerState with save data
             ({
-                position: playerStart,
                 score: playerScore,
                 health: playerHealth,
                 character: playerCharacter,
@@ -150,23 +179,11 @@ export class TestScene extends Scene {
             });
         } else {
             //  otherwise, use the default data- will also come from backend
-            const mLoader = new mapLoader(this);
-            const { map } = mLoader.loadMap(
-                mapId,
-                tilesetName,
-                tilesetKey,
-                tilesetOverlayName,
-                tilesetOverlayKey
-            );
-
-            const spawnData = TiledParser.extractData(map);
-            if (!spawnData) throw new Error("spawn data not found");
-
-            const playerStart = spawnData.player;
-
             worldState.init(levelId);
-            worldState.setTriggerZones(spawnData.triggerZones);
-            worldState.setTerminal(levelId, spawnData.terminals[0].coords);
+            worldState.setTerminal(
+                spawnData.terminals[0].id,
+                spawnData.terminals[0].coords
+            );
             spawnData.floppyDisks.forEach((d) =>
                 worldState.setFloppyDisk(d.id, d.colour, d.coords, false)
             );
@@ -184,27 +201,15 @@ export class TestScene extends Scene {
                 tilesetOverlayKey,
                 musicKey
             );
-            // would want to keep this in if its the first/ only scene!
-            //
+            worldState.setTriggerZones(spawnData.triggerZones);
             playerState.init({ position: playerStart });
-            // playerState.setPosition(playerStart);
         }
 
         // all the following happens whether data has come from save file or using default level data
         // load map based on incoming data- will need to retrieve tileset names etc alongside user data
 
-        const mLoader = new mapLoader(this);
-        const { map, collisionLayer } = mLoader.loadMap(
-            mapId,
-            tilesetName,
-            tilesetKey,
-            tilesetOverlayName,
-            tilesetOverlayKey
-        );
-
         // actual spawning of players and enemies
         // player
-
         const { x, y } = playerState.getPosition();
         this.player = new Player(this, x, y);
         // enemies- can be added to with diff types and we could make an enemy factory to slim down this logic
@@ -282,9 +287,7 @@ export class TestScene extends Scene {
                 );
             });
         // exit zone
-        console.log(worldState.getTriggerZones());
         const exitZoneData = worldState.getTriggerZones();
-        console.log(exitZoneData[0]);
         this.exitZone = new Phaser.Geom.Rectangle(
             exitZoneData[0].x,
             exitZoneData[0].y,
