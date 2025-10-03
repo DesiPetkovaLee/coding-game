@@ -83,7 +83,6 @@ export class BunkerLevelScene extends Scene {
         this.physics.add.collider(this.player, collisionLayer);
 
         this.physics.add.collider(this.player, this.enemies, () => {
-            console.log("collides");
             eventBus.emit("playerDamaged", -10);
             eventBus.emit("updateUI");
         });
@@ -108,7 +107,6 @@ export class BunkerLevelScene extends Scene {
                     0.3
                 )
                 .setOrigin(0, 0);
-            console.table(this.exitZone);
         }
         // Camera;
         const camControl = new CameraController(this);

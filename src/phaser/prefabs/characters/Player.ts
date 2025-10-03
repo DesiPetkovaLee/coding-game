@@ -6,6 +6,7 @@ export class Player extends BaseSprite {
     keyA: Phaser.Input.Keyboard.Key;
     keyS: Phaser.Input.Keyboard.Key;
     keyD: Phaser.Input.Keyboard.Key;
+    keyE: Phaser.Input.Keyboard.Key;
     keyEnter: Phaser.Input.Keyboard.Key;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
@@ -19,6 +20,7 @@ export class Player extends BaseSprite {
         this.keyA = scene.input.keyboard.addKey("A");
         this.keyS = scene.input.keyboard.addKey("S");
         this.keyD = scene.input.keyboard.addKey("D");
+        this.keyE = scene.input.keyboard.addKey("E");
         this.keyEnter = scene.input.keyboard.addKey(
             Phaser.Input.Keyboard.KeyCodes.ENTER
         );
@@ -27,6 +29,9 @@ export class Player extends BaseSprite {
         this.getBody().setOffset(48, 5);
 
         this.keyEnter.on("down", () => {
+            this.tryInteract();
+        });
+        this.keyE.on("down", () => {
             this.tryInteract();
         });
 
