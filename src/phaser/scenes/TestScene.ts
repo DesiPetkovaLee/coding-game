@@ -29,16 +29,10 @@ const levelDefaults: Record<string, LevelDefaults> = {
         musicKey: "WakeyWakey",
     },
 };
+// if you want to try initialising with diff presets you can add to here. by default a new user should have a character selected
+// switch -> "dreamer"
 const playerDefaults = {
-    position: {
-        x: 2337.6666666666674,
-        y: 159,
-    },
-    health: 50,
-    character: "Dreamer",
-    score: 100,
-    level: 1,
-    lives: 3,
+    character: "thinker",
 };
 
 import { Scene } from "phaser";
@@ -61,6 +55,7 @@ import { playerStateSaveData } from "./TestData";
 import {
     dreamerConfig,
     thinkerConfig,
+    type CharacterConfig,
 } from "../prefabs/characters/CharacterConfig";
 
 export class TestScene extends Scene {
@@ -91,13 +86,13 @@ export class TestScene extends Scene {
         let tilesetOverlayKey = defaults.tilesetOverlayKey;
         let musicKey = defaults.musicKey;
 
-        let playerStart = playerDefaults.position;
-        let playerScore = playerDefaults.score;
-        let playerHealth = playerDefaults.health;
+        let playerStart;
+        let playerScore;
+        let playerHealth;
         let playerCharacter = playerDefaults.character;
-        let playerLives = playerDefaults.lives;
+        let playerLives;
 
-        if (!worldstateSaveData && !playerStateSaveData) {
+        if (worldstateSaveData && playerStateSaveData) {
             // initialising worldstate with save data
             const {
                 levelId: mockLevelId,
@@ -190,10 +185,10 @@ export class TestScene extends Scene {
                 tilesetOverlayKey,
                 musicKey
             );
-            // would want to keep this in if its the first/ only scene!
-            //
-            playerState.init({ position: playerStart });
-            // playerState.setPosition(playerStart);
+            playerState.init({
+                position: playerStart,
+                character: playerDefaults.character,
+            });
         }
 
         // all the following happens whether data has come from save file or using default level data
@@ -209,10 +204,20 @@ export class TestScene extends Scene {
         );
 
         // actual spawning of players and enemies
-        // player
-
+        // render correct character
+        let playerConfig: CharacterConfig;
+        switch (playerState.getCharacter()) {
+            case "dreamer":
+                playerConfig = dreamerConfig;
+                break;
+            case "thinker":
+                playerConfig = thinkerConfig;
+                break;
+            default:
+                playerConfig = dreamerConfig;
+        }
         const { x, y } = playerState.getPosition();
-        this.player = new Player(this, x, y, thinkerConfig);
+        this.player = new Player(this, x, y, playerConfig);
         // enemies- can be added to with diff types and we could make an enemy factory to slim down this logic
         this.enemies = worldState
             .getAllEnemyStates()

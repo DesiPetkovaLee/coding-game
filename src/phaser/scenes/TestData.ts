@@ -1,79 +1,79 @@
-// lots of errors on this file don't be alarmed just bc im choosing to load as if there is from the json atm and still working on mocking the save data!
+// i will get rid of the enemy and
 
 export const worldstateSaveData = {
     terminals: {
-        id: "LabLevelScene",
+        id: "BunkerLevelScene",
         position: {
-            x: 3520.75,
-            y: 1682.83333333333,
+            x: 1722.03,
+            y: 1015.65,
         },
         attempted: false,
         completed: true,
     },
     triggerZones: [
         {
-            id: 13,
+            id: 20,
             type: "generic-trigger",
-            x: 3799.16666666667,
-            y: 2428.83333333333,
-            width: 40.3333333333335,
-            height: 260.833333333333,
+            x: 2986.5,
+            y: 1400,
+            width: 13,
+            height: 198.5,
         },
     ],
     levelProgress: {
-        LabLevelScene: {},
+        BunkerLevelScene: {},
     },
-    levelId: "LabLevelScene",
+    levelId: "BunkerLevelScene",
     floppyDisks: {
-        "4": {
-            colour: "red",
-            collected: true,
-            position: {
-                x: 174,
-                y: 706,
-            },
-        },
-        "5": {
-            colour: "blue",
-            collected: true,
-            position: {
-                x: 3253.33333333333,
-                y: 323.666666666667,
-            },
-        },
-        "11": {
+        "1": {
             colour: "green",
             collected: false,
             position: {
-                x: 1596.66666666667,
-                y: 406.666666666667,
+                x: 2413.13,
+                y: 103.093,
             },
         },
-        "14": {
+        "2": {
             colour: "blue",
             collected: false,
             position: {
-                x: 3774,
-                y: 3292,
+                x: 2810.23,
+                y: 2317.68,
+            },
+        },
+        "3": {
+            colour: "red",
+            collected: false,
+            position: {
+                x: 603.284,
+                y: 2107.67,
+            },
+        },
+        "17": {
+            colour: "red",
+            collected: false,
+            position: {
+                x: 764,
+                y: 1368,
             },
         },
     },
     enemyStates: {
-        "2": {
-            id: 2,
+        "5": {
+            id: 5,
             position: {
-                x: 3765.37878787879,
-                y: 2644.30303030303,
+                x: 2917.14,
+                y: 1424.21,
             },
             interacted: false,
             alive: true,
             type: "bitey",
         },
-        "3": {
-            id: 3,
+        "6": {
+            id: 6,
             position: {
-                x: 3767.66666666667,
-                y: 2505.33333333333,
+                x: 2923.4568489628,
+                y: 1540.23260414881,
             },
             interacted: false,
             alive: true,
@@ -82,18 +82,8 @@ export const worldstateSaveData = {
         "7": {
             id: 7,
             position: {
-                x: 1174.5,
-                y: 2295.08333333333,
-            },
-            interacted: false,
-            alive: true,
-            type: "rolly",
-        },
-        "8": {
-            id: 8,
-            position: {
-                x: 2565.25,
-                y: 1738.5,
+                x: 1254.92885307732,
+                y: 349.734270529745,
             },
             interacted: false,
             alive: true,
@@ -102,8 +92,8 @@ export const worldstateSaveData = {
         "9": {
             id: 9,
             position: {
-                x: 584,
-                y: 3262.75,
+                x: 1368,
+                y: 1952,
             },
             interacted: false,
             alive: true,
@@ -112,8 +102,8 @@ export const worldstateSaveData = {
         "10": {
             id: 10,
             position: {
-                x: 1580.5,
-                y: 3138.5,
+                x: 852,
+                y: 788,
             },
             interacted: false,
             alive: true,
@@ -121,23 +111,23 @@ export const worldstateSaveData = {
         },
     },
     levelInfo: {
-        mapId: "LabLevelMap",
-        tilesetName: "tileset1",
-        tilesetKey: "LabLevelTileset",
-        tilesetOverlayName: "tileset1",
-        tilesetOverlayKey: "LabLevelTileset",
+        mapId: "BunkerLevelMap",
+        tilesetName: "BunkerLevelTileset",
+        tilesetKey: "BunkerLevelTileset",
+        tilesetOverlayName: "BunkerLevelTilesetOverlay",
+        tilesetOverlayKey: "BunkerLevelTilesetOverlay",
         musicKey: "WakeyWakey",
     },
 };
 
 export const playerStateSaveData = {
     position: {
-        x: 1378,
-        y: 458,
+        x: 2241.0299999999997,
+        y: 1107,
     },
     health: 100,
-    character: "Dreamer",
-    score: 140,
+    character: "thinker",
+    score: 20,
     level: 1,
     lives: 3,
 };

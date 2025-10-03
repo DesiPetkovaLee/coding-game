@@ -30,13 +30,14 @@ export class PreloadScene extends Scene {
             frameWidth: 70,
             frameHeight: 100,
         });
+        this.load.image("terminal", "console-bob-sleeping.png");
+        this.load.image("terminal-active", "console-bob-active.png");
 
         // interactables
         this.load.setPath("/assets/objects/");
         this.load.image("floppy-red", "floppy-red.png");
         this.load.image("floppy-green", "floppy-green.png");
         this.load.image("floppy-blue", "floppy-blue.png");
-        this.load.image("terminal", "terminal-temp.png");
 
         // maps and tilesets
         this.load.setPath("/assets/maps/");

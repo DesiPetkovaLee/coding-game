@@ -17,6 +17,9 @@ class PlayerState {
         }
         return PlayerState.instance;
     }
+    public getCharacter() {
+        return this.character;
+    }
 
     public getPosition() {
         return this.position;
