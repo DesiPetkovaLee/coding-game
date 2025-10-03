@@ -1,0 +1,94 @@
+{
+    "lessonTitle": "Javascript Functions Introduction",
+    "lessonNumber": 1,
+    "description": "",
+    "lessonSections": [
+        {
+            "sectionNumber": 1,
+            "title": "Function declaration",
+            "description": "Why do we use functions?",
+            "content": [
+                {
+                    "text": "Functions are fundamental building blocks in all programming.Functions enable better code organization, modularity, and efficiency.Functions are reusable block of code designed to perform a particular task.Functions execute when they are 'called' or 'invoked'."
+                },
+                {
+                    "text": "A function is defined with the function keyword, followed by the function name, followed by parentheses ( ), followed by brackets { }.The name follows the naming rules for variables (letters, digits, ...).Optional parameters are listed inside parentheses: (p1, p2, p3).The code to be executed is listed inside curly brackets: { code }.Functions can optionally return a value back to the 'caller'."
+                }
+            ],
+            "codeSnippet": "const student1 = 'Jesse';\n const student2 = 'Charlie'; \nfunction introduceYourself(name) {return 'Hi, my name is ' + name;}",
+            "sectionChallenge": {
+                "instruction": {
+                    "line1": "Create a function that takes your age in years and returns your age in days.",
+                    "line2": "Create a function that takes your age in years and returns your age in seconds",
+                    "example": "ageInDays(32) => 11680; ageInSeconds(32) => 1009152000"
+                },
+                "solution": "const ageInDays = (ageInYears) => {return age * 365}"
+            },
+            "links": [
+                {
+                    "title": "W3 Schools - Javascript Functions",
+                    "desc": "",
+                    "link": "https://www.w3schools.com/js/js_functions.asp"
+                }
+            ]
+        },
+        {
+            "title": "Function declaration",
+            "sectionNumber": 2,
+            "description": "Why do we use functions?",
+            "content": [
+                {
+                    "text": "Functions are fundamental building blocks in all programming.Functions enable better code organization, modularity, and efficiency.Functions are reusable block of code designed to perform a particular task.Functions execute when they are 'called' or 'invoked'."
+                },
+                {
+                    "text": "A function is defined with the function keyword, followed by the function name, followed by parentheses ( ), followed by brackets { }.The name follows the naming rules for variables (letters, digits, ...).Optional parameters are listed inside parentheses: (p1, p2, p3).The code to be executed is listed inside curly brackets: { code }.Functions can optionally return a value back to the 'caller'."
+                }
+            ],
+            "codeSnippet": "const student1 = 'Jesse';\n const student2 = 'Charlie'; \nfunction introduceYourself(name) {return 'Hi, my name is ' + name;}",
+            "sectionChallenge": {
+                "instruction": {
+                    "line1": "Create a function that takes your age in years and returns your age in days.",
+                    "line2": "Create a function that takes your age in years and returns your age in seconds",
+                    "example": "ageInDays(32) => 11680; ageInSeconds(32) => 1009152000"
+                },
+                "solution": "const ageInDays = (ageInYears) => {return age * 365}"
+            },
+            "links": [
+                {
+                    "title": "W3 Schools - Javascript Functions",
+                    "desc": "",
+                    "link": "https://www.w3schools.com/js/js_functions.asp"
+                }
+            ]
+        },
+        {
+            "title": "Function declaration",
+            "description": "Why do we use functions?",
+            "sectionNumber": 3,
+            "content": [
+                {
+                    "text": "Functions are fundamental building blocks in all programming.Functions enable better code organization, modularity, and efficiency.Functions are reusable block of code designed to perform a particular task.Functions execute when they are 'called' or 'invoked'."
+                },
+                {
+                    "text": "A function is defined with the function keyword, followed by the function name, followed by parentheses ( ), followed by brackets { }.The name follows the naming rules for variables (letters, digits, ...).Optional parameters are listed inside parentheses: (p1, p2, p3).The code to be executed is listed inside curly brackets: { code }.Functions can optionally return a value back to the 'caller'."
+                }
+            ],
+            "codeSnippet": "const student1 = 'Jesse';\n const student2 = 'Charlie'; \nfunction introduceYourself(name) {return 'Hi, my name is ' + name;}",
+            "sectionChallenge": {
+                "instruction": {
+                    "line1": "Create a function that takes your age in years and returns your age in days.",
+                    "line2": "Create a function that takes your age in years and returns your age in seconds",
+                    "example": "ageInDays(32) => 11680; ageInSeconds(32) => 1009152000"
+                },
+                "solution": "const ageInDays = (ageInYears) => {return age * 365}"
+            },
+            "links": [
+                {
+                    "title": "W3 Schools - Javascript Functions",
+                    "desc": "",
+                    "link": "https://www.w3schools.com/js/js_functions.asp"
+                }
+            ]
+        }
+    ]
+}

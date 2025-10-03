@@ -2,7 +2,7 @@
 
 const worldstateSaveData = {
     terminals: {
-        id: "LabLevelScene",
+        id: 'LabLevelScene',
         position: {
             x: 3520.75,
             y: 1682.83333333333,
@@ -13,7 +13,7 @@ const worldstateSaveData = {
     triggerZones: [
         {
             id: 13,
-            type: "generic-trigger",
+            type: 'generic-trigger',
             x: 3799.16666666667,
             y: 2428.83333333333,
             width: 40.3333333333335,
@@ -23,34 +23,34 @@ const worldstateSaveData = {
     levelProgress: {
         LabLevelScene: {},
     },
-    levelId: "LabLevelScene",
+    levelId: 'LabLevelScene',
     floppyDisks: {
-        "4": {
-            colour: "red",
+        '4': {
+            colour: 'red',
             collected: true,
             position: {
                 x: 174,
                 y: 706,
             },
         },
-        "5": {
-            colour: "blue",
+        '5': {
+            colour: 'blue',
             collected: true,
             position: {
                 x: 3253.33333333333,
                 y: 323.666666666667,
             },
         },
-        "11": {
-            colour: "green",
+        '11': {
+            colour: 'green',
             collected: false,
             position: {
                 x: 1596.66666666667,
                 y: 406.666666666667,
             },
         },
-        "14": {
-            colour: "blue",
+        '14': {
+            colour: 'blue',
             collected: false,
             position: {
                 x: 3774,
@@ -59,7 +59,7 @@ const worldstateSaveData = {
         },
     },
     enemyStates: {
-        "2": {
+        '2': {
             id: 2,
             position: {
                 x: 3765.37878787879,
@@ -67,9 +67,9 @@ const worldstateSaveData = {
             },
             interacted: false,
             alive: true,
-            type: "bitey",
+            type: 'bitey',
         },
-        "3": {
+        '3': {
             id: 3,
             position: {
                 x: 3767.66666666667,
@@ -77,9 +77,9 @@ const worldstateSaveData = {
             },
             interacted: false,
             alive: true,
-            type: "bitey",
+            type: 'bitey',
         },
-        "7": {
+        '7': {
             id: 7,
             position: {
                 x: 1174.5,
@@ -87,9 +87,9 @@ const worldstateSaveData = {
             },
             interacted: false,
             alive: true,
-            type: "rolly",
+            type: 'rolly',
         },
-        "8": {
+        '8': {
             id: 8,
             position: {
                 x: 2565.25,
@@ -97,9 +97,9 @@ const worldstateSaveData = {
             },
             interacted: false,
             alive: true,
-            type: "rolly",
+            type: 'rolly',
         },
-        "9": {
+        '9': {
             id: 9,
             position: {
                 x: 584,
@@ -107,9 +107,9 @@ const worldstateSaveData = {
             },
             interacted: false,
             alive: true,
-            type: "rolly",
+            type: 'rolly',
         },
-        "10": {
+        '10': {
             id: 10,
             position: {
                 x: 1580.5,
@@ -117,16 +117,16 @@ const worldstateSaveData = {
             },
             interacted: false,
             alive: true,
-            type: "rolly",
+            type: 'rolly',
         },
     },
     levelInfo: {
-        mapId: "LabLevelMap",
-        tilesetName: "tileset1",
-        tilesetKey: "LabLevelTileset",
-        tilesetOverlayName: "tileset1",
-        tilesetOverlayKey: "LabLevelTileset",
-        musicKey: "WakeyWakey",
+        mapId: 'LabLevelMap',
+        tilesetName: 'tileset1',
+        tilesetKey: 'LabLevelTileset',
+        tilesetOverlayName: 'tileset1',
+        tilesetOverlayKey: 'LabLevelTileset',
+        musicKey: 'WakeyWakey',
     },
 };
 
@@ -136,7 +136,7 @@ const playerStateSaveData = {
         y: 458,
     },
     health: 100,
-    character: "Dreamer",
+    character: 'Dreamer',
     score: 140,
     level: 1,
     lives: 3,
@@ -155,22 +155,22 @@ type LevelDefaults = {
 
 const levelDefaults: Record<string, LevelDefaults> = {
     bunker: {
-        levelId: "BunkerLevelScene",
-        mapId: "BunkerLevelMap",
-        tilesetName: "BunkerLevelTileset",
-        tilesetKey: "BunkerLevelTileset",
-        tilesetOverlayName: "BunkerLevelTilesetOverlay",
-        tilesetOverlayKey: "BunkerLevelTilesetOverlay",
-        musicKey: "WakeyWakey",
+        levelId: 'BunkerLevelScene',
+        mapId: 'BunkerLevelMap',
+        tilesetName: 'BunkerLevelTileset',
+        tilesetKey: 'BunkerLevelTileset',
+        tilesetOverlayName: 'BunkerLevelTilesetOverlay',
+        tilesetOverlayKey: 'BunkerLevelTilesetOverlay',
+        musicKey: 'WakeyWakey',
     },
     lab: {
-        levelId: "LabLevelScene",
-        mapId: "LabLevelMap",
-        tilesetName: "tileset1",
-        tilesetKey: "LabLevelTileset",
-        tilesetOverlayName: "tileset1",
-        tilesetOverlayKey: "LabLevelTileset",
-        musicKey: "WakeyWakey",
+        levelId: 'LabLevelScene',
+        mapId: 'LabLevelMap',
+        tilesetName: 'tileset1',
+        tilesetKey: 'LabLevelTileset',
+        tilesetOverlayName: 'tileset1',
+        tilesetOverlayKey: 'LabLevelTileset',
+        musicKey: 'WakeyWakey',
     },
 };
 const playerDefaults = {
@@ -179,26 +179,26 @@ const playerDefaults = {
         y: 159,
     },
     health: 50,
-    character: "Dreamer",
+    character: 'Dreamer',
     score: 100,
     level: 1,
     lives: 3,
 };
 
-import { Scene } from "phaser";
-import { Player } from "../prefabs/characters/Player";
-import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
-import { Terminal } from "../prefabs/interactables/Terminal";
-import { TiledParser } from "../systems/TiledParser";
-import { CameraController } from "../systems/CameraControl";
-import { MusicLoader } from "../systems/MusicLoader";
-import { worldState } from "../core/state/WorldState";
-import { playerState } from "../core/state/PlayerState";
-import { mapLoader } from "../systems/mapLoader";
-import { BiteySprite } from "../prefabs/enemies/BiteySprite";
-import { RollySprite } from "../prefabs/enemies/RollySprite";
-import eventBus from "../core/EventBus";
-import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
+import { Scene } from 'phaser';
+import { Player } from '../prefabs/characters/Player';
+import { FloppyDisk } from '../prefabs/interactables/FloppyDisk';
+import { Terminal } from '../prefabs/interactables/Terminal';
+import { TiledParser } from '../systems/TiledParser';
+import { CameraController } from '../systems/CameraControl';
+import { MusicLoader } from '../systems/MusicLoader';
+import { worldState } from '../core/state/WorldState';
+import { playerState } from '../core/state/PlayerState';
+import { mapLoader } from '../systems/mapLoader';
+import { BiteySprite } from '../prefabs/enemies/BiteySprite';
+import { RollySprite } from '../prefabs/enemies/RollySprite';
+import eventBus from '../core/EventBus';
+import type { BaseEnemy } from '../prefabs/enemies/BaseEnemy';
 
 export class TestScene extends Scene {
     player: Player | undefined;
@@ -209,15 +209,15 @@ export class TestScene extends Scene {
     interactables: (BaseEnemy | Terminal | FloppyDisk)[] | undefined;
     musicLoader: MusicLoader | undefined;
     constructor() {
-        super("TestScene");
+        super('TestScene');
     }
 
     create() {
-        if (!this.scene.isActive("UIScene")) {
-            this.scene.launch("UIScene");
-            this.scene.get("UIScene").events.emit("updateUI");
+        if (!this.scene.isActive('UIScene')) {
+            this.scene.launch('UIScene');
+            this.scene.get('UIScene').events.emit('updateUI');
         }
-        const selectedScene = "bunker";
+        const selectedScene = 'bunker';
         const defaults = levelDefaults[selectedScene];
 
         let mapId = defaults.mapId;
@@ -264,7 +264,7 @@ export class TestScene extends Scene {
                     id,
                     disk.colour,
                     disk.position,
-                    disk.collected
+                    disk.collected,
                 );
             });
 
@@ -299,11 +299,11 @@ export class TestScene extends Scene {
                 tilesetName,
                 tilesetKey,
                 tilesetOverlayName,
-                tilesetOverlayKey
+                tilesetOverlayKey,
             );
 
             const spawnData = TiledParser.extractData(map);
-            if (!spawnData) throw new Error("spawn data not found");
+            if (!spawnData) throw new Error('spawn data not found');
 
             const playerStart = spawnData.player;
 
@@ -311,13 +311,13 @@ export class TestScene extends Scene {
             worldState.setTriggerZones(spawnData.triggerZones);
             worldState.setTerminal(levelId, spawnData.terminals[0].coords);
             spawnData.floppyDisks.forEach((d) =>
-                worldState.setFloppyDisk(d.id, d.colour, d.coords, false)
+                worldState.setFloppyDisk(d.id, d.colour, d.coords, false),
             );
             spawnData.enemies.forEach((e) =>
                 worldState.setEnemyState(e.id, {
                     position: e.coords,
                     type: e.type,
-                })
+                }),
             );
             worldState.setLevelInfo(
                 mapId,
@@ -325,7 +325,7 @@ export class TestScene extends Scene {
                 tilesetKey,
                 tilesetOverlayName,
                 tilesetOverlayKey,
-                musicKey
+                musicKey,
             );
             // would want to keep this in if its the first/ only scene!
             //
@@ -342,7 +342,7 @@ export class TestScene extends Scene {
             tilesetName,
             tilesetKey,
             tilesetOverlayName,
-            tilesetOverlayKey
+            tilesetOverlayKey,
         );
 
         // actual spawning of players and enemies
@@ -357,22 +357,22 @@ export class TestScene extends Scene {
             .map((data) => {
                 let enemy: BaseEnemy;
                 switch (data.type) {
-                    case "bitey":
+                    case 'bitey':
                         enemy = new BiteySprite(
                             this,
                             data.position.x,
                             data.position.y,
                             data.type,
-                            data.id
+                            data.id,
                         );
                         break;
-                    case "rolly":
+                    case 'rolly':
                         enemy = new RollySprite(
                             this,
                             data.position.x,
                             data.position.y,
                             data.type,
-                            data.id
+                            data.id,
                         );
                         break;
                     default:
@@ -380,8 +380,8 @@ export class TestScene extends Scene {
                             this,
                             data.position.x,
                             data.position.y,
-                            (data.type = "rolly"),
-                            data.id
+                            (data.type = 'rolly'),
+                            data.id,
                         );
                         break;
                 }
@@ -398,8 +398,8 @@ export class TestScene extends Scene {
                       this,
                       terminalData.position.x,
                       terminalData.position.y,
-                      "terminal",
-                      terminalData.id
+                      'terminal',
+                      terminalData.id,
                   )
                 : undefined;
 
@@ -407,12 +407,12 @@ export class TestScene extends Scene {
             .getAllFloppyDisks()
             .filter((d) => !d.collected)
             .map((d) => {
-                const colour = d.colour ?? "default";
+                const colour = d.colour ?? 'default';
                 const textureMap: Record<string, string> = {
-                    red: "floppy-red",
-                    green: "floppy-green",
-                    blue: "floppy-blue",
-                    default: "floppy-red",
+                    red: 'floppy-red',
+                    green: 'floppy-green',
+                    blue: 'floppy-blue',
+                    default: 'floppy-red',
                 };
                 const texture = textureMap[colour] ?? textureMap.default;
                 return new FloppyDisk(
@@ -421,7 +421,7 @@ export class TestScene extends Scene {
                     d.position.y,
                     texture,
                     d.id,
-                    d.colour
+                    d.colour,
                 );
             });
         // exit zone
@@ -432,7 +432,7 @@ export class TestScene extends Scene {
             exitZoneData[0].x,
             exitZoneData[0].y,
             exitZoneData[0].width,
-            exitZoneData[0].height
+            exitZoneData[0].height,
         );
         this.add
             .rectangle(
@@ -441,7 +441,7 @@ export class TestScene extends Scene {
                 this.exitZone.width,
                 this.exitZone.height,
                 0xff0000,
-                0.3
+                0.3,
             )
             .setOrigin(0, 0);
 
@@ -455,12 +455,12 @@ export class TestScene extends Scene {
         // filtering based on if they have a function called interact
         this.interactables = allEntities.filter(
             (e): e is BaseEnemy | Terminal | FloppyDisk =>
-                typeof e.interact === "function"
+                typeof e.interact === 'function',
         );
         // when the interact event is emitted from player checks if any interactables are near and if so calls their interact function
-        eventBus.on("playerInteract", (x: number, y: number) => {
+        eventBus.on('playerInteract', (x: number, y: number) => {
             const nearby = this.interactables?.filter(
-                (i) => Phaser.Math.Distance.Between(x, y, i.x, i.y) < 100
+                (i) => Phaser.Math.Distance.Between(x, y, i.x, i.y) < 100,
             );
 
             nearby?.forEach((i) => i.interact());
@@ -477,7 +477,7 @@ export class TestScene extends Scene {
             this.physics.add.collider(this.enemies, this.disks);
         }
         this.enemies.forEach((enemy) =>
-            enemy.getBody().setCollideWorldBounds(true)
+            enemy.getBody().setCollideWorldBounds(true),
         );
         this.player.getBody().setCollideWorldBounds(true);
 
@@ -485,24 +485,24 @@ export class TestScene extends Scene {
         const camControl = new CameraController(this);
         camControl.setup(this.player, map);
         this.musicLoader = new MusicLoader(this, musicKey, true, 0.1);
-        this.input.keyboard?.once("keydown", () => {
+        this.input.keyboard?.once('keydown', () => {
             this.musicLoader?.playMusic();
         });
 
         // 'save' data
         const space = this.input.keyboard?.addKey(
-            Phaser.Input.Keyboard.KeyCodes.SPACE
+            Phaser.Input.Keyboard.KeyCodes.SPACE,
         );
-        space?.on("down", () => {
+        space?.on('down', () => {
             const worldSaveData = worldState.getSaveData();
             console.log(
-                "WorldState Save:\n",
-                JSON.stringify(worldSaveData, null, 2)
+                'WorldState Save:\n',
+                JSON.stringify(worldSaveData, null, 2),
             );
             const playerStateData = playerState.getSaveData();
             console.log(
-                "playerStateData Save:\n",
-                JSON.stringify(playerStateData, null, 2)
+                'playerStateData Save:\n',
+                JSON.stringify(playerStateData, null, 2),
             );
         });
     }
@@ -544,23 +544,23 @@ export class TestScene extends Scene {
             if (
                 Phaser.Geom.Intersects.RectangleToRectangle(
                     playerBounds,
-                    this.exitZone
+                    this.exitZone,
                 )
             ) {
                 if (worldState.getCollectedDiskCount() == 4) {
                     console.log(
-                        JSON.stringify(worldState.getSaveData(), null, 2)
+                        JSON.stringify(worldState.getSaveData(), null, 2),
                     );
-                    console.log("------------------");
+                    console.log('------------------');
 
                     console.log(
-                        JSON.stringify(playerState.getSaveData(), null, 2)
+                        JSON.stringify(playerState.getSaveData(), null, 2),
                     );
                     // might put these inside of phaser scene shutdown instead if it gets bloated
                     worldState.resetAllCAREFUL();
-                    eventBus.emit("updateUI");
+                    eventBus.emit('updateUI');
                     this.musicLoader?.stopMusic();
-                    console.log("start next scene");
+                    console.log('start next scene');
                     // this.scene.start("TestScene");
                 }
             }
