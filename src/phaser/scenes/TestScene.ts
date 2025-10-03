@@ -56,7 +56,12 @@ import { RollySprite } from "../prefabs/enemies/RollySprite";
 import eventBus from "../core/EventBus";
 import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
 // importing save data
-import { playerStateSaveData, worldstateSaveData } from "./TestData";
+import { worldstateSaveData } from "./TestData";
+import { playerStateSaveData } from "./TestData";
+import {
+    dreamerConfig,
+    thinkerConfig,
+} from "../prefabs/characters/CharacterConfig";
 
 export class TestScene extends Scene {
     player: Player | undefined;
@@ -92,7 +97,7 @@ export class TestScene extends Scene {
         let playerCharacter = playerDefaults.character;
         let playerLives = playerDefaults.lives;
 
-        if (worldstateSaveData && playerStateSaveData) {
+        if (!worldstateSaveData && !playerStateSaveData) {
             // initialising worldstate with save data
             const {
                 levelId: mockLevelId,
@@ -207,7 +212,7 @@ export class TestScene extends Scene {
         // player
 
         const { x, y } = playerState.getPosition();
-        this.player = new Player(this, x, y);
+        this.player = new Player(this, x, y, thinkerConfig);
         // enemies- can be added to with diff types and we could make an enemy factory to slim down this logic
         this.enemies = worldState
             .getAllEnemyStates()
@@ -283,9 +288,7 @@ export class TestScene extends Scene {
                 );
             });
         // exit zone
-        console.log(worldState.getTriggerZones());
         const exitZoneData = worldState.getTriggerZones();
-        console.log(exitZoneData[0]);
         this.exitZone = new Phaser.Geom.Rectangle(
             exitZoneData[0].x,
             exitZoneData[0].y,
