@@ -1,3 +1,4 @@
+import eventBus from "../../core/EventBus";
 import type { Interactable } from "../../systems/interactableInterface";
 import type { Coords } from "../../systems/TiledParser";
 import { BaseSprite } from "../BaseSprite";

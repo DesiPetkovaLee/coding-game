@@ -108,7 +108,6 @@ export class BunkerLevelScene extends Scene {
                     0.3
                 )
                 .setOrigin(0, 0);
-            console.table(this.exitZone);
         }
         // Camera;
         const camControl = new CameraController(this);

@@ -24,6 +24,7 @@ import { BiteySprite } from "../prefabs/enemies/BiteySprite";
 import { RollySprite } from "../prefabs/enemies/RollySprite";
 import eventBus from "../core/EventBus";
 import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
+import { dreamerConfig } from "../prefabs/characters/CharacterConfig";
 
 export class LabLevelScene extends Scene {
     player: Player | undefined;
@@ -81,7 +82,7 @@ export class LabLevelScene extends Scene {
 
         // spawning
         const { x, y } = playerState.getPosition();
-        this.player = new Player(this, x, y);
+        this.player = new Player(this, x, y, dreamerConfig);
         // enemies- can be added to with diff types and we could make an enemy factory to slim down this logic
         this.enemies = worldState
             .getAllEnemyStates()
@@ -134,7 +135,6 @@ export class LabLevelScene extends Scene {
                       terminalData.id
                   )
                 : undefined;
-        console.log(this.terminals?.id);
 
         this.disks = worldState
             .getAllFloppyDisks()
@@ -158,9 +158,7 @@ export class LabLevelScene extends Scene {
                 );
             });
         // exit zone
-        console.log(worldState.getTriggerZones());
         const exitZoneData = worldState.getTriggerZones();
-        console.log(exitZoneData[0]);
         this.exitZone = new Phaser.Geom.Rectangle(
             exitZoneData[0].x,
             exitZoneData[0].y,

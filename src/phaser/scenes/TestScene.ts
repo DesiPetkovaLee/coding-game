@@ -1,148 +1,4 @@
-// lots of errors on this file don't be alarmed just bc im choosing to load as if there is from the json atm and still working on mocking the save data!
-
-const worldstateSaveData = {
-    terminals: {
-        id: "LabLevelScene",
-        position: {
-            x: 3520.75,
-            y: 1682.83333333333,
-        },
-        attempted: false,
-        completed: true,
-    },
-    triggerZones: [
-        {
-            id: 13,
-            type: "generic-trigger",
-            x: 3799.16666666667,
-            y: 2428.83333333333,
-            width: 40.3333333333335,
-            height: 260.833333333333,
-        },
-    ],
-    levelProgress: {
-        LabLevelScene: {},
-    },
-    levelId: "LabLevelScene",
-    floppyDisks: {
-        "4": {
-            colour: "red",
-            collected: true,
-            position: {
-                x: 174,
-                y: 706,
-            },
-        },
-        "5": {
-            colour: "blue",
-            collected: true,
-            position: {
-                x: 3253.33333333333,
-                y: 323.666666666667,
-            },
-        },
-        "11": {
-            colour: "green",
-            collected: false,
-            position: {
-                x: 1596.66666666667,
-                y: 406.666666666667,
-            },
-        },
-        "14": {
-            colour: "blue",
-            collected: false,
-            position: {
-                x: 3774,
-                y: 3292,
-            },
-        },
-    },
-    enemyStates: {
-        "2": {
-            id: 2,
-            position: {
-                x: 3765.37878787879,
-                y: 2644.30303030303,
-            },
-            interacted: false,
-            alive: true,
-            type: "bitey",
-        },
-        "3": {
-            id: 3,
-            position: {
-                x: 3767.66666666667,
-                y: 2505.33333333333,
-            },
-            interacted: false,
-            alive: true,
-            type: "bitey",
-        },
-        "7": {
-            id: 7,
-            position: {
-                x: 1174.5,
-                y: 2295.08333333333,
-            },
-            interacted: false,
-            alive: true,
-            type: "rolly",
-        },
-        "8": {
-            id: 8,
-            position: {
-                x: 2565.25,
-                y: 1738.5,
-            },
-            interacted: false,
-            alive: true,
-            type: "rolly",
-        },
-        "9": {
-            id: 9,
-            position: {
-                x: 584,
-                y: 3262.75,
-            },
-            interacted: false,
-            alive: true,
-            type: "rolly",
-        },
-        "10": {
-            id: 10,
-            position: {
-                x: 1580.5,
-                y: 3138.5,
-            },
-            interacted: false,
-            alive: true,
-            type: "rolly",
-        },
-    },
-    levelInfo: {
-        mapId: "LabLevelMap",
-        tilesetName: "tileset1",
-        tilesetKey: "LabLevelTileset",
-        tilesetOverlayName: "tileset1",
-        tilesetOverlayKey: "LabLevelTileset",
-        musicKey: "WakeyWakey",
-    },
-};
-
-const playerStateSaveData = {
-    position: {
-        x: 1378,
-        y: 458,
-    },
-    health: 100,
-    character: "Dreamer",
-    score: 140,
-    level: 1,
-    lives: 3,
-};
-
-// currently what we need to build a level (and player info)
+// currently what we need to build a level (and json tilemap) and assets
 type LevelDefaults = {
     levelId: string;
     mapId: string;
@@ -173,16 +29,10 @@ const levelDefaults: Record<string, LevelDefaults> = {
         musicKey: "WakeyWakey",
     },
 };
+// if you want to try initialising with diff presets you can add to here. by default a new user should have a character selected
+// switch -> "dreamer"
 const playerDefaults = {
-    position: {
-        x: 2337.6666666666674,
-        y: 159,
-    },
-    health: 50,
-    character: "Dreamer",
-    score: 100,
-    level: 1,
-    lives: 3,
+    character: "thinker",
 };
 
 import { Scene } from "phaser";
@@ -199,6 +49,14 @@ import { BiteySprite } from "../prefabs/enemies/BiteySprite";
 import { RollySprite } from "../prefabs/enemies/RollySprite";
 import eventBus from "../core/EventBus";
 import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
+// importing save data
+import { worldstateSaveData } from "./TestData";
+import { playerStateSaveData } from "./TestData";
+import {
+    dreamerConfig,
+    thinkerConfig,
+    type CharacterConfig,
+} from "../prefabs/characters/CharacterConfig";
 
 export class TestScene extends Scene {
     player: Player | undefined;
@@ -228,11 +86,11 @@ export class TestScene extends Scene {
         let tilesetOverlayKey = defaults.tilesetOverlayKey;
         let musicKey = defaults.musicKey;
 
-        let playerStart = playerDefaults.position;
-        let playerScore = playerDefaults.score;
-        let playerHealth = playerDefaults.health;
+        let playerStart;
+        let playerScore;
+        let playerHealth;
         let playerCharacter = playerDefaults.character;
-        let playerLives = playerDefaults.lives;
+        let playerLives;
 
         if (worldstateSaveData && playerStateSaveData) {
             // initialising worldstate with save data
@@ -327,10 +185,10 @@ export class TestScene extends Scene {
                 tilesetOverlayKey,
                 musicKey
             );
-            // would want to keep this in if its the first/ only scene!
-            //
-            playerState.init({ position: playerStart });
-            // playerState.setPosition(playerStart);
+            playerState.init({
+                position: playerStart,
+                character: playerDefaults.character,
+            });
         }
 
         // all the following happens whether data has come from save file or using default level data
@@ -346,10 +204,20 @@ export class TestScene extends Scene {
         );
 
         // actual spawning of players and enemies
-        // player
-
+        // render correct character
+        let playerConfig: CharacterConfig;
+        switch (playerState.getCharacter()) {
+            case "dreamer":
+                playerConfig = dreamerConfig;
+                break;
+            case "thinker":
+                playerConfig = thinkerConfig;
+                break;
+            default:
+                playerConfig = dreamerConfig;
+        }
         const { x, y } = playerState.getPosition();
-        this.player = new Player(this, x, y);
+        this.player = new Player(this, x, y, playerConfig);
         // enemies- can be added to with diff types and we could make an enemy factory to slim down this logic
         this.enemies = worldState
             .getAllEnemyStates()
@@ -425,9 +293,7 @@ export class TestScene extends Scene {
                 );
             });
         // exit zone
-        console.log(worldState.getTriggerZones());
         const exitZoneData = worldState.getTriggerZones();
-        console.log(exitZoneData[0]);
         this.exitZone = new Phaser.Geom.Rectangle(
             exitZoneData[0].x,
             exitZoneData[0].y,

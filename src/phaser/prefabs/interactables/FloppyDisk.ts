@@ -1,5 +1,4 @@
 import eventBus from "../../core/EventBus";
-import { worldState } from "../../core/state/WorldState";
 import { BaseInteractable } from "./BaseInteractable";
 import type { Interactable } from "../../systems/interactableInterface";
 
@@ -20,10 +19,8 @@ export class FloppyDisk extends BaseInteractable implements Interactable {
     }
 
     interact() {
-        console.log("clicked floppydisk");
         eventBus.emit("playerScored", 50);
         eventBus.emit("diskCollected", this.id);
-        console.log(worldState.getCollectedDiskCount());
         // pixellate and fade when clicked
         this.scene.tweens.add({
             targets: this.postFX.addPixelate(2),
