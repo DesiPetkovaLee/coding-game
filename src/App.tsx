@@ -4,7 +4,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
 import StartPage from "./pages/start/StartPage";
 import SetupPage from "./pages/setup/SetupPage";
-import { StoryReader } from "./api/getStory";
+import StoryPage from "./pages/story/StoryPage";
 import { CodingQuestion } from "./pages/codingQuestion/CodingQuestion";
 import LevelSelectPage from "./pages/levelSelect/LevelSelectPage";
 import { Routes, Route } from "react-router-dom";
@@ -21,7 +21,7 @@ export default function App() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
                     <Route path="/setup" element={<SetupPage />} />
-                    <Route path="/story" element={<StoryReader />} />
+                    <Route path="/story" element={<StoryPage />} />
                     <Route
                         path="/codingQuestion"
                         element={<CodingQuestion />}
