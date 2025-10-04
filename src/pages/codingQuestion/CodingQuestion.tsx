@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllData, deleteDataById } from "../../api/backendClients";
-import { CodingQuestionStyles as styles } from "./codingQuestionStyles";
+import { CodingQuestionStyles as styles } from "./CodingQuestionStyles";
 import type { CodingQuestionData } from "./CodingQuestionTypes";
 import CodingQuestionForm from "./CodingQuestionForm";
 import ConfirmModal from "./../common/ConfirmModal";
