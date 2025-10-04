@@ -1,15 +1,15 @@
-import { Scene } from 'phaser';
-import { mapLoader } from '../systems/mapLoader';
-import { Player } from '../prefabs/characters/Player';
-import { MusicLoader } from '../systems/MusicLoader';
-import { CameraController } from '../systems/CameraControl';
-import { Spawner } from '../systems/SpriteSpawner';
-import type { Terminal } from '../prefabs/interactables/Terminal';
-import { FloppyDisk } from '../prefabs/interactables/FloppyDisk';
-import eventBus from '../core/EventBus';
-import { playerState } from '../core/States/PlayerState';
-import { worldState } from '../core/States/WorldState';
-import type { BaseEnemy } from '../prefabs/enemies/BaseEnemy';
+import { Scene } from "phaser";
+import { mapLoader } from "../systems/mapLoader";
+import { Player } from "../prefabs/characters/Player";
+import { MusicLoader } from "../systems/MusicLoader";
+import { CameraController } from "../systems/CameraControl";
+import { Spawner } from "../systems/SpriteSpawner";
+import type { Terminal } from "../prefabs/interactables/Terminal";
+import { FloppyDisk } from "../prefabs/interactables/FloppyDisk";
+import eventBus from "../core/EventBus";
+import { playerState } from "../core/state/PlayerState";
+import { worldState } from "../core/state/WorldState";
+import type { BaseEnemy } from "../prefabs/enemies/BaseEnemy";
 
 export class BunkerLevelScene extends Scene {
     player: Player | undefined;
@@ -20,25 +20,25 @@ export class BunkerLevelScene extends Scene {
     interactables: (BaseEnemy | Terminal | FloppyDisk)[] | undefined;
     musicLoader: MusicLoader | undefined;
     constructor() {
-        super('BunkerLevelScene');
+        super("BunkerLevelScene");
     }
 
     create() {
         // example ui overlay
-        this.scene.launch('UIScene');
-        this.scene.get('UIScene').events.emit('updateUI');
+        this.scene.launch("UIScene");
+        this.scene.get("UIScene").events.emit("updateUI");
 
         playerState.init();
-        worldState.init('BunkerLevelScene');
+        worldState.init("BunkerLevelScene");
 
         // map load
         const mLoader = new mapLoader(this);
         const { map, collisionLayer } = mLoader.loadMap(
-            'BunkerLevelMap',
-            'BunkerLevelTileset',
-            'BunkerLevelTileset',
-            'BunkerLevelTilesetOverlay',
-            'BunkerLevelTilesetOverlay',
+            "BunkerLevelMap",
+            "BunkerLevelTileset",
+            "BunkerLevelTileset",
+            "BunkerLevelTilesetOverlay",
+            "BunkerLevelTilesetOverlay"
         );
 
         const spawner = new Spawner(this, map);
@@ -49,7 +49,12 @@ export class BunkerLevelScene extends Scene {
         this.disks = disks;
 
         this.disks.forEach((disk) => {
-            worldState.setFloppyDisk(disk.id, disk.colour, disk.getCoords());
+            worldState.setFloppyDisk(
+                disk.id,
+                disk.colour,
+                disk.getCoords(),
+                false
+            );
         });
         // interactions
         // if we add interactables they need to be added here
@@ -61,12 +66,12 @@ export class BunkerLevelScene extends Scene {
         // filtering based on if they have a function called interact
         this.interactables = allEntities.filter(
             (e): e is BaseEnemy | Terminal | FloppyDisk =>
-                typeof e.interact === 'function',
+                typeof e.interact === "function"
         );
         // when the interact event is emitted from player checks if any interactables are near and if so calls their interact function
-        eventBus.on('playerInteract', (x: number, y: number) => {
+        eventBus.on("playerInteract", (x: number, y: number) => {
             const nearby = this.interactables?.filter(
-                (i) => Phaser.Math.Distance.Between(x, y, i.x, i.y) < 100,
+                (i) => Phaser.Math.Distance.Between(x, y, i.x, i.y) < 100
             );
 
             nearby?.forEach((i) => i.interact());
@@ -78,9 +83,9 @@ export class BunkerLevelScene extends Scene {
         this.physics.add.collider(this.player, collisionLayer);
 
         this.physics.add.collider(this.player, this.enemies, () => {
-            console.log('collides');
-            eventBus.emit('playerDamaged', -10);
-            eventBus.emit('updateUI');
+            console.log("collides");
+            eventBus.emit("playerDamaged", -10);
+            eventBus.emit("updateUI");
         });
         this.physics.add.collider(this.player, this.terminals);
         this.physics.add.collider(this.player, this.disks);
@@ -88,7 +93,7 @@ export class BunkerLevelScene extends Scene {
         this.physics.add.collider(this.enemies, this.terminals);
 
         this.enemies.forEach((enemy) =>
-            enemy.getBody().setCollideWorldBounds(true),
+            enemy.getBody().setCollideWorldBounds(true)
         );
 
         this.exitZone = spawner.exitZone();
@@ -100,18 +105,17 @@ export class BunkerLevelScene extends Scene {
                     this.exitZone.width,
                     this.exitZone.height,
                     0xff0000,
-                    0.3,
+                    0.3
                 )
                 .setOrigin(0, 0);
-            console.table(this.exitZone);
         }
         // Camera;
         const camControl = new CameraController(this);
         camControl.setup(this.player, map);
 
         // music
-        this.musicLoader = new MusicLoader(this, 'WakeyWakey', true, 0.1);
-        this.input.keyboard?.once('keydown', () => {
+        this.musicLoader = new MusicLoader(this, "WakeyWakey", true, 0.1);
+        this.input.keyboard?.once("keydown", () => {
             this.musicLoader?.playMusic();
         });
     }
@@ -156,23 +160,23 @@ export class BunkerLevelScene extends Scene {
             if (
                 Phaser.Geom.Intersects.RectangleToRectangle(
                     playerBounds,
-                    this.exitZone,
+                    this.exitZone
                 )
             ) {
                 if (worldState.getCollectedDiskCount() == 4) {
                     console.log(
-                        JSON.stringify(worldState.getSaveData(), null, 2),
+                        JSON.stringify(worldState.getSaveData(), null, 2)
                     );
-                    console.log('------------------');
+                    console.log("------------------");
 
                     console.log(
-                        JSON.stringify(playerState.getSaveData(), null, 2),
+                        JSON.stringify(playerState.getSaveData(), null, 2)
                     );
-                    console.log('start next scene');
+                    console.log("start next scene");
                     worldState.resetAllCAREFUL();
                     this.musicLoader?.stopMusic();
-                    eventBus.emit('updateUI');
-                    this.scene.start('LabLevelScene');
+                    eventBus.emit("updateUI");
+                    this.scene.start("LabLevelScene");
                 }
             }
         }
