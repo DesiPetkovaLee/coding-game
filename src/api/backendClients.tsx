@@ -19,7 +19,7 @@ export const getDataById = async (
 };
 
 export const getAllData = async (apiEndPoint: string, message: string) => {
-    const response = await fetch(`http://localhost:8080/api/${apiEndPoint}/`, {
+    const response = await fetch(`http://localhost:8080/api/${apiEndPoint}`, {
         method: "get",
         headers: {
             "Content-Type": "application/json",
@@ -37,13 +37,16 @@ export async function deleteDataById(
     id: number,
     message: string
 ) {
-    const response = await fetch(`http://localhost:8080/api/${apiEndPoint}/${id}`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
-            //Authorization: `Bearer ${header}`,
-        },
-    });
+    const response = await fetch(
+        `http://localhost:8080/api/${apiEndPoint}/${id}`,
+        {
+            method: "delete",
+            headers: {
+                "Content-Type": "application/json",
+                //Authorization: `Bearer ${header}`,
+            },
+        }
+    );
     if (!response.ok) {
         throw new Error(`Failed to create data for ${message}`);
     }
@@ -79,17 +82,19 @@ export async function updateData<T extends object>(
     message: string,
     fields: T
 ) {
-    const response = await fetch(`http://localhost:8080/api/${apiEndPoint}/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            //Authorization: `Bearer ${header}`,
-        },
-        body: JSON.stringify({
-            fields,
-        }),
-    });
+    const response = await fetch(
+        `http://localhost:8080/api/${apiEndPoint}/${id}`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                //Authorization: `Bearer ${header}`,
+            },
+            body: JSON.stringify(fields),
+        }
+    );
     if (!response.ok) {
+        console.log(JSON.stringify({ fields }));
         throw new Error(`Failed to update ${message} for id: ${id}`);
     }
     return await response.json();
