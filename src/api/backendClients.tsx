@@ -10,6 +10,7 @@ export const getDataById = async (
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: "include",
         }
     );
     if (!response.ok) {
@@ -24,6 +25,7 @@ export const getAllData = async (apiEndPoint: string, message: string) => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
     });
     if (!response.ok) {
         throw new Error(`Failed to fetch data for ${message}`);
@@ -45,6 +47,7 @@ export async function deleteDataById(
                 "Content-Type": "application/json",
                 //Authorization: `Bearer ${header}`,
             },
+            credentials: "include",
         }
     );
     if (!response.ok) {
@@ -65,9 +68,10 @@ export async function createData<T extends object>(
             "Content-Type": "application/json",
             //Authorization: `Bearer ${header}`,
         },
-        body: JSON.stringify({
+        credentials: "include",
+        body: JSON.stringify(
             fields,
-        }),
+        ),
     });
     if (!response.ok) {
         throw new Error(`Failed to create data for ${message}`);
@@ -90,6 +94,7 @@ export async function updateData<T extends object>(
                 "Content-Type": "application/json",
                 //Authorization: `Bearer ${header}`,
             },
+            credentials: "include",
             body: JSON.stringify(fields),
         }
     );
