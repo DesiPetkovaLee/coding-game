@@ -6,7 +6,7 @@ import { getAllData } from "../../api/backendClients";
 const githubLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/github";
 };
-const apiEndPoint = "/api/user/user-info";
+const apiEndPoint = "user/user-info";
 const apiMessage = "user";
 
 export default function SignupPage() {
@@ -14,12 +14,12 @@ export default function SignupPage() {
 
     useEffect(() => {
         fetchUser();
-    });
+    },[]);
 
     const fetchUser = async () => {
         const data = await getAllData(apiEndPoint, apiMessage);
         setUser(data);
-        console.log("user:", user)
+        console.log("user:", data)
     };
 
     return (

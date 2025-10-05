@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createData, updateData } from "../../api/backendClients";
-import { CodingQuestionStyles as styles } from "./codingQuestionStyles";
+import { CodingQuestionStyles as styles } from "./CodingQuestionStyles";
 import type {
     CodingQuestionData,
     CodingQuestionFormData,
@@ -55,19 +55,16 @@ const CodingQuestionForm: React.FC<Props> = ({ action, question, onClose }) => {
             testCases: formData.testCases.split("\n").map((s) => s.trim()),
         };
 
-        
-        console.log("data: ", JSON.stringify({formData}));
+        console.log("data: ", JSON.stringify({ formData }));
         const saveData = true;
 
-        if (saveData){
-        if (action === "edit" && formData.id) {
-            console.log("action: ", action);
-            await updateData(apiEndPoint, formData.id, apiMessage, payload);
-        } else {
-            console.log("action - else - sending formData: ", action);
-            await createData(apiEndPoint, apiMessage, payload);
+        if (saveData) {
+            if (action === "edit" && formData.id) {
+                await updateData(apiEndPoint, formData.id, apiMessage, payload);
+            } else {
+                await createData(apiEndPoint, apiMessage, payload);
+            }
         }
-    }
 
         onClose();
     };
