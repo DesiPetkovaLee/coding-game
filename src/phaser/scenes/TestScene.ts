@@ -30,16 +30,10 @@ const levelDefaults: Record<string, LevelDefaults> = {
         musicKey: "WakeyWakey",
     },
 };
+// if you want to try initialising with diff presets you can add to here. by default a new user should have a character selected
+// switch -> "dreamer"
 const playerDefaults = {
-    position: {
-        x: 2337.6666666666674,
-        y: 159,
-    },
-    health: 50,
-    character: "Dreamer",
-    score: 100,
-    level: 1,
-    lives: 3,
+    character: "thinker",
 };
 
 import { Scene } from "phaser";
@@ -89,7 +83,7 @@ export class TestScene extends Scene {
         let playerScore = playerDefaults.score;
         let playerHealth = playerDefaults.health;
         let playerCharacter = playerDefaults.character;
-        let playerLives = playerDefaults.lives;
+        let playerLives;
 
         // changed here to set player and enemy positions based on tilemap
         const mLoader = new mapLoader(this);
@@ -211,7 +205,7 @@ export class TestScene extends Scene {
         // actual spawning of players and enemies
         // player
         const { x, y } = playerState.getPosition();
-        this.player = new Player(this, x, y);
+        this.player = new Player(this, x, y, playerConfig);
         // enemies- can be added to with diff types and we could make an enemy factory to slim down this logic
         this.enemies = worldState
             .getAllEnemyStates()

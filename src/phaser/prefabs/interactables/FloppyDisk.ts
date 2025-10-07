@@ -19,7 +19,6 @@ export class FloppyDisk extends BaseInteractable implements Interactable {
     }
 
     interact() {
-        console.log("clicked floppydisk");
         eventBus.emit("playerScored", 50);
         eventBus.emit("diskCollected", this.id);
         // pixellate and fade when clicked
