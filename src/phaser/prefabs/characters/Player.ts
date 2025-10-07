@@ -35,14 +35,6 @@ export class Player extends BaseSprite {
         this.keyE.on("down", () => {
             this.tryInteract();
         });
-        //  body config
-        if (config.bodySize && config.bodyOffset) {
-            this.getBody().setSize(
-                config.bodySize.width,
-                config.bodySize.height
-            );
-            this.getBody().setOffset(config.bodyOffset.x, config.bodyOffset.y);
-        }
 
         // animations
         this.anims.create({

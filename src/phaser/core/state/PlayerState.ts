@@ -84,7 +84,7 @@ class PlayerState {
 
     getSaveData() {
         return {
-            position: this.position,
+            // position: this.position,
             health: this.health,
             character: this.character,
             score: this.score,

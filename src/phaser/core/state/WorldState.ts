@@ -10,12 +10,7 @@ type TriggerZone = {
     height: number;
 };
 
-type LevelProgress = {
-    disksCollected?: number;
-    enemiesDefeated?: number;
-};
-
-type EnemyState = {
+export type EnemyState = {
     id: string | number;
     position: { x: number; y: number };
     interacted: boolean;
@@ -42,9 +37,8 @@ class WorldState {
         position: Coords;
     } | null = null;
     private triggerZones: TriggerZone[] = [];
-    private levelProgress: Record<string, LevelProgress> = {};
     private levelId: string | number = "";
-    private enemyStates: Record<string, EnemyState> = {};
+    private enemyStates: Record<string | number, EnemyState> = {};
     private floppyDisks: Record<
         string,
         { colour: string; collected: boolean; position: Coords }
@@ -67,15 +61,12 @@ class WorldState {
     init(levelId: string | number) {
         if (this.initialised) return;
         this.levelId = levelId;
-        if (!this.levelProgress[levelId]) {
-            this.levelProgress[levelId] = {};
-        }
         //  event listeners
         eventBus.on("diskCollected", this.markFloppyCollected.bind(this));
         eventBus.on("terminalCompleted", this.markTerminalComplete.bind(this));
         eventBus.on("enemyDefeated", this.markEnemyRemoved.bind(this));
         eventBus.on("enemyInteracted", this.markEnemyInteracted.bind(this));
-        eventBus.on("enemyMoved", this.setEnemyPosition.bind(this));
+        // eventBus.on("enemyMoved", this.setEnemyPosition.bind(this));
 
         this.initialised = true;
     }
@@ -86,7 +77,7 @@ class WorldState {
         eventBus.off("terminalCompleted", this.markTerminalComplete);
         eventBus.off("enemyDefeated", this.markEnemyRemoved);
         eventBus.off("enemyInteracted", this.markEnemyInteracted);
-        eventBus.off("enemyMoved", this.setEnemyPosition);
+        // eventBus.off("enemyMoved", this.setEnemyPosition);
     }
 
     setTriggerZones(zones: TriggerZone[]) {
@@ -134,12 +125,12 @@ class WorldState {
             ...state,
         };
     }
-    setEnemyPosition(id: string | number, newPosition: Coords) {
-        return (this.enemyStates[id] = {
-            ...this.enemyStates[id],
-            position: newPosition,
-        });
-    }
+    // setEnemyPosition(id: string | number, newPosition: Coords) {
+    //     return (this.enemyStates[id] = {
+    //         ...this.enemyStates[id],
+    //         position: newPosition,
+    //     });
+    // }
     getEnemyState(id: string | number): EnemyState | undefined {
         return this.enemyStates[id];
     }
@@ -160,12 +151,17 @@ class WorldState {
     }
 
     // terminals
-    setTerminal(id: string | number, position: Coords, attempted = false) {
+    setTerminal(
+        id: string | number,
+        position: Coords,
+        attempted: boolean = false,
+        completed: boolean = false
+    ) {
         this.terminal = {
             id,
             position,
             attempted,
-            completed: false,
+            completed,
         };
     }
 
@@ -196,7 +192,6 @@ class WorldState {
         if (this.floppyDisks[id]) {
             this.floppyDisks[id].collected = true;
         }
-        console.log(this.getAllFloppyDisks());
         eventBus.emit("updateUI");
     }
     isFloppyCollected(id: string | number): boolean {
@@ -220,31 +215,31 @@ class WorldState {
 
     // save / load all data held in this state
     getSaveData() {
+        // don't want to save enemy position data
+        const partialEnemyStates: Record<
+            string | number,
+            Omit<EnemyState, "position">
+        > = {};
+        for (const [id, enemy] of Object.entries(this.enemyStates)) {
+            partialEnemyStates[id] = {
+                id: enemy.id,
+                interacted: enemy.interacted,
+                alive: enemy.alive,
+                type: enemy.type,
+            };
+        }
         return {
             terminals: this.terminal,
-            triggerZones: this.triggerZones,
-            levelProgress: this.levelProgress,
             levelId: this.levelId,
             floppyDisks: this.floppyDisks,
-            enemyStates: this.enemyStates,
+            enemyStates: partialEnemyStates,
             levelInfo: this.levelInfo,
         };
-    }
-
-    load(data: ReturnType<WorldState["getSaveData"]>) {
-        this.terminal = data.terminals;
-        this.triggerZones = data.triggerZones;
-        this.levelProgress = data.levelProgress;
-        this.levelId = data.levelId;
-        this.floppyDisks = data.floppyDisks;
-        this.enemyStates = data.enemyStates;
-        this.levelInfo = data.levelInfo;
     }
 
     resetAllCAREFUL() {
         this.initialised = false;
         this.levelId = "";
-        this.levelProgress = {};
         this.floppyDisks = {};
         this.terminal = null;
         this.enemyStates = {};
