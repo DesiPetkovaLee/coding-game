@@ -1,17 +1,17 @@
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "./theme/theme";
-import LoginPage from "./pages/auth/LoginPage";
-import SignupPage from "./pages/auth/SignupPage";
-import StartPage from "./pages/start/StartPage";
-import SetupPage from "./pages/setup/SetupPage";
-import StoryPage from "./pages/story/StoryPage";
-import { CodingQuestion } from "./pages/codingQuestion/CodingQuestion";
-import LevelSelectPage from "./pages/levelSelect/LevelSelectPage";
-import { Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./appState/auth/AuthContext";
-import GameInitialiser from "./phaser/GameInitialiser";
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import theme from './theme/theme';
+import LoginPage from './pages/auth/LoginPage';
+import SignupPage from './pages/auth/SignupPage';
+import StartPage from './pages/start/StartPage';
+import SetupPage from './pages/setup/SetupPage';
+import StoryPage from './pages/story/StoryPage';
+import { CodingQuestion } from './pages/codingQuestion/CodingQuestion';
+import LevelSelectPage from './pages/levelSelect/LevelSelectPage';
+import { Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './appState/auth/AuthContext';
+import GameInitialiser from './phaser/GameInitialiser';
 
-export default function App() {
+const App = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -32,4 +32,6 @@ export default function App() {
             </AuthProvider>
         </ThemeProvider>
     );
-}
+};
+
+export default App;
