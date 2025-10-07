@@ -1,5 +1,5 @@
-import { worldState } from '../../core/States/WorldState';
-import { BaseEnemy } from './BaseEnemy';
+import { worldState } from "../../core/state/WorldState";
+import { BaseEnemy } from "./BaseEnemy";
 
 export class BiteySprite extends BaseEnemy {
     id: string | number;
@@ -9,7 +9,7 @@ export class BiteySprite extends BaseEnemy {
         x: number,
         y: number,
         texture: string,
-        id: string | number,
+        id: string | number
     ) {
         super(scene, x, y, texture);
         this.id = id;
@@ -18,7 +18,7 @@ export class BiteySprite extends BaseEnemy {
         this.setImmovable(true);
 
         this.anims.create({
-            key: 'bite',
+            key: "bite",
             frames: this.anims.generateFrameNumbers(texture, {
                 start: 0,
                 end: 24,
@@ -33,15 +33,15 @@ export class BiteySprite extends BaseEnemy {
         worldState.setEnemyPosition(this.id, { x: this.x, y: this.y });
     }
     interact(): void {
-        console.log('bitey clicked');
+        console.log("bitey clicked");
         console.log(worldState.getCollectedDiskCount());
         if (worldState.getCollectedDiskCount() === 4) {
             this.toDelete = true;
         } else {
-            console.log('You need all 4 disks to delete Bitey!');
+            console.log("You need all 4 disks to delete Bitey!");
         }
     }
     update() {
-        this.anims.play('bite', true);
+        this.anims.play("bite", true);
     }
 }

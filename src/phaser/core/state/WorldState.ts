@@ -184,8 +184,13 @@ class WorldState {
     }
 
     // floppydisks
-    setFloppyDisk(id: string | number, colour: string, position: Coords) {
-        this.floppyDisks[id] = { colour, collected: false, position };
+    setFloppyDisk(
+        id: string | number,
+        colour: string,
+        position: Coords,
+        isCollected: boolean
+    ) {
+        this.floppyDisks[id] = { colour, collected: isCollected, position };
     }
     markFloppyCollected(id: string | number) {
         if (this.floppyDisks[id]) {
